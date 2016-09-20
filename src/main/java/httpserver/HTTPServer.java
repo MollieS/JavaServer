@@ -1,8 +1,5 @@
 package httpserver;
 
-import java.io.IOException;
-import java.net.Socket;
-
 public class HTTPServer {
 
     private final SocketServer socketServer;
@@ -17,8 +14,9 @@ public class HTTPServer {
         return port;
     }
 
-    public void start() throws IOException {
-        Socket socket = socketServer.serve();
+    public void start() {
+        ClientSocket socket = socketServer.serve();
+        socket.sendResponse(new HTTPResponse());
         socket.close();
     }
 }

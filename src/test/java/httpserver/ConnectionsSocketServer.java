@@ -1,7 +1,5 @@
 package httpserver;
 
-import java.net.Socket;
-
 public class ConnectionsSocketServer implements SocketServer {
 
     private int connections = 0;
@@ -11,8 +9,8 @@ public class ConnectionsSocketServer implements SocketServer {
     }
 
     @Override
-    public Socket serve() {
+    public ClientSocket serve() {
         connections++;
-        return new Socket();
+        return new SocketDummy();
     }
 }

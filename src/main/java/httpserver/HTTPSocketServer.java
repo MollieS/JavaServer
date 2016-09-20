@@ -2,7 +2,6 @@ package httpserver;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class HTTPSocketServer implements SocketServer {
 
@@ -13,9 +12,9 @@ public class HTTPSocketServer implements SocketServer {
     }
 
     @Override
-    public Socket serve() {
+    public ClientSocket serve() {
         try {
-            return serverSocket.accept();
+            return new HTTPSocket(serverSocket.accept());
         } catch (IOException e) {
             throw new SocketConnectionException("Error accepting requests: ", e.getCause());
         }

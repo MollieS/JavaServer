@@ -26,7 +26,7 @@ public class HTTPSocketServerTest {
         ServerSocketSpy serverSocketSpy = new ServerSocketSpy();
         HTTPSocketServer httpSocketServer = new HTTPSocketServer(serverSocketSpy);
 
-        Socket socket = httpSocketServer.serve();
+        ClientSocket socket = httpSocketServer.serve();
 
         assertTrue(socket != null);
     }
