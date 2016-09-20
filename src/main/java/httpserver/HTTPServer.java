@@ -16,7 +16,7 @@ public class HTTPServer {
 
     public void start() {
         ClientSocket socket = socketServer.serve();
-        socket.sendResponse(new HTTPResponse());
+        socket.sendResponse(new HTTPResponse(200));
         socket.close();
     }
 }

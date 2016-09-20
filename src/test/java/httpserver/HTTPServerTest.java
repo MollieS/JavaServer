@@ -23,8 +23,4 @@ public class HTTPServerTest {
 
         assertEquals(1, connectionsSocketServer.getConnections());
     }
-
-    @Test
-    public void addsResponseToSocket() {
-    }
 }

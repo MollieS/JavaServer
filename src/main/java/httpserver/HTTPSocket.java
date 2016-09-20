@@ -22,6 +22,13 @@ public class HTTPSocket implements ClientSocket {
 
     @Override
     public void sendResponse(HTTPResponse httpResponse) {
-
+        try {
+            OutputStream outputStream = socket.getOutputStream();
+            PrintWriter printWriter = new PrintWriter(outputStream);
+            printWriter.write(httpResponse.getStatusCode() + " " + httpResponse.getReasonPhrase());
+            printWriter.close();
+        } catch (IOException e) {
+            throw new SocketConnectionException("Cannot get output stream: ", e.getCause());
+        }
     }
 }
