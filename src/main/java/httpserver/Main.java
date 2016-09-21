@@ -6,12 +6,15 @@ import java.net.ServerSocket;
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            SocketServer socketServer = new HTTPSocketServer(new ServerSocket(5000));
-            HTTPServer httpServer = new HTTPServer(5000, socketServer);
+        HTTPServer httpServer = null;
+            try {
+                SocketServer socketServer = new HTTPSocketServer(new ServerSocket(5000));
+                httpServer = new HTTPServer(5000, socketServer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        while(true) {
             httpServer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
