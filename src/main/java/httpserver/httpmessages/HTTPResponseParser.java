@@ -6,13 +6,23 @@ public class HTTPResponseParser {
 
     public String parse(HTTPResponse httpResponse) {
         String response = PROTOCOL_VERSION;
-        response += " " + httpResponse.getStatusCode();
-        response += " " + httpResponse.getReasonPhrase();
+        response = addHeader(httpResponse, response);
+        response = addBody(httpResponse, response);
+        response += "\n";
+        return response;
+    }
+
+    private String addBody(HTTPResponse httpResponse, String response) {
         if (httpResponse.hasBody()) {
             response += "\n\n";
             response += httpResponse.getBody();
         }
-        response += "\n";
+        return response;
+    }
+
+    private String addHeader(HTTPResponse httpResponse, String response) {
+        response += " " + httpResponse.getStatusCode();
+        response += " " + httpResponse.getReasonPhrase();
         return response;
     }
 }

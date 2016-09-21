@@ -5,9 +5,9 @@ public class HTTPRequest {
     private String method;
     private String requestURI;
 
-    public HTTPRequest(String method, String requestUri) {
+    public HTTPRequest(String method, String requestURI) {
         this.method = method;
-        this.requestURI = requestUri;
+        this.requestURI = requestURI;
     }
 
     public String getMethod() {

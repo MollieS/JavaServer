@@ -1,6 +1,6 @@
 package httpserver.resourcemanagement;
 
-import java.io.File;
+import java.io.*;
 
 public class ResourceParser {
 
@@ -9,15 +9,29 @@ public class ResourceParser {
     }
 
     private String getFiles(File directory) {
-        if (directory.isDirectory()) {
-            if (directory.exists()) {
-                String files = "";
-                for (File fileEntry : directory.listFiles()) {
-                    files += fileEntry.getName() + "\n";
+        if (directory.exists()) {
+            if (directory.isDirectory()) {
+                return returnFiles(directory);
+            } else {
+                try {
+                    FileReader fileReader = new FileReader(directory);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    return bufferedReader.readLine();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                return files;
             }
         }
         return null;
+    }
+
+    private String returnFiles(File directory) {
+        String files = "";
+        for (File fileEntry : directory.listFiles()) {
+            files += fileEntry.getName() + "\n";
+        }
+        return files;
     }
 }

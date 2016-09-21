@@ -31,12 +31,12 @@ public class ResourceParserTest {
     }
 
     @Test
-    public void returnsNullIfFileIsNotADirectory() {
+    public void returnsFileContentsIfNotDirectory() {
         String path = getClass().getClassLoader().getResource("directory/file1").getPath();
         File file = new File(path);
 
         String parsedFile = resourceParser.parse(file);
 
-        assertNull(parsedFile);
+        assertEquals("this is file1", parsedFile);
     }
 }
