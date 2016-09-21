@@ -55,7 +55,7 @@ public class HTTPSocketServerTest {
 
     private class ServerSocketException extends ServerSocket {
 
-        public ServerSocketException() throws IOException {
+        ServerSocketException() throws IOException {
         }
 
         @Override

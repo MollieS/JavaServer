@@ -19,7 +19,7 @@ public class HTTPServer {
         String request = socket.getRequest();
         HTTPRequest httpRequest = HTTPRequestParser.parse(request);
         HTTPResponse httpResponse = HTTPRequestHandler.handle(httpRequest);
-        socket.sendResponse(new HTTPResponse(200, "OK"));
+        socket.sendResponse(httpResponse);
         socket.close();
     }
 }

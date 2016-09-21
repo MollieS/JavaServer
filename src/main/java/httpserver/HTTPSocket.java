@@ -38,8 +38,7 @@ public class HTTPSocket implements ClientSocket {
             InputStream inputStream = socket.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String request = bufferedReader.readLine();
-            return request;
+            return bufferedReader.readLine();
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get input stream: ", e.getCause());
         }

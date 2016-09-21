@@ -2,5 +2,4 @@
 .idea/
 gradlew.bat
 build/
-out/
 *.jar
