@@ -11,6 +11,6 @@ public class ConnectionsSocketServer implements SocketServer {
     @Override
     public ClientSocket serve() {
         connections++;
-        return new SocketDummy();
+        return new SocketFake();
     }
 }

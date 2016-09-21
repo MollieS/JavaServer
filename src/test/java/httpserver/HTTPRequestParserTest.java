@@ -11,7 +11,7 @@ public class HTTPRequestParserTest {
         HTTPRequestParser httpRequestParser = new HTTPRequestParser();
 
         String request = "GET / HTTP/1.1";
-        HTTPRequest httpRequest = httpRequestParser.handle(request);
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertEquals("GET", httpRequest.getMethod());
     }
@@ -21,7 +21,7 @@ public class HTTPRequestParserTest {
         HTTPRequestParser httpRequestParser = new HTTPRequestParser();
 
         String request = "GET / HTTP/1.1";
-        HTTPRequest httpRequest = httpRequestParser.handle(request);
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertEquals("/", httpRequest.getRequestURI());
     }

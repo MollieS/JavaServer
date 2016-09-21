@@ -2,10 +2,12 @@ package httpserver;
 
 public class HTTPResponse {
 
-    private String statusCode;
+    private final String reasonPhrase;
+    private final String statusCode;
 
-    public HTTPResponse(int statusCode) {
+    public HTTPResponse(int statusCode, String reasonPhrase) {
         this.statusCode = String.valueOf(statusCode);
+        this.reasonPhrase = reasonPhrase;
     }
 
     public String HTTP() {
@@ -17,6 +19,6 @@ public class HTTPResponse {
     }
 
     public String getReasonPhrase() {
-        return "OK";
+        return reasonPhrase;
     }
 }

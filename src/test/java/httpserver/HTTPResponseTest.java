@@ -8,7 +8,7 @@ public class HTTPResponseTest {
 
     @Test
     public void hasAStatusCode() {
-        HTTPResponse httpResponse = new HTTPResponse(200);
+        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
 
         String statusCode = httpResponse.getStatusCode();
 
@@ -17,7 +17,7 @@ public class HTTPResponseTest {
 
     @Test
     public void hasAReasonPhrase() {
-        HTTPResponse httpResponse = new HTTPResponse(200);
+        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
 
         String reasonPhrase = httpResponse.getReasonPhrase();
 

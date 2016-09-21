@@ -1,6 +1,6 @@
 package httpserver;
 
-public class SocketDummy implements ClientSocket {
+public class SocketFake implements ClientSocket {
 
     @Override
     public void close() {
@@ -14,6 +14,6 @@ public class SocketDummy implements ClientSocket {
 
     @Override
     public String getRequest() {
-        return null;
+        return "GET / HTTP/1.1";
     }
 }

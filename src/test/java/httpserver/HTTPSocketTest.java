@@ -33,7 +33,7 @@ public class HTTPSocketTest {
     public void getsTheOutputStreamFromTheSocket() {
         HTTPSocket httpSocket = new HTTPSocket(socketSpy);
 
-        httpSocket.sendResponse(new HTTPResponse(200));
+        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
 
         assertTrue(socketSpy.getOutputStreamHasBeenCalled);
     }
@@ -42,7 +42,7 @@ public class HTTPSocketTest {
     public void writesTheHTTPResponseToTheSocketOutputStream() {
         HTTPSocket httpSocket = new HTTPSocket(socketSpy);
 
-        httpSocket.sendResponse(new HTTPResponse(200));
+        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
         OutputStream outputStream = socketSpy.getOutputStream();
 
         assertEquals("HTTP/1.1 200 OK", outputStream.toString());
@@ -52,7 +52,7 @@ public class HTTPSocketTest {
     public void throwsASocketConnectionExceptionIfOutputStreamCannotBeRetrieved() {
         HTTPSocket httpSocket = new HTTPSocket(socketThatThrowsException);
 
-        httpSocket.sendResponse(new HTTPResponse(200));
+        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
     }
 
     @Test
