@@ -29,4 +29,14 @@ public class ResourceParserTest {
 
         assertNull(parsedFile);
     }
+
+    @Test
+    public void returnsNullIfFileIsNotADirectory() {
+        String path = getClass().getClassLoader().getResource("directory/file1").getPath();
+        File file = new File(path);
+
+        String parsedFile = resourceParser.parse(file);
+
+        assertNull(parsedFile);
+    }
 }

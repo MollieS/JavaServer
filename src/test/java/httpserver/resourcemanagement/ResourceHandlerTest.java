@@ -3,6 +3,7 @@ package httpserver.resourcemanagement;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ResourceHandlerTest {
@@ -22,5 +23,12 @@ public class ResourceHandlerTest {
         Resource resource = resourceHandler.getResource("/");
 
         assertEquals("file1\nfile2\n", resource.getContents());
+    }
+
+    @Test
+    public void returnsANonExistentResourceForAFileThatDoesNotExist() {
+        Resource resource = resourceHandler.getResource("/foobar");
+
+        assertFalse(resource.exists());
     }
 }

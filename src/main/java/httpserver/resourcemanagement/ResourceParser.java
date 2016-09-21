@@ -4,17 +4,19 @@ import java.io.File;
 
 public class ResourceParser {
 
-    public String parse(File directory) throws ResourceNotFoundException {
+    public String parse(File directory) {
         return getFiles(directory);
     }
 
     private String getFiles(File directory) {
-        if (directory.exists()) {
-            String files = "";
-            for (File fileEntry : directory.listFiles()) {
-                files += fileEntry.getName() + "\n";
+        if (directory.isDirectory()) {
+            if (directory.exists()) {
+                String files = "";
+                for (File fileEntry : directory.listFiles()) {
+                    files += fileEntry.getName() + "\n";
+                }
+                return files;
             }
-            return files;
         }
         return null;
     }

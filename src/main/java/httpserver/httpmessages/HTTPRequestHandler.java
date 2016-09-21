@@ -12,9 +12,6 @@ public class HTTPRequestHandler implements RequestHandler {
     }
 
     public HTTPResponse handle(HTTPRequest httpRequest) {
-        if (httpRequest.getRequestURI().equals("/")) {
-            return responseBuilder.buildResponse(httpRequest.getMethod(), httpRequest.getRequestURI());
-        }
-        return new HTTPResponse(404, "OK");
+        return responseBuilder.buildResponse(httpRequest.getMethod(), httpRequest.getRequestURI());
     }
 }
