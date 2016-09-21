@@ -47,7 +47,7 @@ public class HTTPSocketTest {
         httpSocket.sendResponse(new HTTPResponse(200));
         OutputStream outputStream = socketSpy.getOutputStream();
 
-        assertEquals("200 OK", outputStream.toString());
+        assertEquals("HTTP/1.1 200 OK", outputStream.toString());
     }
 
     @Test(expected = SocketConnectionException.class)

@@ -7,8 +7,8 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            SocketServer socketServer = new HTTPSocketServer(new ServerSocket(9000));
-            HTTPServer httpServer = new HTTPServer(9000, socketServer);
+            SocketServer socketServer = new HTTPSocketServer(new ServerSocket(5000));
+            HTTPServer httpServer = new HTTPServer(5000, socketServer);
             httpServer.start();
         } catch (IOException e) {
             e.printStackTrace();

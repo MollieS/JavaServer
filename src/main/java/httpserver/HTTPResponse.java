@@ -8,6 +8,10 @@ public class HTTPResponse {
         this.statusCode = String.valueOf(statusCode);
     }
 
+    public String HTTP() {
+        return "HTTP/1.1";
+    }
+
     public String getStatusCode() {
         return statusCode;
     }

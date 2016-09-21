@@ -25,7 +25,7 @@ public class HTTPSocket implements ClientSocket {
         try {
             OutputStream outputStream = socket.getOutputStream();
             PrintWriter printWriter = new PrintWriter(outputStream);
-            printWriter.write(httpResponse.getStatusCode() + " " + httpResponse.getReasonPhrase());
+            printWriter.write(httpResponse.HTTP() + " " + httpResponse.getStatusCode() + " " + httpResponse.getReasonPhrase());
             printWriter.close();
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get output stream: ", e.getCause());
