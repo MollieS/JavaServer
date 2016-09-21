@@ -11,4 +11,9 @@ public class SocketDummy implements ClientSocket {
     public void sendResponse(HTTPResponse httpResponse) {
 
     }
+
+    @Override
+    public String getRequest() {
+        return null;
+    }
 }

@@ -2,9 +2,7 @@ package httpserver;
 
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
@@ -57,10 +55,36 @@ public class HTTPSocketTest {
         httpSocket.sendResponse(new HTTPResponse(200));
     }
 
+    @Test
+    public void getsTheInputStreamFromTheSocket() {
+        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+
+        httpSocket.getRequest();
+
+        assertTrue(socketSpy.getInputStreamHasBeenCalled);
+    }
+
+    @Test
+    public void getsTheRequestFromInputStream() {
+        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+
+        String request = httpSocket.getRequest();
+
+        assertEquals("GET / HTTP/1.1", request);
+    }
+
+    @Test(expected = SocketConnectionException.class)
+    public void throwsASocketConnectionExceptionIfInputStreamCannotBeRetrieved() {
+        HTTPSocket httpSocket = new HTTPSocket(socketThatThrowsException);
+
+        httpSocket.getRequest();
+    }
+
     private class SocketSpy extends Socket {
 
         boolean isClosed = false;
         boolean getOutputStreamHasBeenCalled = false;
+        boolean getInputStreamHasBeenCalled = false;
         private OutputStream outputStream = new ByteArrayOutputStream();
 
         @Override
@@ -73,6 +97,12 @@ public class HTTPSocketTest {
             getOutputStreamHasBeenCalled = true;
             return outputStream;
         }
+
+        @Override
+        public InputStream getInputStream() {
+            getInputStreamHasBeenCalled = true;
+            return new ByteArrayInputStream(("GET / HTTP/1.1").getBytes());
+        }
     }
 
     private class SocketThatThrowsException extends Socket {
@@ -84,6 +114,11 @@ public class HTTPSocketTest {
 
         @Override
         public OutputStream getOutputStream() throws IOException {
+            throw new IOException();
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
             throw new IOException();
         }
     }

@@ -31,4 +31,16 @@ public class HTTPSocket implements ClientSocket {
             throw new SocketConnectionException("Cannot get output stream: ", e.getCause());
         }
     }
+
+    @Override
+    public String getRequest() {
+        try {
+            InputStream inputStream = socket.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new SocketConnectionException("Cannot get input stream: ", e.getCause());
+        }
+    }
 }
