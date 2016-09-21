@@ -1,4 +1,9 @@
-package httpserver;
+package httpserver.server;
+
+import httpserver.ClientSocket;
+import httpserver.SocketConnectionException;
+import httpserver.httpmessages.HTTPResponse;
+import httpserver.httpmessages.HTTPResponseParser;
 
 import java.io.*;
 import java.net.Socket;
@@ -6,9 +11,11 @@ import java.net.Socket;
 public class HTTPSocket implements ClientSocket {
 
     private final Socket socket;
+    private final HTTPResponseParser responseParser;
 
-    public HTTPSocket(Socket socket) {
+    public HTTPSocket(Socket socket, HTTPResponseParser responseParser) {
         this.socket = socket;
+        this.responseParser = responseParser;
     }
 
     @Override
@@ -25,7 +32,7 @@ public class HTTPSocket implements ClientSocket {
         try {
             OutputStream outputStream = socket.getOutputStream();
             PrintWriter printWriter = new PrintWriter(outputStream);
-            printWriter.write(httpResponse.HTTP() + " " + httpResponse.getStatusCode() + " " + httpResponse.getReasonPhrase());
+            printWriter.write(responseParser.parse(httpResponse));
             printWriter.close();
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get output stream: ", e.getCause());

@@ -1,4 +1,7 @@
-package httpserver;
+package httpserver.server;
+
+import httpserver.ClientSocket;
+import httpserver.httpmessages.HTTPResponse;
 
 public class SocketFake implements ClientSocket {
 

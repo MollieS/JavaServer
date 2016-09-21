@@ -1,5 +1,7 @@
 package httpserver;
 
+import httpserver.httpmessages.HTTPResponse;
+
 public interface ClientSocket {
 
     void close();

@@ -1,5 +1,8 @@
-package httpserver;
+package httpserver.server;
 
+import httpserver.SocketConnectionException;
+import httpserver.httpmessages.HTTPResponse;
+import httpserver.httpmessages.HTTPResponseParser;
 import org.junit.Test;
 
 import java.io.*;
@@ -15,7 +18,7 @@ public class HTTPSocketTest {
 
     @Test
     public void closesTheSocket() {
-        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.close();
 
@@ -24,14 +27,14 @@ public class HTTPSocketTest {
 
     @Test(expected = SocketConnectionException.class)
     public void throwsASocketConnectionExceptionIfErrorClosing() {
-        HTTPSocket httpSocket = new HTTPSocket(socketThatThrowsException);
+        HTTPSocket httpSocket = createSocket(socketThatThrowsException);
 
         httpSocket.close();
     }
 
     @Test
     public void getsTheOutputStreamFromTheSocket() {
-        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.sendResponse(new HTTPResponse(200, "OK"));
 
@@ -40,24 +43,24 @@ public class HTTPSocketTest {
 
     @Test
     public void writesTheHTTPResponseToTheSocketOutputStream() {
-        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.sendResponse(new HTTPResponse(200, "OK"));
         OutputStream outputStream = socketSpy.getOutputStream();
 
-        assertEquals("HTTP/1.1 200 OK", outputStream.toString());
+        assertEquals("HTTP/1.1 200 OK\n", outputStream.toString());
     }
 
     @Test(expected = SocketConnectionException.class)
     public void throwsASocketConnectionExceptionIfOutputStreamCannotBeRetrieved() {
-        HTTPSocket httpSocket = new HTTPSocket(socketThatThrowsException);
+        HTTPSocket httpSocket = createSocket(socketThatThrowsException);
 
         httpSocket.sendResponse(new HTTPResponse(200, "OK"));
     }
 
     @Test
     public void getsTheInputStreamFromTheSocket() {
-        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.getRequest();
 
@@ -66,7 +69,7 @@ public class HTTPSocketTest {
 
     @Test
     public void getsTheRequestFromInputStream() {
-        HTTPSocket httpSocket = new HTTPSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketSpy);
 
         String request = httpSocket.getRequest();
 
@@ -75,10 +78,27 @@ public class HTTPSocketTest {
 
     @Test(expected = SocketConnectionException.class)
     public void throwsASocketConnectionExceptionIfInputStreamCannotBeRetrieved() {
-        HTTPSocket httpSocket = new HTTPSocket(socketThatThrowsException);
+        HTTPSocket httpSocket = createSocket(socketThatThrowsException);
 
         httpSocket.getRequest();
     }
+
+    @Test
+    public void sendsTheBodyOfTheResponseIfThereIsBody() {
+        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
+        httpResponse.setBody("This is the body");
+        HTTPSocket httpSocket = createSocket(socketSpy);
+
+        httpSocket.sendResponse(httpResponse);
+        OutputStream outputStream = socketSpy.getOutputStream();
+
+        assertTrue(outputStream.toString().contains("This is the body"));
+    }
+
+    private HTTPSocket createSocket(Socket socket) {
+        return new HTTPSocket(socket, new HTTPResponseParser());
+    }
+
 
     private class SocketSpy extends Socket {
 

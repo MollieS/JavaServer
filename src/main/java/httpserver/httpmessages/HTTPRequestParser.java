@@ -1,8 +1,8 @@
-package httpserver;
+package httpserver.httpmessages;
 
 public class HTTPRequestParser {
 
-    public static HTTPRequest parse(String request) {
+    public HTTPRequest parse(String request) {
         String[] requestElements = request.split(" ");
         String method = requestElements[0];
         String requestURI = requestElements[1];

@@ -1,4 +1,7 @@
-package httpserver;
+package httpserver.server;
+
+import httpserver.ClientSocket;
+import httpserver.SocketServer;
 
 public class ConnectionsSocketServer implements SocketServer {
 

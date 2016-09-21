@@ -1,4 +1,4 @@
-package httpserver;
+package httpserver.httpmessages;
 
 import org.junit.Test;
 
