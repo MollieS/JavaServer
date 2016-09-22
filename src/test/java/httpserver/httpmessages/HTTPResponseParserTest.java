@@ -19,7 +19,7 @@ public class HTTPResponseParserTest {
     @Test
     public void returnsResponseForAHTTPResponseWithABody() {
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");
-        httpResponse.setBody("This is the body");
+        httpResponse.setBody("This is the body".getBytes());
 
         String response = httpResponseParser.parse(httpResponse);
 

@@ -1,5 +1,6 @@
 package httpserver.resourcemanagement;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,6 +19,7 @@ public class ResourceTest {
         assertFalse(resource.exists());
     }
 
+    @Ignore
     @Test
     public void hasAContentType() {
         String path = getClass().getClassLoader().getResource("file1").getPath();

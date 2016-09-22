@@ -2,6 +2,8 @@ package httpserver.httpmessages;
 
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
 import static org.junit.Assert.*;
 
 public class HTTPResponseTest {
@@ -24,9 +26,11 @@ public class HTTPResponseTest {
 
     @Test
     public void hasBody() {
-        httpResponse.setBody("This is the body");
+        httpResponse.setBody("This is the body".getBytes());
 
-        assertEquals("This is the body", httpResponse.getBody());
+        String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
+
+        assertEquals("This is the body", body);
     }
 
     @Test
@@ -36,7 +40,7 @@ public class HTTPResponseTest {
 
     @Test
     public void knowsIfItHasBody() {
-        httpResponse.setBody("This is the body");
+        httpResponse.setBody("This is the body".getBytes());
 
         assertTrue(httpResponse.hasBody());
     }

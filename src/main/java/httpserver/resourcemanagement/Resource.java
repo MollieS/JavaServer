@@ -5,7 +5,7 @@ import java.io.File;
 public class Resource {
 
     private final File file;
-    private String contents;
+    private byte[] contents;
     private String type;
 
     public Resource(File file) {
@@ -16,11 +16,11 @@ public class Resource {
         return file.isDirectory();
     }
 
-    public String getContents() {
+    public byte[] getContents() {
         return contents;
     }
 
-    public void setContents(String contents) {
+    public void setContents(byte[] contents) {
         this.contents = contents;
     }
 

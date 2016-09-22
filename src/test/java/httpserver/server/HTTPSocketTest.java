@@ -86,7 +86,7 @@ public class HTTPSocketTest {
     @Test
     public void sendsTheBodyOfTheResponseIfThereIsBody() {
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");
-        httpResponse.setBody("This is the body");
+        httpResponse.setBody("This is the body".getBytes());
         HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.sendResponse(httpResponse);

@@ -4,6 +4,8 @@ import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +23,8 @@ public class HTTPResponseBuilderTest {
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertTrue(httpResponse.hasBody());
-        assertEquals("file1\nfile2\n", httpResponse.getBody());
+        String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
+        assertEquals("file1\nfile2\nimage.jpeg\n", body);
     }
 
     @Test

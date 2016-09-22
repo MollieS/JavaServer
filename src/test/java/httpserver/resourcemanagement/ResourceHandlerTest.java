@@ -2,6 +2,8 @@ package httpserver.resourcemanagement;
 
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,7 +24,9 @@ public class ResourceHandlerTest {
     public void returnsAResourceThatContainsDirectoryContent() {
         Resource resource = resourceHandler.getResource("/");
 
-        assertEquals("file1\nfile2\n", resource.getContents());
+        String body = new String(resource.getContents(), Charset.forName("UTF-8"));
+
+        assertEquals("file1\nfile2\nimage.jpeg\n", body);
     }
 
     @Test

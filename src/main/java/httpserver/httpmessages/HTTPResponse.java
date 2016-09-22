@@ -4,7 +4,7 @@ public class HTTPResponse {
 
     private final String reasonPhrase;
     private final String statusCode;
-    private String body;
+    private byte[] body;
 
     public HTTPResponse(int statusCode, String reasonPhrase) {
         this.statusCode = String.valueOf(statusCode);
@@ -19,11 +19,11 @@ public class HTTPResponse {
         return reasonPhrase;
     }
 
-    public void setBody(String body) {
+    public void setBody(byte[] body) {
         this.body = body;
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 

@@ -1,5 +1,7 @@
 package httpserver.httpmessages;
 
+import java.nio.charset.Charset;
+
 public class HTTPResponseParser {
 
     private static final String PROTOCOL_VERSION = "HTTP/1.1";
@@ -15,7 +17,7 @@ public class HTTPResponseParser {
     private String addBody(HTTPResponse httpResponse, String response) {
         if (httpResponse.hasBody()) {
             response += "\n\n";
-            response += httpResponse.getBody();
+            response += new String(httpResponse.getBody(), Charset.forName("UTF-8"));
         }
         return response;
     }
