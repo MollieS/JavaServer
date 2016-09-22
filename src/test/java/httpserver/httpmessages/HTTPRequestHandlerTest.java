@@ -1,41 +1,78 @@
 package httpserver.httpmessages;
 
 import httpserver.ResponseBuilder;
+import httpserver.server.Router;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HTTPRequestHandlerTest {
 
-    private final ResponseBuilderSpy responseBuilderSpy = new ResponseBuilderSpy();
-    private final HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(responseBuilderSpy);
+    private HTTPRequestHandler httpRequestHandler;
 
     @Test
     public void returnsA200ResponseForGETToAKnownURI() {
+        createRequestHandler(200, "OK");
+
         HTTPRequest httpRequest = new HTTPRequest("GET", "/");
 
-        httpRequestHandler.handle(httpRequest);
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertTrue(responseBuilderSpy.buildResponseWasCalled);
+        assertEquals("200", httpResponse.getStatusCode());
     }
 
     @Test
-    public void returnsA404ResponseForAGETToUnknownURI() {
+    public void returnsA404ToAnUnknownURI() {
+        createRequestHandler(404, "Not Found");
+
         HTTPRequest httpRequest = new HTTPRequest("GET", "/foobar");
 
-        httpRequestHandler.handle(httpRequest);
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertTrue(responseBuilderSpy.buildResponseWasCalled);
+        assertEquals("404", httpResponse.getStatusCode());
     }
 
-    private class ResponseBuilderSpy implements ResponseBuilder {
+    @Test
+    public void returnsA418ResponseForAGETToCoffee() {
+        createRequestHandler(404, "Not Found");
 
-        private boolean buildResponseWasCalled = false;
+        HTTPRequest httpRequest = new HTTPRequest("GET", "/coffee");
+
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals("418", httpResponse.getStatusCode());
+        assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
+    }
+
+    @Test
+    public void returnsA200ResponseForAGETToTea() {
+        createRequestHandler(404, "Not Found");
+
+        HTTPRequest httpRequest = new HTTPRequest("GET", "/tea");
+
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals("200", httpResponse.getStatusCode());
+    }
+
+    private void createRequestHandler(int code, String reason) {
+        ResponseBuilderFake responseBuilderFake = new ResponseBuilderFake(code, reason);
+        httpRequestHandler = new HTTPRequestHandler(responseBuilderFake, new Router());
+    }
+
+    private class ResponseBuilderFake implements ResponseBuilder {
+
+        private final int code;
+        private final String statusCode;
+
+        public ResponseBuilderFake(int code, String statusCode) {
+            this.code = code;
+            this.statusCode = statusCode;
+        }
 
         @Override
         public HTTPResponse buildResponse(String method, String path) {
-            buildResponseWasCalled = true;
-            return null;
+            return new HTTPResponse(code, statusCode);
         }
     }
 }
