@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class HTTPServerTest {
 
-    private ConnectionsSocketServer connectionsSocketServer = new ConnectionsSocketServer();
+    private final ConnectionsSocketServer connectionsSocketServer = new ConnectionsSocketServer();
 
     @Test
     public void canAcceptConnectionsOnThePortWhenListening() throws IOException {

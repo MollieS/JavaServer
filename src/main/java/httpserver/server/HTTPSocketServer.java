@@ -5,6 +5,7 @@ import httpserver.SocketConnectionException;
 import httpserver.SocketServer;
 import httpserver.httpmessages.HTTPResponseParser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -19,7 +20,7 @@ public class HTTPSocketServer implements SocketServer {
     @Override
     public ClientSocket serve() {
         try {
-            return new HTTPSocket(serverSocket.accept(), new HTTPResponseParser());
+            return new HTTPSocket(serverSocket.accept(), new HTTPResponseParser(new ByteArrayOutputStream()));
         } catch (IOException e) {
             throw new SocketConnectionException("Error accepting requests: ", e.getCause());
         }

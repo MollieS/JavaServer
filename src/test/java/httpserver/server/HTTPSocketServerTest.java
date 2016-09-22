@@ -2,7 +2,6 @@ package httpserver.server;
 
 import httpserver.ClientSocket;
 import httpserver.SocketConnectionException;
-import httpserver.server.HTTPSocketServer;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -40,11 +39,6 @@ public class HTTPSocketServerTest {
         HTTPSocketServer httpSocketServer = new HTTPSocketServer(serverSocketThatThrowsException);
 
         httpSocketServer.serve();
-    }
-
-    @Test
-    public void sendsBodyIfResponseHasBody() {
-
     }
 
     private class ServerSocketSpy extends ServerSocket {

@@ -1,6 +1,7 @@
 package httpserver.resourcemanagement;
 
 import java.io.*;
+import java.nio.file.Files;
 
 public class ResourceParser {
 
@@ -9,22 +10,15 @@ public class ResourceParser {
     }
 
     private byte[] getFiles(File file) {
-        if (file.exists()) {
-            if (file.isDirectory()) {
-                return returnFiles(file);
-            } else {
-                byte[] fileContents = readFile(file);
-                if (fileContents != null) return fileContents;
-            }
+        if (file.isDirectory()) {
+            return returnFiles(file);
         }
-        return null;
+        return readFile(file);
     }
 
     private byte[] readFile(File file) {
         try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            return bufferedReader.readLine().getBytes();
+            return Files.readAllBytes(file.toPath());
         } catch (IOException e) {
             e.printStackTrace();
         }

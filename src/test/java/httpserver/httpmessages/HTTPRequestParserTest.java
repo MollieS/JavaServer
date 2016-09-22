@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 public class HTTPRequestParserTest {
 
-    private HTTPRequestParser httpRequestParser = new HTTPRequestParser();
+    private final HTTPRequestParser httpRequestParser = new HTTPRequestParser();
 
     @Test
     public void returnsAGetMethodFromAString() {

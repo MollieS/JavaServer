@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class HTTPResponseTest {
 
-    private HTTPResponse httpResponse = new HTTPResponse(200, "OK");
+    private final HTTPResponse httpResponse = new HTTPResponse(200, "OK");
 
     @Test
     public void hasAStatusCode() {
@@ -43,5 +43,12 @@ public class HTTPResponseTest {
         httpResponse.setBody("This is the body".getBytes());
 
         assertTrue(httpResponse.hasBody());
+    }
+
+    @Test
+    public void knowsTheContentType() {
+        httpResponse.setContentType("text/plain");
+
+        assertEquals("text/plain", httpResponse.getContentType());
     }
 }

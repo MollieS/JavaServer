@@ -2,11 +2,12 @@ package httpserver.resourcemanagement;
 
 import java.io.File;
 
+import static httpserver.resourcemanagement.ResourceContentType.TEXT;
+
 public class Resource {
 
     private final File file;
     private byte[] contents;
-    private String type;
 
     public Resource(File file) {
         this.file = file;
@@ -28,7 +29,12 @@ public class Resource {
         return file.exists();
     }
 
-    public String getType() {
-        return type;
+    public String getContentType() {
+        for (ResourceContentType type : ResourceContentType.values()) {
+            if (file.getName().contains(type.extension)) {
+                return type.contentType;
+            }
+        }
+        return TEXT.contentType;
     }
 }

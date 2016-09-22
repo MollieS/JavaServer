@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestHandlerTest {
 
-    private ResponseBuilderSpy responseBuilderSpy = new ResponseBuilderSpy();
-    private HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(responseBuilderSpy);
+    private final ResponseBuilderSpy responseBuilderSpy = new ResponseBuilderSpy();
+    private final HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(responseBuilderSpy);
 
     @Test
     public void returnsA200ResponseForGETToAKnownURI() {

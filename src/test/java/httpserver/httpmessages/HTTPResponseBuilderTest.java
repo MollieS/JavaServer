@@ -6,33 +6,28 @@ import org.junit.Test;
 
 import java.nio.charset.Charset;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HTTPResponseBuilderTest {
 
+    private final String path = getClass().getClassLoader().getResource("directory").getPath();
+    private final HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
+    private final HTTPResponseBuilder httpResponseBuilder = new HTTPResponseBuilder(resourceHandler);
+
     @Test
     public void buildsTheCorrectResponseForAGETRequestToRoot() {
-        String path = getClass().getClassLoader().getResource("directory").getPath();
-        HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
-        HTTPResponseBuilder httpResponseBuilder = new HTTPResponseBuilder(resourceHandler);
-
         HTTPResponse httpResponse = httpResponseBuilder.buildResponse("GET", "/");
 
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
+        assertEquals("text/plain", httpResponse.getContentType());
         assertTrue(httpResponse.hasBody());
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
-        assertEquals("file1\nfile2\nimage.jpeg\n", body);
+        assertTrue(body.contains("file1"));
     }
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToAnInvalidFile() {
-        String path = getClass().getClassLoader().getResource("directory").getPath();
-        HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
-        HTTPResponseBuilder httpResponseBuilder = new HTTPResponseBuilder(resourceHandler);
-
         HTTPResponse httpResponse = httpResponseBuilder.buildResponse("GET", "/foobar");
 
         assertEquals("404", httpResponse.getStatusCode());
@@ -40,4 +35,12 @@ public class HTTPResponseBuilderTest {
         assertFalse(httpResponse.hasBody());
     }
 
+    @Test
+    public void buildsTheCorrectResponseForAGETRequestToAJPEG() {
+        HTTPResponse httpResponse = httpResponseBuilder.buildResponse("GET", "/image.jpeg");
+
+        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals("OK", httpResponse.getReasonPhrase());
+        assertEquals("image/jpeg", httpResponse.getContentType());
+    }
 }

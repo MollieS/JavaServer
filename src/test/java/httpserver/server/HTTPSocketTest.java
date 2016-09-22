@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class HTTPSocketTest {
 
-    private SocketSpy socketSpy = new SocketSpy();
-    private SocketThatThrowsException socketThatThrowsException = new SocketThatThrowsException();
+    private final SocketSpy socketSpy = new SocketSpy();
+    private final SocketThatThrowsException socketThatThrowsException = new SocketThatThrowsException();
 
     @Test
     public void closesTheSocket() {
@@ -96,7 +96,7 @@ public class HTTPSocketTest {
     }
 
     private HTTPSocket createSocket(Socket socket) {
-        return new HTTPSocket(socket, new HTTPResponseParser());
+        return new HTTPSocket(socket, new HTTPResponseParser(new ByteArrayOutputStream()));
     }
 
 
@@ -105,7 +105,7 @@ public class HTTPSocketTest {
         boolean isClosed = false;
         boolean getOutputStreamHasBeenCalled = false;
         boolean getInputStreamHasBeenCalled = false;
-        private OutputStream outputStream = new ByteArrayOutputStream();
+        private final OutputStream outputStream = new ByteArrayOutputStream();
 
         @Override
         public void close() {

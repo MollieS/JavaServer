@@ -5,6 +5,7 @@ public class HTTPResponse {
     private final String reasonPhrase;
     private final String statusCode;
     private byte[] body;
+    private String contentType;
 
     public HTTPResponse(int statusCode, String reasonPhrase) {
         this.statusCode = String.valueOf(statusCode);
@@ -29,5 +30,13 @@ public class HTTPResponse {
 
     public boolean hasBody() {
         return (body != null);
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
