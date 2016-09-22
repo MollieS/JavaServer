@@ -8,21 +8,25 @@ public class ResourceParser {
         return getFiles(directory);
     }
 
-    private String getFiles(File directory) {
-        if (directory.exists()) {
-            if (directory.isDirectory()) {
-                return returnFiles(directory);
+    private String getFiles(File file) {
+        if (file.exists()) {
+            if (file.isDirectory()) {
+                return returnFiles(file);
             } else {
-                try {
-                    FileReader fileReader = new FileReader(directory);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
-                    return bufferedReader.readLine();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                String fileContents = readFile(file);
+                if (fileContents != null) return fileContents;
             }
+        }
+        return null;
+    }
+
+    private String readFile(File file) {
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }

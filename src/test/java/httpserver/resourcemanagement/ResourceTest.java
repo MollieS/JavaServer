@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class ResourceTest {
@@ -15,5 +16,15 @@ public class ResourceTest {
         Resource resource = new Resource(file);
 
         assertFalse(resource.exists());
+    }
+
+    @Test
+    public void hasAContentType() {
+        String path = getClass().getClassLoader().getResource("file1").getPath();
+        File file = new File(path);
+
+        Resource resource = new Resource(file);
+
+        assertEquals("text/plain", resource.getType());
     }
 }

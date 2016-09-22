@@ -10,10 +10,10 @@ import static org.junit.Assert.assertNull;
 public class ResourceParserTest {
 
     private ResourceParser resourceParser = new ResourceParser();
+    private String path = getClass().getClassLoader().getResource("directory").getPath();
 
     @Test
     public void parsesADirectory() {
-        String path = getClass().getClassLoader().getResource("directory").getPath();
         File file = new File(path);
 
         String parsedFile = resourceParser.parse(file);
@@ -32,11 +32,17 @@ public class ResourceParserTest {
 
     @Test
     public void returnsFileContentsIfNotDirectory() {
-        String path = getClass().getClassLoader().getResource("directory/file1").getPath();
-        File file = new File(path);
+        File file = new File(path + "/file1");
 
         String parsedFile = resourceParser.parse(file);
 
         assertEquals("this is file1", parsedFile);
+    }
+
+    @Test
+    public void doesNotParseAnImage() {
+        File file = new File(path + "/image.jpeg");
+
+
     }
 }

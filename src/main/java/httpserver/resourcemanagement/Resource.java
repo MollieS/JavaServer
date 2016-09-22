@@ -6,6 +6,7 @@ public class Resource {
 
     private final File file;
     private String contents;
+    private String type;
 
     public Resource(File file) {
         this.file = file;
@@ -25,5 +26,9 @@ public class Resource {
 
     public boolean exists() {
         return file.exists();
+    }
+
+    public String getType() {
+        return type;
     }
 }
