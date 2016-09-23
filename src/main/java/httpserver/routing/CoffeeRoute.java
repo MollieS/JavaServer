@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 
 import static httpserver.httpmessages.HTTPResponseCode.TEAPOT;
@@ -10,8 +11,8 @@ public class CoffeeRoute extends Route {
         super(uri, methods);
     }
 
-    public HTTPResponse performAction(Method method) {
-        if (super.methodIsAllowed(method)) {
+    public HTTPResponse performAction(HTTPRequest httpRequest) {
+        if (super.methodIsAllowed(httpRequest.getMethod())) {
             HTTPResponse httpResponse = new HTTPResponse(TEAPOT.code, TEAPOT.reason);
             httpResponse.setContentType("text/plain");
             httpResponse.setBody(TEAPOT.reason.getBytes());

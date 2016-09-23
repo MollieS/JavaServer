@@ -18,8 +18,10 @@ public class HTTPResponseParser {
 
     public byte[] parse(HTTPResponse httpResponse) {
         addHeader(httpResponse, byteArrayOutputStream);
-        if (httpResponse.hasBody()) {
+        if (httpResponse.allowedMethods() != null) {
             addAllowedMethods(httpResponse, byteArrayOutputStream);
+        }
+        if (httpResponse.hasBody()) {
             addBody(httpResponse, byteArrayOutputStream);
         }
         return byteArrayOutputStream.toByteArray();

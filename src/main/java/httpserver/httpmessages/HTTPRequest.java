@@ -8,6 +8,7 @@ public class HTTPRequest {
 
     private final Method method;
     private final URI requestURI;
+    private String data;
 
     public HTTPRequest(Method method, String requestURI) {
         this.method = method;
@@ -20,5 +21,13 @@ public class HTTPRequest {
 
     public URI getRequestURI() {
         return requestURI;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 }

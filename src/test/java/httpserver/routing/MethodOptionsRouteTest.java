@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 import org.junit.Test;
 
@@ -8,11 +9,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MethodOptionsRouteTest {
+
     private MethodOptionsRoute methodOptionsRoute = new MethodOptionsRoute("/method_options", GET, PUT, POST, HEAD, OPTIONS);
 
     @Test
     public void returnsA200ResponseForAGetRequest() {
-        HTTPResponse httpResponse = methodOptionsRoute.performAction(GET);
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/method_options");
+
+        HTTPResponse httpResponse = methodOptionsRoute.performAction(httpRequest);
 
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
@@ -20,7 +24,9 @@ public class MethodOptionsRouteTest {
 
     @Test
     public void returnsA200ResponseForAPostRequest() {
-        HTTPResponse httpResponse = methodOptionsRoute.performAction(POST);
+        HTTPRequest httpRequest = new HTTPRequest(POST, "/method_options");
+
+        HTTPResponse httpResponse = methodOptionsRoute.performAction(httpRequest);
 
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
@@ -28,7 +34,9 @@ public class MethodOptionsRouteTest {
 
     @Test
     public void returnsResponseWithMethodsForOptionsRequest() {
-        HTTPResponse httpResponse = methodOptionsRoute.performAction(OPTIONS);
+        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
+
+        HTTPResponse httpResponse = methodOptionsRoute.performAction(httpRequest);
 
         assertTrue(httpResponse.allowedMethods().contains(GET));
         assertTrue(httpResponse.allowedMethods().contains(PUT));

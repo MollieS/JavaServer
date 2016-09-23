@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static httpserver.routing.Method.GET;
+import static httpserver.routing.Method.HEAD;
+import static httpserver.routing.Method.POST;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -30,5 +33,16 @@ public class RouterTest {
         HTTPResponse httpResponse = router.getResponse(httpRequest);
 
         assertEquals("418", httpResponse.getStatusCode());
+    }
+
+    @Test
+    public void allowsGetAndHeadRequestsToAnyURI() {
+        assertTrue(router.allowsMethod(GET));
+        assertTrue(router.allowsMethod(HEAD));
+    }
+
+    @Test
+    public void doesNotAllowPostRequestsToGeneralURLs() {
+        assertFalse(router.allowsMethod(POST));
     }
 }

@@ -9,6 +9,7 @@ import java.net.URI;
 
 import static httpserver.httpmessages.HTTPResponseCode.NOTFOUND;
 import static httpserver.httpmessages.HTTPResponseCode.OK;
+import static httpserver.routing.Method.GET;
 
 public class HTTPResponseBuilder implements ResponseBuilder {
 
@@ -22,8 +23,10 @@ public class HTTPResponseBuilder implements ResponseBuilder {
         Resource resource = resourceHandler.getResource(path);
         if (resource.exists()) {
             HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
-            httpResponse.setContentType(resource.getContentType());
-            httpResponse.setBody(resource.getContents());
+            if (method == GET) {
+                httpResponse.setContentType(resource.getContentType());
+                httpResponse.setBody(resource.getContents());
+            }
             return httpResponse;
         }
         return new HTTPResponse(NOTFOUND.code, NOTFOUND.reason);

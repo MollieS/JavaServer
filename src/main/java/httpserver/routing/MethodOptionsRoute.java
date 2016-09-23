@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 
 import static httpserver.httpmessages.HTTPResponseCode.OK;
@@ -11,11 +12,11 @@ public class MethodOptionsRoute extends Route {
     }
 
     @Override
-    public HTTPResponse performAction(Method method) {
+    public HTTPResponse performAction(HTTPRequest httpRequest) {
         HTTPResponse httpResponse;
-        if (super.methodIsAllowed(method)) {
+        if (methodIsAllowed(httpRequest.getMethod())) {
             httpResponse = new HTTPResponse(OK.code, OK.reason);
-            if (method == Method.OPTIONS) {
+            if (httpRequest.getMethod() == Method.OPTIONS) {
                 httpResponse.setAllowedMethods(super.getAllowedMethods());
             }
             return httpResponse;

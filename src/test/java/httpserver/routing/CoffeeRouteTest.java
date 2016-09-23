@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 import org.junit.Test;
 
@@ -10,12 +11,13 @@ import static httpserver.routing.Method.*;
 import static org.junit.Assert.assertEquals;
 
 public class CoffeeRouteTest {
+    private CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET, HEAD, OPTIONS);
 
     @Test
     public void returnsTheCorrectStatusForAGet() {
-        CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET, HEAD, OPTIONS);
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
 
-        HTTPResponse httpResponse = coffeeRoute.performAction(GET);
+        HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
 
         assertEquals("418", httpResponse.getStatusCode());
         assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
@@ -23,9 +25,9 @@ public class CoffeeRouteTest {
 
     @Test
     public void addsBodyToResponseForGet() {
-        CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET, HEAD, OPTIONS);
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
 
-        HTTPResponse httpResponse = coffeeRoute.performAction(GET);
+        HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("I'm a teapot", body);
@@ -41,11 +43,10 @@ public class CoffeeRouteTest {
 
     @Test
     public void returnsA405ForMethodNotAllowed() {
-        CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET);
+        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/coffee");
 
-        HTTPResponse httpResponse = coffeeRoute.performAction(POST);
+        HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
 
         assertEquals("405", httpResponse.getStatusCode());
-
     }
 }

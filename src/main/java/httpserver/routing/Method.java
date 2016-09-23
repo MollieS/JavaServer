@@ -5,5 +5,8 @@ public enum Method {
     HEAD,
     POST,
     OPTIONS,
-    PUT;
+    PUT,
+    BOGUS,
+    PATCH,
+    DELETE;
 }

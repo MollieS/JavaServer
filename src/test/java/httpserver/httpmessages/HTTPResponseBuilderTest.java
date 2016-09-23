@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static httpserver.routing.Method.GET;
+import static httpserver.routing.Method.HEAD;
 import static org.junit.Assert.*;
 
 public class HTTPResponseBuilderTest {
@@ -49,5 +50,12 @@ public class HTTPResponseBuilderTest {
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertEquals("image/jpeg", httpResponse.getContentType());
+    }
+
+    @Test
+    public void aHeadRequestDoesNotContainBody() {
+        HTTPResponse httpResponse = httpResponseBuilder.buildResponse(HEAD, URI.create("/"));
+
+        assertFalse(httpResponse.hasBody());
     }
 }

@@ -18,7 +18,7 @@ public class Router {
 
     public boolean hasRegistered(URI uri) {
         for (Route route : registeredRoutes) {
-            if (route.getUri().equals(uri)) {
+            if (isRegistered(uri, route)) {
                 return true;
             }
         }
@@ -27,34 +27,18 @@ public class Router {
 
     public HTTPResponse getResponse(HTTPRequest httpRequest) {
         for (Route route : registeredRoutes) {
-            if (route.getUri().equals(httpRequest.getRequestURI())) {
-                return route.performAction(httpRequest.getMethod());
+            if (isRegistered(httpRequest.getRequestURI(), route)) {
+                return route.performAction(httpRequest);
             }
         }
         return null;
     }
 
-    public boolean allowsMethod(Method method) {
-        return method == GET;
+    private boolean isRegistered(URI uri, Route route) {
+        return route.getUri().equals(uri);
     }
 
-    public enum RegisteredRoute {
-        COFFEE(true, "418", "/coffee", GET, OPTIONS),
-        TEA(false, "200", "/tea", GET, OPTIONS),
-        METHOD_OPTIONS(false, "200", "/method_options", GET, HEAD, POST, OPTIONS, PUT),
-        FORM(false, "200", "/form", GET, POST, PUT),
-        OPTIONS2(false, "200", "/method_options2", GET, OPTIONS);
-
-        public final String expectedCode;
-        public final URI uri;
-        public final Method[] methods;
-        public final boolean overrideAllowed;
-
-        RegisteredRoute(boolean overrideAllowed, String code, String uri, Method... methods) {
-            this.overrideAllowed = overrideAllowed;
-            this.expectedCode = code;
-            this.uri = URI.create(uri);
-            this.methods = methods;
-        }
+    public boolean allowsMethod(Method method) {
+        return method == GET || method == HEAD;
     }
 }

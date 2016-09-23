@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 import org.junit.Test;
 
@@ -9,11 +10,13 @@ import static org.junit.Assert.assertEquals;
 
 public class TeaRouteTest {
 
+    private TeaRoute teaRoute = new TeaRoute("/tea", GET);
+
     @Test
     public void sendsA200ReponseForAGet() {
-        TeaRoute teaRoute = new TeaRoute("/tea", GET);
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/tea");
 
-        HTTPResponse httpResponse = teaRoute.performAction(GET);
+        HTTPResponse httpResponse = teaRoute.performAction(httpRequest);
 
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
@@ -21,9 +24,9 @@ public class TeaRouteTest {
 
     @Test
     public void sendsA405IfMethodNotAllowed() {
-        TeaRoute teaRoute = new TeaRoute("/tea", GET);
+        HTTPRequest httpRequest = new HTTPRequest(POST, "/tea");
 
-        HTTPResponse httpResponse = teaRoute.performAction(POST);
+        HTTPResponse httpResponse = teaRoute.performAction(httpRequest);
 
         assertEquals("405", httpResponse.getStatusCode());
     }
