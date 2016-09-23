@@ -1,21 +1,21 @@
 package httpserver.httpmessages;
 
 import httpserver.ResponseBuilder;
-import httpserver.routing.Method;
-import httpserver.routing.Router;
+import httpserver.routing.*;
 import org.junit.Test;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
-import static httpserver.routing.Method.GET;
-import static httpserver.routing.Method.OPTIONS;
-import static httpserver.routing.Method.POST;
+import static httpserver.routing.Method.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestHandlerTest {
 
     private HTTPRequestHandler httpRequestHandler;
+    private List<Route> routes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD));
+    private Router router = new Router(routes);
 
     @Test
     public void returnsA200ResponseForGETToAKnownURI() {
@@ -41,7 +41,7 @@ public class HTTPRequestHandlerTest {
 
     @Test
     public void returnsA418ResponseForAGETToCoffee() {
-        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new ResponseBuilderDummy(), new Router());
+        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new ResponseBuilderDummy(), router);
 
         HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
 
@@ -64,7 +64,7 @@ public class HTTPRequestHandlerTest {
 
     @Test
     public void returnsA405ResponseForAPOST() {
-        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new ResponseBuilderDummy(), new Router());
+        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new ResponseBuilderDummy(), router);
 
         HTTPRequest httpRequest = new HTTPRequest(POST, "/file1");
 
@@ -84,21 +84,9 @@ public class HTTPRequestHandlerTest {
         assertEquals("200", httpResponse.getStatusCode());
     }
 
-    @Test
-    public void anOptionsRequestReturnsAllowedMethods() {
-        ResponseBuilderSpy spy = new ResponseBuilderSpy();
-        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(spy, new Router());
-
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
-
-        httpRequestHandler.handle(httpRequest);
-
-        assertTrue(spy.addAllowedMethodsHasBeenCalled);
-    }
-
     private void createRequestHandler(int code, String reason) {
         ResponseBuilderFake responseBuilderFake = new ResponseBuilderFake(code, reason);
-        httpRequestHandler = new HTTPRequestHandler(responseBuilderFake, new Router());
+        httpRequestHandler = new HTTPRequestHandler(responseBuilderFake, router);
     }
 
     private class ResponseBuilderFake implements ResponseBuilder {
@@ -116,25 +104,6 @@ public class HTTPRequestHandlerTest {
             return new HTTPResponse(code, statusCode);
         }
 
-        @Override
-        public void addAllowedMethods(HTTPResponse httpResponse, HTTPRequest httpRequest, Router router) {
-
-        }
-    }
-
-    private class ResponseBuilderSpy implements ResponseBuilder {
-
-        public boolean addAllowedMethodsHasBeenCalled = false;
-
-        @Override
-        public HTTPResponse buildResponse(Method method, URI path) {
-            return new HTTPResponse(200, "OK");
-        }
-
-        @Override
-        public void addAllowedMethods(HTTPResponse httpResponse, HTTPRequest httpRequest, Router router) {
-            addAllowedMethodsHasBeenCalled = true;
-        }
     }
 
     private class ResponseBuilderDummy implements ResponseBuilder {
@@ -142,11 +111,6 @@ public class HTTPRequestHandlerTest {
         @Override
         public HTTPResponse buildResponse(Method method, URI path) {
             return null;
-        }
-
-        @Override
-        public void addAllowedMethods(HTTPResponse httpResponse, HTTPRequest httpRequest, Router router) {
-
         }
     }
 }

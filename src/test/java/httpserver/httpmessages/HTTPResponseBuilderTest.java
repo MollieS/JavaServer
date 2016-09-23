@@ -2,19 +2,22 @@ package httpserver.httpmessages;
 
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
+import httpserver.routing.CoffeeRoute;
 import httpserver.routing.Router;
+import httpserver.routing.TeaRoute;
 import org.junit.Test;
 
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import static httpserver.routing.Method.GET;
-import static httpserver.routing.Method.OPTIONS;
 import static org.junit.Assert.*;
 
 public class HTTPResponseBuilderTest {
 
     private final String path = getClass().getClassLoader().getResource("directory").getPath();
+    private final Router router = new Router(Arrays.asList(new TeaRoute("/tea", GET), new CoffeeRoute("/coffee", GET)));
     private final HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
     private final HTTPResponseBuilder httpResponseBuilder = new HTTPResponseBuilder(resourceHandler);
 
@@ -46,15 +49,5 @@ public class HTTPResponseBuilderTest {
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertEquals("image/jpeg", httpResponse.getContentType());
-    }
-
-    @Test
-    public void addsAllowedMethodsToAResponse() {
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
-        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
-
-        httpResponseBuilder.addAllowedMethods(httpResponse, httpRequest, new Router());
-
-        assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
     }
 }
