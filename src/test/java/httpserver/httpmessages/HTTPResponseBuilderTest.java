@@ -2,10 +2,14 @@ package httpserver.httpmessages;
 
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
+import httpserver.routing.Router;
 import org.junit.Test;
 
+import java.net.URI;
 import java.nio.charset.Charset;
 
+import static httpserver.routing.Method.GET;
+import static httpserver.routing.Method.OPTIONS;
 import static org.junit.Assert.*;
 
 public class HTTPResponseBuilderTest {
@@ -16,7 +20,7 @@ public class HTTPResponseBuilderTest {
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToRoot() {
-        HTTPResponse httpResponse = httpResponseBuilder.buildResponse("GET", "/");
+        HTTPResponse httpResponse = httpResponseBuilder.buildResponse(GET, URI.create("/"));
 
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
@@ -28,7 +32,7 @@ public class HTTPResponseBuilderTest {
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToAnInvalidFile() {
-        HTTPResponse httpResponse = httpResponseBuilder.buildResponse("GET", "/foobar");
+        HTTPResponse httpResponse = httpResponseBuilder.buildResponse(GET, URI.create("/foobar"));
 
         assertEquals("404", httpResponse.getStatusCode());
         assertEquals("Not Found", httpResponse.getReasonPhrase());
@@ -37,10 +41,20 @@ public class HTTPResponseBuilderTest {
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToAJPEG() {
-        HTTPResponse httpResponse = httpResponseBuilder.buildResponse("GET", "/image.jpeg");
+        HTTPResponse httpResponse = httpResponseBuilder.buildResponse(GET, URI.create("/image.jpeg"));
 
         assertEquals("200", httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertEquals("image/jpeg", httpResponse.getContentType());
+    }
+
+    @Test
+    public void addsAllowedMethodsToAResponse() {
+        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
+        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
+
+        httpResponseBuilder.addAllowedMethods(httpResponse, httpRequest, new Router());
+
+        assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
     }
 }

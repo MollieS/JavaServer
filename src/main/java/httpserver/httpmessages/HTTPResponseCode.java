@@ -1,15 +1,16 @@
 package httpserver.httpmessages;
 
-public enum HTTPResponses {
+public enum HTTPResponseCode {
 
     OK ("OK", 200),
     NOTFOUND ("Not Found", 404),
-    TEAPOT("I'm a teapot", 418);
+    TEAPOT("I'm a teapot", 418),
+    NOTALLOWED("Method Not Allowed", 405);
 
     public final String reason;
     public final int code;
 
-    HTTPResponses(String reason, int code) {
+    HTTPResponseCode(String reason, int code) {
         this.reason = reason;
         this.code = code;
     }

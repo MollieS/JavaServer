@@ -7,7 +7,7 @@ import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import httpserver.server.HTTPServer;
 import httpserver.server.HTTPSocketServer;
-import httpserver.server.Router;
+import httpserver.routing.Router;
 
 import java.io.IOException;
 import java.net.ServerSocket;

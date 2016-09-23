@@ -2,6 +2,9 @@ package httpserver.httpmessages;
 
 import org.junit.Test;
 
+import java.net.URI;
+
+import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 
 public class HTTPRequestParserTest {
@@ -14,7 +17,7 @@ public class HTTPRequestParserTest {
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
-        assertEquals("GET", httpRequest.getMethod());
+        assertEquals(GET, httpRequest.getMethod());
     }
 
     @Test
@@ -23,6 +26,6 @@ public class HTTPRequestParserTest {
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
-        assertEquals("/", httpRequest.getRequestURI());
+        assertEquals(URI.create("/"), httpRequest.getRequestURI());
     }
 }

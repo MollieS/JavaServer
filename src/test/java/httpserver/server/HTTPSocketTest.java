@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 
+import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -87,6 +89,7 @@ public class HTTPSocketTest {
     public void sendsTheBodyOfTheResponseIfThereIsBody() {
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");
         httpResponse.setBody("This is the body".getBytes());
+        httpResponse.setAllowedMethods(Arrays.asList(GET));
         HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.sendResponse(httpResponse);

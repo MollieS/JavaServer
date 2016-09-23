@@ -1,5 +1,7 @@
 package httpserver.httpmessages;
 
+import httpserver.routing.Method;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -17,9 +19,22 @@ public class HTTPResponseParser {
     public byte[] parse(HTTPResponse httpResponse) {
         addHeader(httpResponse, byteArrayOutputStream);
         if (httpResponse.hasBody()) {
+            addAllowedMethods(httpResponse, byteArrayOutputStream);
             addBody(httpResponse, byteArrayOutputStream);
         }
         return byteArrayOutputStream.toByteArray();
+    }
+
+    private void addAllowedMethods(HTTPResponse httpResponse, ByteArrayOutputStream byteArrayOutputStream) {
+        try {
+            byteArrayOutputStream.write(("Allow : ").getBytes());
+            for (Method method : httpResponse.allowedMethods()) {
+                byteArrayOutputStream.write((method + ",").getBytes());
+            }
+            byteArrayOutputStream.write("\n".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addBody(HTTPResponse httpResponse, ByteArrayOutputStream byteArrayOutputStream) {
