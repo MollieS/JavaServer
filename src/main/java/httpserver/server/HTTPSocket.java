@@ -7,6 +7,7 @@ import httpserver.httpmessages.HTTPResponseParser;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
 public class HTTPSocket implements ClientSocket {
 
@@ -41,9 +42,10 @@ public class HTTPSocket implements ClientSocket {
     public String getRequest() {
         try {
             InputStream inputStream = socket.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            return bufferedReader.readLine();
+            byte[] buffer = new byte[600];
+            inputStream.read(buffer);
+            String req = new String(buffer, Charset.forName("UTF-8"));
+            return req;
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get input stream: ", e.getCause());
         }

@@ -31,7 +31,7 @@ public class FormRoute extends Route {
             if (httpRequest.getMethod() == POST || httpRequest.getMethod() == PUT) {
                 writeToFile(httpRequest);
             } else if (httpRequest.getMethod() == GET) {
-                httpResponse.setContentType("text/plain");
+                httpResponse.setContentType("text/html");
                 httpResponse.setBody(readFromFile());
             }
             return httpResponse;

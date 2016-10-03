@@ -75,7 +75,7 @@ public class HTTPSocketTest {
 
         String request = httpSocket.getRequest();
 
-        assertEquals("GET / HTTP/1.1", request);
+        assertTrue(request.contains("GET / HTTP/1.1"));
     }
 
     @Test(expected = SocketConnectionException.class)

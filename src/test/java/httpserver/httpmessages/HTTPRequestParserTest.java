@@ -40,8 +40,8 @@ public class HTTPRequestParserTest {
     }
 
     @Test
-    public void canSeperateParamsFromURI() {
-        String request = "POST /form?data=fatcat";
+    public void canGetDataFromARequest() {
+        String request = "POST /form \n\n\n\ndata=fatcat";
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
