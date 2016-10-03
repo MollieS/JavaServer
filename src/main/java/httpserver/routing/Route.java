@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static httpserver.httpmessages.HTTPResponseCode.NOTALLOWED;
+import static httpserver.httpmessages.StatusCode.NOTALLOWED;
 
 public abstract class Route {
 

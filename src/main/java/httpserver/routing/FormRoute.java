@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static httpserver.httpmessages.HTTPResponseCode.OK;
+import static httpserver.httpmessages.StatusCode.OK;
 import static httpserver.routing.Method.*;
 
 public class FormRoute extends Route {

@@ -3,7 +3,7 @@ package httpserver.routing;
 import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 
-import static httpserver.httpmessages.HTTPResponseCode.OK;
+import static httpserver.httpmessages.StatusCode.OK;
 
 public class MethodOptionsRoute extends Route {
 

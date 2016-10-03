@@ -3,7 +3,7 @@ package httpserver.routing;
 import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 
-import static httpserver.httpmessages.HTTPResponseCode.TEAPOT;
+import static httpserver.httpmessages.StatusCode.TEAPOT;
 
 public class CoffeeRoute extends Route {
 

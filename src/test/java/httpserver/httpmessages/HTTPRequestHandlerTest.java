@@ -1,42 +1,23 @@
 package httpserver.httpmessages;
 
-import httpserver.ResponseBuilder;
+import httpserver.resourcemanagement.HTTPResourceHandler;
+import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.*;
 import org.junit.Test;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 import static httpserver.routing.Method.*;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestHandlerTest {
 
     private List<Route> routes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD));
     private Router router = new Router(routes);
-    private ResponseBuilderSpy responseBuilderSpy = new ResponseBuilderSpy();
-    private HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(responseBuilderSpy, router);
-
-    @Test
-    public void delegatesToResponseBuilderIfARequestToRoot() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/");
-
-        httpRequestHandler.handle(httpRequest);
-
-        assertTrue(responseBuilderSpy.buildResponseHasBeenCalled);
-    }
-
-    @Test
-    public void delegatesToResponseBuilderIfUnkownURI() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/foobar");
-
-        httpRequestHandler.handle(httpRequest);
-
-        assertTrue(responseBuilderSpy.buildResponseHasBeenCalled);
-    }
+    String path = getClass().getClassLoader().getResource("directory").getPath();
+    private HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new HTTPResourceHandler(path, new ResourceParser()), router);
 
     @Test
     public void returnsA418ResponseForAGETToCoffee() {
@@ -91,16 +72,5 @@ public class HTTPRequestHandlerTest {
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
         assertNotNull(httpResponse.allowedMethods());
-    }
-
-    private class ResponseBuilderSpy implements ResponseBuilder {
-
-        public boolean buildResponseHasBeenCalled = false;
-
-        @Override
-        public HTTPResponse buildResponse(Method method, URI path) {
-            buildResponseHasBeenCalled = true;
-            return new HTTPResponse(200, "OK");
-        }
     }
 }
