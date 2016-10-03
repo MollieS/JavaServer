@@ -12,9 +12,9 @@ public class HTTPResponseTest {
 
     @Test
     public void hasAStatusCode() {
-        String statusCode = httpResponse.getStatusCode();
+        int statusCode = httpResponse.getStatusCode();
 
-        assertEquals("200", statusCode);
+        assertEquals(200, statusCode);
     }
 
     @Test

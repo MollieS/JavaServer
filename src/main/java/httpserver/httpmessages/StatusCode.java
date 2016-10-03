@@ -1,6 +1,6 @@
 package httpserver.httpmessages;
 
-public enum HTTPResponses {
+public enum StatusCode {
 
     OK ("OK", 200),
     NOTFOUND ("Not Found", 404);
@@ -8,7 +8,7 @@ public enum HTTPResponses {
     public final String reason;
     public final int code;
 
-    HTTPResponses(String reason, int code) {
+    StatusCode(String reason, int code) {
         this.reason = reason;
         this.code = code;
     }

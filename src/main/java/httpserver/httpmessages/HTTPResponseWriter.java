@@ -3,14 +3,14 @@ package httpserver.httpmessages;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class HTTPResponseParser {
+public class HTTPResponseWriter {
 
     private static final String PROTOCOL_VERSION = "HTTP/1.1";
     private static final String CONTENT_TYPE = "Content-Type : ";
     private static final String SPACE = " ";
     private final ByteArrayOutputStream byteArrayOutputStream;
 
-    public HTTPResponseParser(ByteArrayOutputStream byteArrayOutputStream) {
+    public HTTPResponseWriter(ByteArrayOutputStream byteArrayOutputStream) {
         this.byteArrayOutputStream = byteArrayOutputStream;
     }
 
