@@ -33,6 +33,15 @@ public class MethodOptionsRouteTest {
     }
 
     @Test
+    public void returnsA405IfMethodNotAllowed() {
+        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/method_options");
+
+        HTTPResponse httpResponse = methodOptionsRoute.performAction(httpRequest);
+
+        assertEquals(405, httpResponse.getStatusCode());
+    }
+
+    @Test
     public void returnsResponseWithMethodsForOptionsRequest() {
         HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
 

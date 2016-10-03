@@ -46,7 +46,7 @@ public class HTTPResponseWriterTest {
         assertEquals("HTTP/1.1 404 Not Found\n", response);
     }
 
-    @Test(expected = ByteWriterException.class)
+    @Test(expected = ResponseWriterException.class)
     public void throwsAByteWriterExceptionIfCannotWriteHeader() {
         HTTPResponseWriter httpResponseWriter = new HTTPResponseWriter(new ByteArrayThatThrowsException());
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");

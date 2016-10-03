@@ -2,9 +2,15 @@ package httpserver.routing;
 
 import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static httpserver.routing.Method.*;
 import static junit.framework.TestCase.assertNull;
@@ -12,8 +18,20 @@ import static org.junit.Assert.assertEquals;
 
 public class FormRouteTest {
 
-    private String path = getClass().getClassLoader().getResource("directory").getPath() + ("form");
+    private String path = getClass().getClassLoader().getResource("directory").getPath() + ("/form");
     private FormRoute formRoute = new FormRoute("/form", path, GET, POST, PUT, DELETE);
+
+    @Before
+    public void setUp() throws IOException {
+        Files.write(Paths.get(path), "".getBytes());
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        if (new File(path).exists()) {
+            Files.delete(Paths.get(path));
+        }
+    }
 
     @Test
     public void canPostToFormAndGetA200Response() {
@@ -62,6 +80,10 @@ public class FormRouteTest {
 
     @Test
     public void canAcceptADeleteRequest() {
+        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
+        httpRequest.setData("data=hello");
+        formRoute.performAction(httpRequest);
+
         HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
         HTTPResponse httpResponse =  formRoute.performAction(httpRequest2);
 
@@ -81,14 +103,21 @@ public class FormRouteTest {
     }
 
     @Test
-    public void canDeleteFromFormFile() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
-        httpRequest.setData("data=hello");
+    public void canGiveAMethodNotAllowedResponse() {
+        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/form");
+
+        HTTPResponse httpResponse = formRoute.performAction(httpRequest);
+
+        assertEquals(405, httpResponse.getStatusCode());
+    }
+
+    @Test(expected = FormManagerException.class)
+    public void throwsAnExceptionIfFormFileCannotBeAccessed() {
+        FormRoute formRoute = new FormRoute("/form", "/bad/path", GET);
+
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/form");
+
         formRoute.performAction(httpRequest);
-
-        HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse =  formRoute.performAction(httpRequest2);
-
     }
 
 }

@@ -26,12 +26,13 @@ public class Router {
     }
 
     public HTTPResponse getResponse(HTTPRequest httpRequest) {
+        HTTPResponse httpResponse = null;
         for (Route route : registeredRoutes) {
             if (isRegistered(httpRequest.getRequestURI(), route)) {
-                return route.performAction(httpRequest);
+                httpResponse = route.performAction(httpRequest);
             }
         }
-        return null;
+        return httpResponse;
     }
 
     private boolean isRegistered(URI uri, Route route) {

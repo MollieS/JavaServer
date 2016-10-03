@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static httpserver.httpmessages.StatusCode.OK;
-import static httpserver.routing.Method.*;
 
 public class FormRoute extends Route {
 
@@ -25,48 +24,56 @@ public class FormRoute extends Route {
 
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
-        HTTPResponse httpResponse;
         if (methodIsAllowed(httpRequest.getMethod())) {
-            httpResponse = new HTTPResponse(OK.code, OK.reason);
-            if (httpRequest.getMethod() == POST || httpRequest.getMethod() == PUT) {
-                writeToFile(httpRequest);
-            } else if (httpRequest.getMethod() == GET) {
-                httpResponse.setContentType("text/html");
-                httpResponse.setBody(readFromFile());
-            } else if (httpRequest.getMethod() == DELETE) {
-                deleteFileContents();
+            try {
+                return getHttpResponse(httpRequest);
+            } catch (IOException e) {
+                throw new FormManagerException("Cannot access form data: ", e);
             }
-            return httpResponse;
         }
         return methodNotAllowed();
     }
 
-    private void deleteFileContents() {
-        file.delete();
-    }
-
-    private byte[] readFromFile() {
-        try {
-            return Files.readAllBytes(file.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
+    private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
+        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+        switch (httpRequest.getMethod()) {
+            case POST:
+                writeToFile(httpRequest);
+            case PUT:
+                writeToFile(httpRequest);
+                break;
+            case GET:
+                httpResponse.setContentType("text/html");
+                httpResponse.setBody(readFromFile());
+                break;
+            case DELETE:
+                deleteFileContents();
+                break;
         }
-        return new byte[0];
+        return httpResponse;
     }
 
-    private void writeToFile(HTTPRequest httpRequest) {
-        Path file = Paths.get(path);
+    private void deleteFileContents() throws IOException {
+        clearForm(file.toPath());
+    }
+
+    private byte[] readFromFile() throws IOException {
+        return Files.readAllBytes(file.toPath());
+    }
+
+    private void writeToFile(HTTPRequest httpRequest) throws IOException {
+        Path path = Paths.get(this.path);
         if (httpRequest.getData() != null) {
-            try {
-                Files.delete(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                Files.write(file, httpRequest.getData().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            clearForm(path);
+            writeToForm(httpRequest, path);
         }
+    }
+
+    private void writeToForm(HTTPRequest httpRequest, Path path) throws IOException {
+        Files.write(path, httpRequest.getData().getBytes());
+    }
+
+    private void clearForm(Path file) throws IOException {
+        Files.delete(file);
     }
 }

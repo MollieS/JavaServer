@@ -5,12 +5,13 @@ import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.*;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
 import static httpserver.routing.Method.*;
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class HTTPRequestHandlerTest {
 
@@ -72,5 +73,46 @@ public class HTTPRequestHandlerTest {
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
         assertNotNull(httpResponse.allowedMethods());
+    }
+
+    @Test
+    public void buildsTheCorrectResponseForAGETRequestToRoot() {
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/");
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals(200, httpResponse.getStatusCode());
+        assertEquals("OK", httpResponse.getReasonPhrase());
+        assertEquals("text/plain", httpResponse.getContentType());
+        assertTrue(httpResponse.hasBody());
+        String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
+        assertTrue(body.contains("file1"));
+    }
+
+    @Test
+    public void buildsTheCorrectResponseForAGETRequestToAJPEG() {
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/image.jpeg");
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals(200, httpResponse.getStatusCode());
+        assertEquals("OK", httpResponse.getReasonPhrase());
+        assertEquals("image/jpeg", httpResponse.getContentType());
+    }
+
+    @Test
+    public void aHeadRequestDoesNotContainBody() {
+        HTTPRequest httpRequest = new HTTPRequest(HEAD, "/");
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertFalse(httpResponse.hasBody());
+    }
+
+    @Test
+    public void returnsTheCorrectResponseForAnUnknownURL() {
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/foobar");
+
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals(404, httpResponse.getStatusCode());
+        assertEquals("Not Found", httpResponse.getReasonPhrase());
     }
 }
