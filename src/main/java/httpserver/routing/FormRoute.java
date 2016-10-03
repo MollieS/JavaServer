@@ -33,10 +33,16 @@ public class FormRoute extends Route {
             } else if (httpRequest.getMethod() == GET) {
                 httpResponse.setContentType("text/html");
                 httpResponse.setBody(readFromFile());
+            } else if (httpRequest.getMethod() == DELETE) {
+                deleteFileContents();
             }
             return httpResponse;
         }
         return methodNotAllowed();
+    }
+
+    private void deleteFileContents() {
+        file.delete();
     }
 
     private byte[] readFromFile() {
