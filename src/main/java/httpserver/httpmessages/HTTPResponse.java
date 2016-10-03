@@ -7,17 +7,17 @@ import java.util.List;
 public class HTTPResponse {
 
     private final String reasonPhrase;
-    private final String statusCode;
+    private final int statusCode;
     private byte[] body;
     private String contentType;
     private List<Method> allowedMethods;
 
     public HTTPResponse(int statusCode, String reasonPhrase) {
-        this.statusCode = String.valueOf(statusCode);
+        this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;
     }
 
-    public String getStatusCode() {
+    public int getStatusCode() {
         return statusCode;
     }
 

@@ -12,15 +12,15 @@ import static httpserver.routing.Method.PUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class HTTPResponseParserTest {
+public class HTTPResponseWriterTest {
 
-    private final HTTPResponseParser httpResponseParser = new HTTPResponseParser(new ByteArrayOutputStream());
+    private final HTTPResponseWriter httpResponseWriter = new HTTPResponseWriter(new ByteArrayOutputStream());
 
     @Test
     public void returnsHeaderForAResponseWithNoBody() {
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");
 
-        String response = new String(httpResponseParser.parse(httpResponse), Charset.forName("UTF-8"));
+        String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
         assertEquals("HTTP/1.1 200 OK\n", response);
     }
@@ -32,7 +32,7 @@ public class HTTPResponseParserTest {
         httpResponse.setBody("This is the body".getBytes());
         httpResponse.setAllowedMethods(Arrays.asList(GET));
 
-        String response = new String(httpResponseParser.parse(httpResponse), Charset.forName("UTF-8"));
+        String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
         assertEquals("HTTP/1.1 200 OK\nAllow : GET,\nContent-Type : text/plain\n\nThis is the body", response);
     }
@@ -41,17 +41,17 @@ public class HTTPResponseParserTest {
     public void returnsAHeaderForA404Response() {
         HTTPResponse httpResponse = new HTTPResponse(404, "Not Found");
 
-        String response = new String(httpResponseParser.parse(httpResponse), Charset.forName("UTF-8"));
+        String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
         assertEquals("HTTP/1.1 404 Not Found\n", response);
     }
 
     @Test(expected = ByteWriterException.class)
     public void throwsAByteWriterExceptionIfCannotWriteHeader() {
-        HTTPResponseParser httpResponseParser = new HTTPResponseParser(new ByteArrayThatThrowsException());
+        HTTPResponseWriter httpResponseWriter = new HTTPResponseWriter(new ByteArrayThatThrowsException());
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");
 
-        httpResponseParser.parse(httpResponse);
+        httpResponseWriter.parse(httpResponse);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class HTTPResponseParserTest {
         httpResponse.setAllowedMethods(Arrays.asList(PUT, GET));
         httpResponse.setBody("HELLO".getBytes());
 
-        String response = new String(httpResponseParser.parse(httpResponse), Charset.forName("UTF-8"));
+        String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
         assertTrue(response.contains("PUT"));
     }

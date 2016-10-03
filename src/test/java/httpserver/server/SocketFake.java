@@ -1,7 +1,10 @@
 package httpserver.server;
 
 import httpserver.ClientSocket;
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
+
+import static httpserver.routing.Method.GET;
 
 public class SocketFake implements ClientSocket {
 
@@ -16,7 +19,7 @@ public class SocketFake implements ClientSocket {
     }
 
     @Override
-    public String getRequest() {
-        return "GET / HTTP/1.1";
+    public HTTPRequest getRequest() {
+        return new HTTPRequest(GET, "/");
     }
 }

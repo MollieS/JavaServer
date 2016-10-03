@@ -21,8 +21,7 @@ public class HTTPServer {
 
     public void start() {
         ClientSocket socket = socketServer.serve();
-        String request = socket.getRequest();
-        HTTPRequest httpRequest = httpRequestParser.parse(request);
+        HTTPRequest httpRequest = socket.getRequest();
         HTTPResponse httpResponse = requestHandler.handle(httpRequest);
         socket.sendResponse(httpResponse);
         socket.close();

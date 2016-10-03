@@ -18,7 +18,7 @@ public class TeaRouteTest {
 
         HTTPResponse httpResponse = teaRoute.performAction(httpRequest);
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
     }
 
@@ -28,6 +28,6 @@ public class TeaRouteTest {
 
         HTTPResponse httpResponse = teaRoute.performAction(httpRequest);
 
-        assertEquals("405", httpResponse.getStatusCode());
+        assertEquals(405, httpResponse.getStatusCode());
     }
 }

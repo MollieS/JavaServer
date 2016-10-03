@@ -1,5 +1,6 @@
 package httpserver;
 
+import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 
 public interface ClientSocket {
@@ -8,5 +9,5 @@ public interface ClientSocket {
 
     void sendResponse(HTTPResponse httpResponse);
 
-    String getRequest();
+    HTTPRequest getRequest();
 }

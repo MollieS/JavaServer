@@ -22,13 +22,27 @@ public class HTTPResponseBuilder implements ResponseBuilder {
     public HTTPResponse buildResponse(Method method, URI path) {
         Resource resource = resourceHandler.getResource(path);
         if (resource.exists()) {
-            HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+            HTTPResponse httpResponse = getOKResponse();
             if (method == GET) {
-                httpResponse.setContentType(resource.getContentType());
-                httpResponse.setBody(resource.getContents());
+                setBody(resource, httpResponse);
             }
             return httpResponse;
+        } else {
+            return getNotFoundResponse();
         }
+    }
+
+    private HTTPResponse getNotFoundResponse() {
         return new HTTPResponse(NOTFOUND.code, NOTFOUND.reason);
+    }
+
+    private HTTPResponse getOKResponse() {
+        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+        return httpResponse;
+    }
+
+    private void setBody(Resource resource, HTTPResponse httpResponse) {
+        httpResponse.setContentType(resource.getContentType());
+        httpResponse.setBody(resource.getContents());
     }
 }

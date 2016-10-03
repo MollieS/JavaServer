@@ -22,7 +22,7 @@ public class FormRouteTest {
 
         HTTPResponse httpResponse = formRoute.performAction(httpRequest);
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class FormRouteTest {
         HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
         HTTPResponse httpResponse =  formRoute.performAction(httpRequest2);
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test

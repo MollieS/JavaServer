@@ -44,7 +44,7 @@ public class HTTPRequestHandlerTest {
 
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertEquals("418", httpResponse.getStatusCode());
+        assertEquals(418, httpResponse.getStatusCode());
         assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
     }
 
@@ -54,7 +54,7 @@ public class HTTPRequestHandlerTest {
 
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class HTTPRequestHandlerTest {
 
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertEquals("405", httpResponse.getStatusCode());
+        assertEquals(405, httpResponse.getStatusCode());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class HTTPRequestHandlerTest {
 
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class HTTPRequestHandlerTest {
 
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test

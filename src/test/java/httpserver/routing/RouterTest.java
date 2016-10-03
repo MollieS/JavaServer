@@ -32,7 +32,7 @@ public class RouterTest {
 
         HTTPResponse httpResponse = router.getResponse(httpRequest);
 
-        assertEquals("418", httpResponse.getStatusCode());
+        assertEquals(418, httpResponse.getStatusCode());
     }
 
     @Test

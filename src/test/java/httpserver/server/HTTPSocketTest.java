@@ -1,8 +1,10 @@
 package httpserver.server;
 
 import httpserver.SocketConnectionException;
+import httpserver.httpmessages.HTTPRequest;
+import httpserver.httpmessages.HTTPRequestParser;
 import httpserver.httpmessages.HTTPResponse;
-import httpserver.httpmessages.HTTPResponseParser;
+import httpserver.httpmessages.HTTPResponseWriter;
 import org.junit.Test;
 
 import java.io.*;
@@ -73,9 +75,9 @@ public class HTTPSocketTest {
     public void getsTheRequestFromInputStream() {
         HTTPSocket httpSocket = createSocket(socketSpy);
 
-        String request = httpSocket.getRequest();
+        HTTPRequest request = httpSocket.getRequest();
 
-        assertTrue(request.contains("GET / HTTP/1.1"));
+        assertEquals(GET, request.getMethod());
     }
 
     @Test(expected = SocketConnectionException.class)
@@ -99,7 +101,7 @@ public class HTTPSocketTest {
     }
 
     private HTTPSocket createSocket(Socket socket) {
-        return new HTTPSocket(socket, new HTTPResponseParser(new ByteArrayOutputStream()));
+        return new HTTPSocket(socket, new HTTPResponseWriter(new ByteArrayOutputStream()), new HTTPRequestParser());
     }
 
 

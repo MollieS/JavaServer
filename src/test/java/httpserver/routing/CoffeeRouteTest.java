@@ -19,7 +19,7 @@ public class CoffeeRouteTest {
 
         HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
 
-        assertEquals("418", httpResponse.getStatusCode());
+        assertEquals(418, httpResponse.getStatusCode());
         assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
     }
 
@@ -47,6 +47,6 @@ public class CoffeeRouteTest {
 
         HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
 
-        assertEquals("405", httpResponse.getStatusCode());
+        assertEquals(405, httpResponse.getStatusCode());
     }
 }

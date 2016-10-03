@@ -26,7 +26,7 @@ public class HTTPResponseBuilderTest {
     public void buildsTheCorrectResponseForAGETRequestToRoot() {
         HTTPResponse httpResponse = httpResponseBuilder.buildResponse(GET, URI.create("/"));
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertEquals("text/plain", httpResponse.getContentType());
         assertTrue(httpResponse.hasBody());
@@ -38,7 +38,7 @@ public class HTTPResponseBuilderTest {
     public void buildsTheCorrectResponseForAGETRequestToAnInvalidFile() {
         HTTPResponse httpResponse = httpResponseBuilder.buildResponse(GET, URI.create("/foobar"));
 
-        assertEquals("404", httpResponse.getStatusCode());
+        assertEquals(404, httpResponse.getStatusCode());
         assertEquals("Not Found", httpResponse.getReasonPhrase());
         assertFalse(httpResponse.hasBody());
     }
@@ -47,7 +47,7 @@ public class HTTPResponseBuilderTest {
     public void buildsTheCorrectResponseForAGETRequestToAJPEG() {
         HTTPResponse httpResponse = httpResponseBuilder.buildResponse(GET, URI.create("/image.jpeg"));
 
-        assertEquals("200", httpResponse.getStatusCode());
+        assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertEquals("image/jpeg", httpResponse.getContentType());
     }
