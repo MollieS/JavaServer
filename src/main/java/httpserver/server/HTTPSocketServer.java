@@ -1,5 +1,12 @@
-package httpserver;
+package httpserver.server;
 
+import httpserver.ClientSocket;
+import httpserver.SocketConnectionException;
+import httpserver.SocketServer;
+import httpserver.httpmessages.HTTPRequestParser;
+import httpserver.httpmessages.HTTPResponseWriter;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -14,7 +21,7 @@ public class HTTPSocketServer implements SocketServer {
     @Override
     public ClientSocket serve() {
         try {
-            return new HTTPSocket(serverSocket.accept());
+            return new HTTPSocket(serverSocket.accept(), new HTTPResponseWriter(new ByteArrayOutputStream()), new HTTPRequestParser());
         } catch (IOException e) {
             throw new SocketConnectionException("Error accepting requests: ", e.getCause());
         }

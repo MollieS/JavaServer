@@ -1,4 +1,7 @@
-package httpserver;
+package httpserver.server;
+
+import httpserver.ClientSocket;
+import httpserver.SocketServer;
 
 public class ConnectionsSocketServer implements SocketServer {
 
@@ -11,6 +14,6 @@ public class ConnectionsSocketServer implements SocketServer {
     @Override
     public ClientSocket serve() {
         connections++;
-        return new SocketDummy();
+        return new SocketFake();
     }
 }

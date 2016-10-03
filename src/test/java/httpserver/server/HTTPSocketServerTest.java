@@ -1,5 +1,7 @@
-package httpserver;
+package httpserver.server;
 
+import httpserver.ClientSocket;
+import httpserver.SocketConnectionException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,8 +35,8 @@ public class HTTPSocketServerTest {
 
     @Test(expected = SocketConnectionException.class)
     public void throwsASocketConnectionException() throws IOException {
-        ServerSocketException serverSocketException = new ServerSocketException();
-        HTTPSocketServer httpSocketServer = new HTTPSocketServer(serverSocketException);
+        ServerSocketThatThrowsException serverSocketThatThrowsException = new ServerSocketThatThrowsException();
+        HTTPSocketServer httpSocketServer = new HTTPSocketServer(serverSocketThatThrowsException);
 
         httpSocketServer.serve();
     }
@@ -53,9 +55,9 @@ public class HTTPSocketServerTest {
         }
     }
 
-    private class ServerSocketException extends ServerSocket {
+    private class ServerSocketThatThrowsException extends ServerSocket {
 
-        public ServerSocketException() throws IOException {
+        ServerSocketThatThrowsException() throws IOException {
         }
 
         @Override
