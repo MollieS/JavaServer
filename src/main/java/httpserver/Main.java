@@ -23,7 +23,12 @@ public class Main {
                 String path = "/Users/molliestephenson/Java/Server/cob_spec/public";
                 String resources = "/Users/molliestephenson/Java/Server/HTTPServer/src/main/resources/form";
                 HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
-                List<Route> registeredRoutes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD), new FormRoute("/form", resources, GET, POST, PUT, DELETE));
+                CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET);
+                TeaRoute teaRoute = new TeaRoute("/tea", GET);
+                MethodOptionsRoute methodOptionsRoute = new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD);
+                FormRoute formRoute = new FormRoute("/form", resources, GET, POST, PUT, DELETE);
+                ParameterRoute parameterRoute = new ParameterRoute("/parameters", GET);
+                List<Route> registeredRoutes = Arrays.asList(coffeeRoute, teaRoute, methodOptionsRoute, formRoute, parameterRoute);
                 HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(resourceHandler, new Router(registeredRoutes));
                 httpServer = new HTTPServer(socketServer, httpRequestHandler);
             } catch (IOException e) {

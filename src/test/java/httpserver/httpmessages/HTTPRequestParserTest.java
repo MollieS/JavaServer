@@ -48,4 +48,13 @@ public class HTTPRequestParserTest {
         assertEquals(URI.create("/form"), httpRequest.getRequestURI());
         assertEquals("data=fatcat", httpRequest.getData());
     }
+
+    @Test
+    public void canGetParametersFromARequest() {
+        String request = "GET /parameters?variable_1=parameter";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals("variable_1=parameter", httpRequest.getParams());
+    }
 }

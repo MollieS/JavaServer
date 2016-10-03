@@ -55,4 +55,13 @@ public class ResourceTest {
 
         assertEquals("image/gif", resource.getContentType());
     }
+
+    @Test
+    public void hasCorrectContentTypeForDirectory() {
+        File file = new File(path);
+
+        Resource resource = new Resource(file);
+
+        assertEquals("text/html", resource.getContentType());
+    }
 }

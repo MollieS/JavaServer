@@ -9,6 +9,7 @@ public class HTTPRequest {
     private final Method method;
     private final URI requestURI;
     private String data;
+    private String params;
 
     public HTTPRequest(Method method, String requestURI) {
         this.method = method;
@@ -29,5 +30,17 @@ public class HTTPRequest {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public boolean hasParams() {
+        return params != null;
     }
 }

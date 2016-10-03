@@ -14,9 +14,13 @@ public class HTTPRequestParser {
         HTTPRequest httpRequest = new HTTPRequest(requestMethod, path);
         if (request.contains("data=")) {
             String[] lines = request.split("\n");
-            String lastLine = lines[lines.length -1];
+            String lastLine = lines[lines.length - 1];
             httpRequest.setData(lastLine.trim());
         }
+        if (uri.getQuery() != null) {
+            httpRequest.setParams(uri.getQuery());
+        }
+        System.out.println(request);
         return httpRequest;
     }
 

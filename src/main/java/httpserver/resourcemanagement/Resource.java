@@ -35,6 +35,9 @@ public class Resource {
                 return type.contentType;
             }
         }
+        if (file.isDirectory()) {
+            return "text/html";
+        }
         return TEXT.contentType;
     }
 }

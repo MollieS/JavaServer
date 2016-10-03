@@ -82,7 +82,7 @@ public class HTTPRequestHandlerTest {
 
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
-        assertEquals("text/plain", httpResponse.getContentType());
+        assertEquals("text/html", httpResponse.getContentType());
         assertTrue(httpResponse.hasBody());
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
         assertTrue(body.contains("file1"));

@@ -28,10 +28,18 @@ public class FormRoute extends Route {
             try {
                 return getHttpResponse(httpRequest);
             } catch (IOException e) {
-                throw new FormManagerException("Cannot access form data: ", e);
+                createForm();
             }
         }
         return methodNotAllowed();
+    }
+
+    private void createForm() {
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new FormManagerException("Cannot access form: ", e);
+        }
     }
 
     private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
