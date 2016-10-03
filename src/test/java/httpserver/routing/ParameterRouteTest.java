@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.nio.charset.Charset;
 
 import static httpserver.routing.Method.GET;
+import static httpserver.routing.Method.POST;
 import static org.junit.Assert.assertEquals;
 
 public class ParameterRouteTest {
@@ -36,13 +37,22 @@ public class ParameterRouteTest {
     }
 
     @Test
-    public void canDecodeParameters() {
+    public void canFormatSpecialCharacters() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/parameters");
         httpRequest.setParams("variable_1=&,=!&variable_2=stuff");
 
         HTTPResponse httpResponse = parameterRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
-        assertEquals("hello", body);
+        assertEquals("variable_1 = &,=!\nvariable_2 = stuff", body);
+    }
+
+    @Test
+    public void canGiveA405ForMethodNotAllowed() {
+        HTTPRequest httpRequest = new HTTPRequest(POST, "/parameters");
+
+        HTTPResponse httpResponse = parameterRoute.performAction(httpRequest);
+
+        assertEquals(405, httpResponse.getStatusCode());
     }
 }
