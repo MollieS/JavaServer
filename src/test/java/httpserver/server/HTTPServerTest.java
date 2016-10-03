@@ -2,7 +2,6 @@ package httpserver.server;
 
 import httpserver.RequestHandler;
 import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPRequestParser;
 import httpserver.httpmessages.HTTPResponse;
 import org.junit.Test;
 
@@ -16,7 +15,7 @@ public class HTTPServerTest {
 
     @Test
     public void canAcceptConnectionsOnThePortWhenListening() throws IOException {
-        HTTPServer httpServer = new HTTPServer(connectionsSocketServer, new RequestHandlerFake(), new HTTPRequestParser());
+        HTTPServer httpServer = new HTTPServer(connectionsSocketServer, new RequestHandlerFake());
 
         httpServer.start();
 

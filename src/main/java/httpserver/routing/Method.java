@@ -8,5 +8,5 @@ public enum Method {
     PUT,
     BOGUS,
     PATCH,
-    DELETE;
+    DELETE
 }

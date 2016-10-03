@@ -1,7 +1,6 @@
 package httpserver;
 
 import httpserver.httpmessages.HTTPRequestHandler;
-import httpserver.httpmessages.HTTPRequestParser;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.*;
@@ -26,8 +25,7 @@ public class Main {
                 HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
                 List<Route> registeredRoutes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD), new FormRoute("/form", resources, GET, POST, PUT, DELETE));
                 HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(resourceHandler, new Router(registeredRoutes));
-                HTTPRequestParser httpRequestParser = new HTTPRequestParser();
-                httpServer = new HTTPServer(socketServer, httpRequestHandler, httpRequestParser);
+                httpServer = new HTTPServer(socketServer, httpRequestHandler);
             } catch (IOException e) {
                 e.printStackTrace();
             }

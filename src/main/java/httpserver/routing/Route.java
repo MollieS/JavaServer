@@ -5,6 +5,7 @@ import httpserver.httpmessages.HTTPResponse;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static httpserver.httpmessages.StatusCode.NOTALLOWED;
@@ -19,9 +20,7 @@ public abstract class Route {
     public Route(String uri, Method...methods) {
         this.uri = URI.create(uri);
         this.allowedMethods = new ArrayList<>();
-        for (Method method : methods) {
-            allowedMethods.add(method);
-        }
+        Collections.addAll(allowedMethods, methods);
     }
 
     public URI getUri() {

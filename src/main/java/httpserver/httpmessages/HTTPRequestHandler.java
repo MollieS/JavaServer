@@ -39,8 +39,7 @@ public class HTTPRequestHandler implements RequestHandler {
     }
 
     private HTTPResponse getOKResponse() {
-        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
-        return httpResponse;
+        return new HTTPResponse(OK.code, OK.reason);
     }
 
     private HTTPResponse getNotFoundResponse() {
