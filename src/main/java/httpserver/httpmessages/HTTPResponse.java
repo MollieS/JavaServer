@@ -11,6 +11,7 @@ public class HTTPResponse {
     private byte[] body;
     private String contentType;
     private List<Method> allowedMethods;
+    private String location;
 
     public HTTPResponse(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
@@ -51,5 +52,17 @@ public class HTTPResponse {
 
     public List<Method> allowedMethods() {
         return allowedMethods;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public boolean hasLocation() {
+        return (location != null);
     }
 }

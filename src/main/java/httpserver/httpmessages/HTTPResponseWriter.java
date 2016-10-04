@@ -9,6 +9,8 @@ public class HTTPResponseWriter {
 
     private static final String PROTOCOL_VERSION = "HTTP/1.1";
     private static final String CONTENT_TYPE = "Content-Type : ";
+    private static final String ALLOW_HEADER = "Allow : ";
+    private static final String LOCATION_HEADER = "Location : ";
     private static final String SPACE = " ";
     private final ByteArrayOutputStream byteArrayOutputStream;
 
@@ -30,13 +32,21 @@ public class HTTPResponseWriter {
         if (httpResponse.allowedMethods() != null) {
             addAllowedMethods(httpResponse);
         }
+        if (httpResponse.hasLocation()) {
+            addLocation(httpResponse);
+        }
         if (httpResponse.hasBody()) {
             addBody(httpResponse);
         }
     }
 
+    private void addLocation(HTTPResponse httpResponse) throws IOException {
+        byteArrayOutputStream.write((LOCATION_HEADER + httpResponse.getLocation()).getBytes());
+        byteArrayOutputStream.write("\n".getBytes());
+    }
+
     private void addAllowedMethods(HTTPResponse httpResponse) throws IOException {
-        byteArrayOutputStream.write(("Allow : ").getBytes());
+        byteArrayOutputStream.write(ALLOW_HEADER.getBytes());
         for (Method method : httpResponse.allowedMethods()) {
             byteArrayOutputStream.write((method + ",").getBytes());
         }

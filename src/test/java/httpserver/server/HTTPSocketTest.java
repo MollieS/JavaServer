@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
 
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
@@ -91,13 +90,24 @@ public class HTTPSocketTest {
     public void sendsTheBodyOfTheResponseIfThereIsBody() {
         HTTPResponse httpResponse = new HTTPResponse(200, "OK");
         httpResponse.setBody("This is the body".getBytes());
-        httpResponse.setAllowedMethods(Arrays.asList(GET));
         HTTPSocket httpSocket = createSocket(socketSpy);
 
         httpSocket.sendResponse(httpResponse);
         OutputStream outputStream = socketSpy.getOutputStream();
 
         assertTrue(outputStream.toString().contains("This is the body"));
+    }
+
+    @Test
+    public void sendsTheLocationHeader() {
+        HTTPResponse httpResponse = new HTTPResponse(302, "Found");
+        httpResponse.setLocation("http://localhost:8080/");
+        HTTPSocket httpSocket = createSocket(socketSpy);
+
+        httpSocket.sendResponse(httpResponse);
+        OutputStream outputStream = socketSpy.getOutputStream();
+
+        assertTrue(outputStream.toString().contains("Location : http://localhost:8080/"));
     }
 
     private HTTPSocket createSocket(Socket socket) {

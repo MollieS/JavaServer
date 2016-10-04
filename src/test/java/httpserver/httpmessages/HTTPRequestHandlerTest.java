@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class HTTPRequestHandlerTest {
 
-    private List<Route> routes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD));
+    private List<Route> routes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD), new RedirectRoute("/redirect", "http://localhost:5000", GET));
     private Router router = new Router(routes);
     String path = getClass().getClassLoader().getResource("directory").getPath();
     private HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new HTTPResourceHandler(path, new ResourceParser()), router);
@@ -114,5 +114,17 @@ public class HTTPRequestHandlerTest {
 
         assertEquals(404, httpResponse.getStatusCode());
         assertEquals("Not Found", httpResponse.getReasonPhrase());
+    }
+
+    @Test
+    public void returnsTheCorrectResponseForARedirect() {
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/redirect");
+
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals(302, httpResponse.getStatusCode());
+        assertEquals("Found", httpResponse.getReasonPhrase());
+        assertEquals("http://localhost:5000/", httpResponse.getLocation());
+
     }
 }

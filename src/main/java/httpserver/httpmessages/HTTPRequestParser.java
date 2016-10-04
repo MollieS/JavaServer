@@ -10,18 +10,20 @@ public class HTTPRequestParser {
         String[] requestElements = request.split(" ");
         Method requestMethod = getMethod(requestElements[0]);
         URI uri = URI.create(requestElements[1]);
-        String path = uri.getPath();
-        HTTPRequest httpRequest = new HTTPRequest(requestMethod, path);
+        HTTPRequest httpRequest = new HTTPRequest(requestMethod, uri.getPath());
         if (request.contains("data=")) {
-            String[] lines = request.split("\n");
-            String lastLine = lines[lines.length - 1];
-            httpRequest.setData(lastLine.trim());
+            parseData(request, httpRequest);
         }
         if (uri.getQuery() != null) {
             httpRequest.setParams(uri.getQuery());
         }
-        System.out.println(request);
         return httpRequest;
+    }
+
+    private void parseData(String request, HTTPRequest httpRequest) {
+        String[] lines = request.split("\n");
+        String lastLine = lines[lines.length - 1];
+        httpRequest.setData(lastLine.trim());
     }
 
     private Method getMethod(String requestMethod) {

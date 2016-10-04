@@ -65,6 +65,16 @@ public class HTTPResponseWriterTest {
         assertTrue(response.contains("PUT"));
     }
 
+    @Test
+    public void addsLocationHeader() {
+        HTTPResponse httpResponse = new HTTPResponse(302, "Found");
+        httpResponse.setLocation("http://localhost:9000/");
+
+        String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
+
+        assertTrue(response.contains("Location : http://localhost:9000/"));
+    }
+
     private class ByteArrayThatThrowsException extends ByteArrayOutputStream {
 
         @Override

@@ -14,13 +14,13 @@ import java.nio.charset.Charset;
 public class HTTPSocket implements ClientSocket {
 
     private final Socket socket;
-    private final HTTPResponseWriter responseParser;
-    private final HTTPRequestParser requestBuilder;
+    private final HTTPResponseWriter httpResponseWriter;
+    private final HTTPRequestParser httpRequestParser;
 
-    public HTTPSocket(Socket socket, HTTPResponseWriter responseParser, HTTPRequestParser httpRequestParser) {
+    public HTTPSocket(Socket socket, HTTPResponseWriter httpResponseWriter, HTTPRequestParser httpRequestParser) {
         this.socket = socket;
-        this.responseParser = responseParser;
-        this.requestBuilder = httpRequestParser;
+        this.httpResponseWriter = httpResponseWriter;
+        this.httpRequestParser = httpRequestParser;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class HTTPSocket implements ClientSocket {
     public void sendResponse(HTTPResponse httpResponse) {
         try {
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(responseParser.parse(httpResponse));
+            outputStream.write(httpResponseWriter.parse(httpResponse));
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get output stream: ", e.getCause());
         }
@@ -49,7 +49,7 @@ public class HTTPSocket implements ClientSocket {
             byte[] buffer = new byte[600];
             inputStream.read(buffer);
             String req = new String(buffer, Charset.forName("UTF-8"));
-            return requestBuilder.parse(req);
+            return httpRequestParser.parse(req);
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get input stream: ", e.getCause());
         }
