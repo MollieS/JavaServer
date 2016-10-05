@@ -1,5 +1,6 @@
 package httpserver.httpresponse;
 
+import httpserver.Response;
 import httpserver.routing.Method;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +21,7 @@ public class HTTPResponseWriter {
         this.byteArrayOutputStream = byteArrayOutputStream;
     }
 
-    public byte[] parse(HTTPResponse httpResponse) {
+    public byte[] parse(Response httpResponse) {
         try {
             writeResponseToByteStream(httpResponse);
             return byteArrayOutputStream.toByteArray();
@@ -29,10 +30,10 @@ public class HTTPResponseWriter {
         }
     }
 
-    private void writeResponseToByteStream(HTTPResponse httpResponse) throws IOException {
+    private void writeResponseToByteStream(Response httpResponse) throws IOException {
         addStatusLine(httpResponse);
         addDate(httpResponse);
-        if (httpResponse.allowedMethods() != null) {
+        if (httpResponse.getAllowedMethods() != null) {
             addAllowedMethods(httpResponse);
         }
         if (httpResponse.hasLocation()) {
@@ -46,43 +47,43 @@ public class HTTPResponseWriter {
         }
     }
 
-    private void addDate(HTTPResponse httpResponse) throws IOException {
+    private void addDate(Response httpResponse) throws IOException {
         byteArrayOutputStream.write((DATE_HEADER + httpResponse.getOriginTime()).getBytes());
         byteArrayOutputStream.write("\n".getBytes());
     }
 
-    private void addContentRange(HTTPResponse httpResponse) throws IOException {
+    private void addContentRange(Response httpResponse) throws IOException {
         byteArrayOutputStream.write((CONTENT_RANGE + httpResponse.getContentRange()).getBytes());
         byteArrayOutputStream.write("\n".getBytes());
     }
 
-    private void addLocation(HTTPResponse httpResponse) throws IOException {
+    private void addLocation(Response httpResponse) throws IOException {
         byteArrayOutputStream.write((LOCATION_HEADER + httpResponse.getLocation()).getBytes());
         byteArrayOutputStream.write("\n".getBytes());
     }
 
-    private void addAllowedMethods(HTTPResponse httpResponse) throws IOException {
+    private void addAllowedMethods(Response httpResponse) throws IOException {
         byteArrayOutputStream.write(ALLOW_HEADER.getBytes());
-        for (Method method : httpResponse.allowedMethods()) {
+        for (Method method : httpResponse.getAllowedMethods()) {
             byteArrayOutputStream.write((method + ",").getBytes());
         }
         byteArrayOutputStream.write("\n".getBytes());
     }
 
-    private void addBody(HTTPResponse httpResponse) throws IOException {
+    private void addBody(Response httpResponse) throws IOException {
         byteArrayOutputStream.write(getContentType(httpResponse));
         byteArrayOutputStream.write(httpResponse.getBody());
     }
 
-    private void addStatusLine(HTTPResponse httpResponse) throws IOException {
+    private void addStatusLine(Response httpResponse) throws IOException {
         byteArrayOutputStream.write(getHeader(httpResponse));
     }
 
-    private byte[] getHeader(HTTPResponse httpResponse) {
+    private byte[] getHeader(Response httpResponse) {
         return (PROTOCOL_VERSION + SPACE + httpResponse.getStatusCode() + SPACE + httpResponse.getReasonPhrase() + "\n").getBytes();
     }
 
-    public byte[] getContentType(HTTPResponse httpResponse) {
+    public byte[] getContentType(Response httpResponse) {
         return (CONTENT_TYPE + httpResponse.getContentType() + "\n\n").getBytes();
     }
 }

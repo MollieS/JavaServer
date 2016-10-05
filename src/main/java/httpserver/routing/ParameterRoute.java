@@ -1,10 +1,9 @@
 package httpserver.routing;
 
+import httpserver.Resource;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.ResponseMessage;
 import httpserver.resourcemanagement.HTTPResource;
-import httpserver.Resource;
 
 import static httpserver.httpresponse.StatusCode.OK;
 
@@ -19,17 +18,17 @@ public class ParameterRoute extends Route {
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         if (methodIsAllowed(httpRequest.getMethod())) {
-            ResponseMessage responseMessage = ResponseMessage.create(OK);
-            addBody(httpRequest, responseMessage);
-            return responseMessage;
+            HTTPResponse httpResponse = HTTPResponse.create(OK);
+            addBody(httpRequest, httpResponse);
+            return httpResponse;
         }
         return methodNotAllowed();
     }
 
-    private void addBody(HTTPRequest httpRequest, ResponseMessage responseMessage) {
+    private void addBody(HTTPRequest httpRequest, HTTPResponse httpResponse) {
         if (httpRequest.hasParams()) {
             Resource resource = new HTTPResource(formatParameters(httpRequest));
-            responseMessage.withBody(resource);
+            httpResponse.withBody(resource);
         }
     }
 

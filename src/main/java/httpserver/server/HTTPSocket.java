@@ -7,7 +7,9 @@ import httpserver.httprequests.HTTPRequestParser;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.HTTPResponseWriter;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 

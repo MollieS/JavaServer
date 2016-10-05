@@ -8,13 +8,11 @@ import httpserver.resourcemanagement.ResourceParser;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
 import static httpserver.routing.Method.*;
-import static httpserver.routing.Method.OPTIONS;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -26,12 +24,6 @@ public class RouterTest {
     private List<Route> routes = Arrays.asList(new CoffeeRoute(GET), new TeaRoute(GET), new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD), new RedirectRoute("http://localhost:5000", GET), new PartialContentRoute(new HTTPResourceHandler(path, new ResourceParser()), GET));
     ResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
     private Router router = new Router(new FileRoute(resourceHandler), routes);
-
-    @Test
-    public void knowsAllRegisteredRoutes() {
-        assertTrue(router.hasRegistered(URI.create("/coffee")));
-        assertTrue(router.hasRegistered(URI.create("/tea")));
-    }
 
     @Test
     public void getsTheCorrectHTTPResponseForAGetToCoffee() {
@@ -52,7 +44,6 @@ public class RouterTest {
     public void doesNotAllowPostRequestsToGeneralURLs() {
         assertFalse(router.allowsMethod(POST));
     }
-
 
     @Test
     public void returnsA418ResponseForAGETToCoffee() {
@@ -106,7 +97,7 @@ public class RouterTest {
 
         HTTPResponse httpResponse = router.route(httpRequest);
 
-        assertNotNull(httpResponse.allowedMethods());
+        assertNotNull(httpResponse.getAllowedMethods());
     }
 
     @Test

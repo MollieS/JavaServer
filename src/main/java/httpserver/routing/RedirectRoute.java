@@ -2,7 +2,6 @@ package httpserver.routing;
 
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.ResponseMessage;
 
 import static httpserver.httpresponse.StatusCode.REDIRECT;
 
@@ -17,6 +16,6 @@ public class RedirectRoute extends Route {
 
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
-        return ResponseMessage.create(REDIRECT).withLocation(baseLocation + "/");
+        return HTTPResponse.create(REDIRECT).withLocation(baseLocation + "/");
     }
 }

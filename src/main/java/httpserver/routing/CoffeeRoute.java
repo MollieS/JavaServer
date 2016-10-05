@@ -2,7 +2,6 @@ package httpserver.routing;
 
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.ResponseMessage;
 
 import static httpserver.httpresponse.StatusCode.TEAPOT;
 
@@ -16,7 +15,7 @@ public class CoffeeRoute extends Route {
 
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         if (super.methodIsAllowed(httpRequest.getMethod())) {
-            return ResponseMessage.create(TEAPOT);
+            return HTTPResponse.create(TEAPOT);
         }
         return super.methodNotAllowed();
     }

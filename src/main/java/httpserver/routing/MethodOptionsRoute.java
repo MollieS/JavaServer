@@ -2,7 +2,6 @@ package httpserver.routing;
 
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.HTTPResponseDate;
 
 import static httpserver.httpresponse.StatusCode.OK;
 
@@ -16,9 +15,9 @@ public class MethodOptionsRoute extends Route {
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         HTTPResponse httpResponse;
         if (methodIsAllowed(httpRequest.getMethod())) {
-            httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
+            httpResponse = HTTPResponse.create(OK);
             if (httpRequest.getMethod() == Method.OPTIONS) {
-                httpResponse.setAllowedMethods(super.getAllowedMethods());
+                httpResponse.withAllowedMethods(super.getAllowedMethods());
             }
             return httpResponse;
         }

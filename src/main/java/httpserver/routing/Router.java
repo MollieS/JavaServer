@@ -7,7 +7,8 @@ import httpserver.httpresponse.HTTPResponse;
 import java.net.URI;
 import java.util.List;
 
-import static httpserver.routing.Method.*;
+import static httpserver.routing.Method.GET;
+import static httpserver.routing.Method.HEAD;
 
 public class Router implements HTTPRouter {
 
@@ -17,15 +18,6 @@ public class Router implements HTTPRouter {
     public Router(FileRoute fileRoute, List<Route> registeredRoutes) {
         this.registeredRoutes = registeredRoutes;
         this.fileRoute = fileRoute;
-    }
-
-    public boolean hasRegistered(URI uri) {
-        for (Route route : registeredRoutes) {
-            if (isRegistered(uri, route)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public HTTPResponse route(HTTPRequest httpRequest) {

@@ -5,12 +5,12 @@ import httpserver.httprequests.HTTPRequest;
 import httpserver.httprequests.HTTPRequestParser;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.HTTPResponseWriter;
-import httpserver.httpresponses.ResponseDateFake;
 import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
 
+import static httpserver.httpresponse.StatusCode.OK;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +19,7 @@ public class HTTPSocketTest {
 
     private final SocketFake socketFake = new SocketFake();
     private final SocketThatThrowsException socketThatThrowsException = new SocketThatThrowsException();
-    private HTTPResponse OkResponse = new HTTPResponse(200, "OK", new ResponseDateFake());
+    private HTTPResponse OkResponse = HTTPResponse.create(OK);
 
     @Test
     public void closesTheSocket() {
@@ -86,41 +86,6 @@ public class HTTPSocketTest {
         HTTPSocket httpSocket = createSocket(socketThatThrowsException);
 
         httpSocket.getRequest();
-    }
-
-    @Test
-    public void sendsTheBodyOfTheResponseIfThereIsBody() {
-        OkResponse.setBody("This is the body".getBytes());
-        HTTPSocket httpSocket = createSocket(socketFake);
-
-        httpSocket.sendResponse(OkResponse);
-        OutputStream outputStream = socketFake.getOutputStream();
-
-        assertTrue(outputStream.toString().contains("This is the body"));
-    }
-
-    @Test
-    public void sendsTheLocationHeader() {
-        HTTPResponse httpResponse = new HTTPResponse(302, "Found", new ResponseDateFake());
-        httpResponse.setLocation("http://localhost:8080/");
-        HTTPSocket httpSocket = createSocket(socketFake);
-
-        httpSocket.sendResponse(httpResponse);
-        OutputStream outputStream = socketFake.getOutputStream();
-
-        assertTrue(outputStream.toString().contains("Location : http://localhost:8080/"));
-    }
-
-    @Test
-    public void setsTheContentRangeHeader() {
-        HTTPResponse httpResponse = new HTTPResponse(206, "Partial Content", new ResponseDateFake());
-        httpResponse.setContentRange(6);
-        HTTPSocket httpSocket = createSocket(socketFake);
-
-        httpSocket.sendResponse(httpResponse);
-        OutputStream outputStream = socketFake.getOutputStream();
-
-        assertTrue(outputStream.toString().contains("Content-Range : 6"));
     }
 
     private HTTPSocket createSocket(Socket socket) {

@@ -1,12 +1,11 @@
 package httpserver.routing;
 
+import httpserver.Resource;
 import httpserver.ResourceHandler;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.ResponseMessage;
 import httpserver.resourcemanagement.FileResource;
 import httpserver.resourcemanagement.HTTPResource;
-import httpserver.Resource;
 
 import java.util.Arrays;
 
@@ -27,9 +26,9 @@ public class PartialContentRoute extends Route {
         FileResource resource = resourceHandler.getResource(super.getUri());
         if (httpRequest.hasRange()) {
             Resource partialResource = getPartialContent(httpRequest, resource);
-            return ResponseMessage.create(PARTIAL).withBody(partialResource);
+            return HTTPResponse.create(PARTIAL).withBody(partialResource);
         }
-        return ResponseMessage.create(OK).withBody(resource);
+        return HTTPResponse.create(OK).withBody(resource);
     }
 
     private HTTPResource getPartialContent(HTTPRequest httpRequest, FileResource resource) {
