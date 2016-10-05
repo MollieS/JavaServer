@@ -20,6 +20,8 @@ public class FormRouteTest {
 
     private String path = getClass().getClassLoader().getResource("directory").getPath() + ("/form");
     private FormRoute formRoute = new FormRoute(path, GET, POST, PUT, DELETE);
+    private HTTPRequest postRequest = new HTTPRequest(POST, "/form");
+    private HTTPRequest getRequest = new HTTPRequest(GET, "/form");
 
     @Before
     public void setUp() throws IOException {
@@ -35,24 +37,20 @@ public class FormRouteTest {
 
     @Test
     public void canPostToFormAndGetA200Response() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
-        httpRequest.setData("data=fatcat");
+        postRequest.setData("data=fatcat");
 
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest);
+        HTTPResponse httpResponse = formRoute.performAction(postRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test
     public void canPostToFormAndGetDataInBodyOfGetResponse() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
-        httpRequest.setData("data=fatcat");
+        postRequest.setData("data=fatcat");
 
-        formRoute.performAction(httpRequest);
+        formRoute.performAction(postRequest);
 
-        HTTPRequest httpRequest2 = new HTTPRequest(GET, "/form");
-
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
+        HTTPResponse httpResponse = formRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("data=fatcat", body);
@@ -60,19 +58,16 @@ public class FormRouteTest {
 
     @Test
     public void canPutToFormAndGetDataInBodyOfGetResponse() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
-        httpRequest.setData("data=hello");
+        postRequest.setData("data=hello");
 
-        formRoute.performAction(httpRequest);
+        formRoute.performAction(postRequest);
 
         HTTPRequest httpRequest2 = new HTTPRequest(PUT, "/");
         httpRequest2.setData("data=goodbye");
 
         formRoute.performAction(httpRequest2);
 
-        HTTPRequest httpRequest3 = new HTTPRequest(GET, "/form");
-
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest3);
+        HTTPResponse httpResponse = formRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("data=goodbye", body);
@@ -80,24 +75,22 @@ public class FormRouteTest {
 
     @Test
     public void canAcceptADeleteRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
-        httpRequest.setData("data=hello");
-        formRoute.performAction(httpRequest);
+        postRequest.setData("data=hello");
+        formRoute.performAction(postRequest);
 
         HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse =  formRoute.performAction(httpRequest2);
+        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
 
     @Test
     public void canDeleteFromAForm() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/form");
-        httpRequest.setData("data=hello");
-        formRoute.performAction(httpRequest);
+        postRequest.setData("data=hello");
+        formRoute.performAction(postRequest);
 
         HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse =  formRoute.performAction(httpRequest2);
+        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
 
         assertNull(httpResponse.getBody());
     }
@@ -119,5 +112,4 @@ public class FormRouteTest {
 
         formRoute.performAction(httpRequest);
     }
-
 }

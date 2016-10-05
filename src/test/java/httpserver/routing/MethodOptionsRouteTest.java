@@ -53,5 +53,4 @@ public class MethodOptionsRouteTest {
         assertTrue(httpResponse.allowedMethods().contains(HEAD));
         assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
     }
-
 }
