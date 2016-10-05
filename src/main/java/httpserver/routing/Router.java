@@ -7,7 +7,8 @@ import httpserver.httpresponse.HTTPResponse;
 import java.net.URI;
 import java.util.List;
 
-import static httpserver.routing.Method.*;
+import static httpserver.routing.Method.GET;
+import static httpserver.routing.Method.HEAD;
 
 public class Router implements HTTPRouter {
 

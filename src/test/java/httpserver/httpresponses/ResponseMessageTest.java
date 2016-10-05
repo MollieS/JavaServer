@@ -1,6 +1,6 @@
 package httpserver.httpresponses;
 
-import httpserver.httpresponse.ResponseMessage;
+import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.StatusCode;
 import httpserver.Resource;
 import org.junit.Test;
@@ -17,75 +17,75 @@ public class ResponseMessageTest {
 
     @Test
     public void buildsACoffeeResponse() {
-        ResponseMessage reponseMessage = ResponseMessage.create(StatusCode.TEAPOT);
+        HTTPResponse httpResponse = HTTPResponse.create(StatusCode.TEAPOT);
 
-        String body = new String(reponseMessage.getBody(), Charset.defaultCharset());
+        String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
-        assertEquals(418, reponseMessage.getStatusCode());
-        assertEquals("I'm a teapot", reponseMessage.getReasonPhrase());
+        assertEquals(418, httpResponse.getStatusCode());
+        assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
         assertEquals("I'm a teapot", body);
-        assertEquals("text/plain", reponseMessage.getContentType());
-        assertNotNull(reponseMessage.getOriginTime());
+        assertEquals("text/plain", httpResponse.getContentType());
+        assertNotNull(httpResponse.getOriginTime());
     }
 
     @Test
     public void buildsANotFoundResponse() {
-        ResponseMessage responseMessage = ResponseMessage.create(StatusCode.NOTFOUND);
+        HTTPResponse httpResponse = HTTPResponse.create(StatusCode.NOTFOUND);
 
-        assertEquals(404, responseMessage.getStatusCode());
-        assertEquals("Not Found", responseMessage.getReasonPhrase());
-        assertFalse(responseMessage.hasBody());
+        assertEquals(404, httpResponse.getStatusCode());
+        assertEquals("Not Found", httpResponse.getReasonPhrase());
+        assertFalse(httpResponse.hasBody());
     }
 
     @Test
     public void buildsARedirectResponse() {
-        ResponseMessage responseMessage = ResponseMessage.create(StatusCode.REDIRECT).withLocation("/");
+        HTTPResponse httpResponse = HTTPResponse.create(StatusCode.REDIRECT).withLocation("/");
 
-        assertEquals(302, responseMessage.getStatusCode());
-        assertEquals("Found", responseMessage.getReasonPhrase());
-        assertEquals("/", responseMessage.getLocation());
+        assertEquals(302, httpResponse.getStatusCode());
+        assertEquals("Found", httpResponse.getReasonPhrase());
+        assertEquals("/", httpResponse.getLocation());
     }
 
     @Test
     public void buildsAnOkResponseWithNoBody() {
-        ResponseMessage responseMessage = ResponseMessage.create(StatusCode.OK);
+        HTTPResponse httpResponse = HTTPResponse.create(StatusCode.OK);
 
-        assertEquals(200, responseMessage.getStatusCode());
-        assertEquals("OK", responseMessage.getReasonPhrase());
-        assertFalse(responseMessage.hasBody());
+        assertEquals(200, httpResponse.getStatusCode());
+        assertEquals("OK", httpResponse.getReasonPhrase());
+        assertFalse(httpResponse.hasBody());
     }
 
     @Test
     public void buildsAnOkResponseWithBody() {
         ResourceFake resourceFake = new ResourceFake();
-        ResponseMessage responseMessage = ResponseMessage.create(StatusCode.OK).withBody(resourceFake);
+        HTTPResponse httpResponse = HTTPResponse.create(StatusCode.OK).withBody(resourceFake);
 
-        String body = new String(responseMessage.getBody(), Charset.defaultCharset());
+        String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals("body", body);
-        assertEquals("text/plain", responseMessage.getContentType());
-        assertNotNull(responseMessage.getOriginTime());
+        assertEquals("text/plain", httpResponse.getContentType());
+        assertNotNull(httpResponse.getOriginTime());
     }
 
     @Test
     public void buildsAPartialResponseWithBody() {
         Resource resource = new ResourceFake();
-        ResponseMessage responseMessage = ResponseMessage.create(PARTIAL).withBody(resource);
-        String body = new String(responseMessage.getBody(), Charset.defaultCharset());
+        HTTPResponse httpResponse = HTTPResponse.create(PARTIAL).withBody(resource);
+        String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
-        assertEquals(206, responseMessage.getStatusCode());
-        assertEquals("Partial Content", responseMessage.getReasonPhrase());
-        assertNotNull(responseMessage.getOriginTime());
+        assertEquals(206, httpResponse.getStatusCode());
+        assertEquals("Partial Content", httpResponse.getReasonPhrase());
+        assertNotNull(httpResponse.getOriginTime());
         assertEquals("body", body);
-        assertEquals(4, responseMessage.getContentRange());
+        assertEquals(4, httpResponse.getContentRange());
     }
 
     @Test
     public void buildsAMethodNotAllowedResponse() {
-        ResponseMessage responseMessage = ResponseMessage.create(NOTALLOWED);
+        HTTPResponse httpResponse = HTTPResponse.create(NOTALLOWED);
 
-        assertEquals(405, responseMessage.getStatusCode());
-        assertEquals("Method Not Allowed", responseMessage.getReasonPhrase());
+        assertEquals(405, httpResponse.getStatusCode());
+        assertEquals("Method Not Allowed", httpResponse.getReasonPhrase());
     }
 
     private class ResourceFake implements Resource {

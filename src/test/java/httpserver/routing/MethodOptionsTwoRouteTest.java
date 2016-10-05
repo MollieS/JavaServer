@@ -18,8 +18,8 @@ public class MethodOptionsTwoRouteTest {
         HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options2");
         HTTPResponse httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
 
-        assertTrue(httpResponse.allowedMethods().contains(GET));
-        assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
+        assertTrue(httpResponse.getAllowedMethods().contains(GET));
+        assertTrue(httpResponse.getAllowedMethods().contains(OPTIONS));
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
     }
@@ -31,8 +31,8 @@ public class MethodOptionsTwoRouteTest {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/method_options2");
         HTTPResponse httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
 
-        assertTrue(httpResponse.allowedMethods().contains(GET));
-        assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
+        assertTrue(httpResponse.getAllowedMethods().contains(GET));
+        assertTrue(httpResponse.getAllowedMethods().contains(OPTIONS));
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
     }

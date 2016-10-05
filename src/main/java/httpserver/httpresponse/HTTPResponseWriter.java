@@ -32,7 +32,7 @@ public class HTTPResponseWriter {
     private void writeResponseToByteStream(HTTPResponse httpResponse) throws IOException {
         addStatusLine(httpResponse);
         addDate(httpResponse);
-        if (httpResponse.allowedMethods() != null) {
+        if (httpResponse.getAllowedMethods() != null) {
             addAllowedMethods(httpResponse);
         }
         if (httpResponse.hasLocation()) {
@@ -63,7 +63,7 @@ public class HTTPResponseWriter {
 
     private void addAllowedMethods(HTTPResponse httpResponse) throws IOException {
         byteArrayOutputStream.write(ALLOW_HEADER.getBytes());
-        for (Method method : httpResponse.allowedMethods()) {
+        for (Method method : httpResponse.getAllowedMethods()) {
             byteArrayOutputStream.write((method + ",").getBytes());
         }
         byteArrayOutputStream.write("\n".getBytes());

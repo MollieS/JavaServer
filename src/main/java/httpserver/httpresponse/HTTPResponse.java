@@ -1,25 +1,69 @@
 package httpserver.httpresponse;
 
-import httpserver.ResponseDate;
+import httpserver.Resource;
+import httpserver.Response;
 import httpserver.routing.Method;
 
 import java.util.List;
 
-public class HTTPResponse {
+import static httpserver.httpresponse.StatusCode.TEAPOT;
+import static httpserver.resourcemanagement.ResourceContentType.TEXT;
 
-    private final String reasonPhrase;
+public class HTTPResponse implements Response {
+
     private final int statusCode;
-    private final String originDate;
+    private final String reasonPhrase;
+    private final String originTime;
     private byte[] body;
     private String contentType;
-    private List<Method> allowedMethods;
-    private String location;
     private int contentRange;
+    private String location;
+    private List<Method> allowedMethods;
 
-    public HTTPResponse(int statusCode, String reasonPhrase, ResponseDate responseDate) {
-        this.statusCode = statusCode;
-        this.reasonPhrase = reasonPhrase;
-        this.originDate = responseDate.getDate();
+    private HTTPResponse(int code, String reason, HTTPResponseDate httpResponseDate) {
+        this.statusCode = code;
+        this.reasonPhrase = reason;
+        this.originTime = httpResponseDate.getDate();
+    }
+
+    public static HTTPResponse create(StatusCode statusCode) {
+        HTTPResponse httpResponse = new HTTPResponse(statusCode.code, statusCode.reason, new HTTPResponseDate());
+        if (statusCode == TEAPOT) {
+            httpResponse.setBody(TEAPOT.reason);
+            httpResponse.setContentType(TEXT.contentType);
+        }
+        return httpResponse;
+    }
+
+    public HTTPResponse withAllowedMethods(List<Method> allowedMethods) {
+        this.allowedMethods = allowedMethods;
+        return this;
+    }
+
+    public HTTPResponse withBody(Resource resource) {
+        this.body = resource.getContents();
+        this.contentType = resource.getContentType();
+        if (this.statusCode == 206) {
+            setContentRange(body.length);
+        }
+        return this;
+    }
+
+    public HTTPResponse withLocation(String location) {
+        setLocation(location);
+        return this;
+    }
+
+    public boolean hasLocation() {
+        return location != null;
+    }
+
+    public byte[] getBody() {
+        return body;
+    }
+
+    public boolean hasBody() {
+        return body != null;
     }
 
     public int getStatusCode() {
@@ -30,59 +74,44 @@ public class HTTPResponse {
         return reasonPhrase;
     }
 
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    public byte[] getBody() {
-        return body;
-    }
-
-    public boolean hasBody() {
-        return (body != null);
-    }
-
     public String getContentType() {
         return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public void setAllowedMethods(List<Method> allowedMethods) {
-        this.allowedMethods = allowedMethods;
-    }
-
-    public List<Method> allowedMethods() {
-        return allowedMethods;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public boolean hasLocation() {
-        return (location != null);
+    public boolean hasContentRange() {
+        return contentRange != 0;
     }
 
     public int getContentRange() {
         return contentRange;
     }
 
-    public void setContentRange(int contentRange) {
+    public String getOriginTime() {
+        return originTime;
+    }
+
+    public List<Method> getAllowedMethods() {
+        return allowedMethods;
+    }
+
+    private void setBody(String body) {
+        this.body = body.getBytes();
+    }
+
+    private void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    private void setContentRange(int contentRange) {
         this.contentRange = contentRange;
     }
 
-    public boolean hasContentRange() {
-        return contentRange != 0;
+    private void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getOriginTime() {
-        return originDate;
-    }
 }

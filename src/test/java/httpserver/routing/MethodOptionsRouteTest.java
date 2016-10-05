@@ -47,10 +47,10 @@ public class MethodOptionsRouteTest {
 
         HTTPResponse httpResponse = methodOptionsRoute.performAction(httpRequest);
 
-        assertTrue(httpResponse.allowedMethods().contains(GET));
-        assertTrue(httpResponse.allowedMethods().contains(PUT));
-        assertTrue(httpResponse.allowedMethods().contains(POST));
-        assertTrue(httpResponse.allowedMethods().contains(HEAD));
-        assertTrue(httpResponse.allowedMethods().contains(OPTIONS));
+        assertTrue(httpResponse.getAllowedMethods().contains(GET));
+        assertTrue(httpResponse.getAllowedMethods().contains(PUT));
+        assertTrue(httpResponse.getAllowedMethods().contains(POST));
+        assertTrue(httpResponse.getAllowedMethods().contains(HEAD));
+        assertTrue(httpResponse.getAllowedMethods().contains(OPTIONS));
     }
 }

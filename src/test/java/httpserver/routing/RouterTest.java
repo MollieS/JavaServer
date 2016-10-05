@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static httpserver.routing.Method.*;
-import static httpserver.routing.Method.OPTIONS;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -106,7 +105,7 @@ public class RouterTest {
 
         HTTPResponse httpResponse = router.route(httpRequest);
 
-        assertNotNull(httpResponse.allowedMethods());
+        assertNotNull(httpResponse.getAllowedMethods());
     }
 
     @Test

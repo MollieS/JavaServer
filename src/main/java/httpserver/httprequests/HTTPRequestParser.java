@@ -10,15 +10,15 @@ public class HTTPRequestParser {
         String[] requestElements = request.split(" ");
         Method requestMethod = getMethod(requestElements[0]);
         URI uri = URI.create(requestElements[1]);
-        HTTPRequest httpRequest = new HTTPRequest(requestMethod, uri.getPath());
-        addDetails(request, uri, httpRequest);
-        return httpRequest;
+        return createRequest(request, uri, requestMethod);
     }
 
-    private void addDetails(String request, URI uri, HTTPRequest httpRequest) {
+    private HTTPRequest createRequest(String request, URI uri, Method requestMethod) {
+        HTTPRequest httpRequest = new HTTPRequest(requestMethod, uri.getPath());
         addRange(request, httpRequest);
         addData(request, httpRequest);
         addQuery(uri, httpRequest);
+        return httpRequest;
     }
 
     private void addRange(String request, HTTPRequest httpRequest) {
@@ -73,10 +73,14 @@ public class HTTPRequestParser {
 
     private Method getMethod(String requestMethod) {
         for (Method method : Method.values()) {
-            if (method.name().equals(requestMethod)) {
+            if (methodIsValid(requestMethod, method)) {
                 return method;
             }
         }
         return Method.BOGUS;
+    }
+
+    private boolean methodIsValid(String requestMethod, Method method) {
+        return method.name().equals(requestMethod);
     }
 }
