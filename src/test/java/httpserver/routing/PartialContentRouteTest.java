@@ -68,11 +68,6 @@ public class PartialContentRouteTest {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
         httpRequest.setRangeEnd(6);
 
-        Path path = Paths.get("/Users/molliestephenson/Java/Server/cob_spec/public/partial_content.txt");
-        byte[] file = Files.readAllBytes(path);
-        byte[] expectedBytes = Arrays.copyOfRange(file, 71, 77);
-
-
         HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
