@@ -2,6 +2,7 @@ package httpserver;
 
 import httpserver.routing.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,13 @@ public class ServerRunner {
         return PUBLIC_DIR;
     }
 
-    public List<Route> createRoutes(String location, String resourcesPath, ResourceHandler resourceHandler) {
+    public List<Route> createRoutes(String location, ResourceHandler resourceHandler) {
+        String resourcesPath = null;
+        try {
+            resourcesPath = getClass().getClassLoader().getResources("/form").toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         List<Route> registeredRoutes = new ArrayList<>();
         registeredRoutes.add(new CoffeeRoute(GET));
         registeredRoutes.add(new TeaRoute(GET));

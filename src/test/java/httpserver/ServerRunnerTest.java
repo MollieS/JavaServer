@@ -53,7 +53,7 @@ public class ServerRunnerTest {
 
     @Test
     public void returnsAllTheRegisteredRoutes() {
-        List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", "directory/path", resourceHandler);
+        List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", resourceHandler);
 
         assertEquals(8, registeredRoutes.size());
     }

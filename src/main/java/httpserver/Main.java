@@ -19,9 +19,8 @@ public class Main {
         int port = serverRunner.parsePort(args);
         String path = serverRunner.parseDirectoryPath(args);
         String url = serverRunner.buildUrl(args);
-        String resources = "/Users/molliestephenson/Java/Server/HTTPServer/src/main/resources/form";
         HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
-        List<Route> registeredRoutes = serverRunner.createRoutes(url, resources, resourceHandler);
+        List<Route> registeredRoutes = serverRunner.createRoutes(url, resourceHandler);
         HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(resourceHandler, new Router(registeredRoutes));
         SocketServer socketServer = null;
             try {
