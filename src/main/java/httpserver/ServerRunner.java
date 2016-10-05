@@ -43,6 +43,7 @@ public class ServerRunner {
         registeredRoutes.add(new FormRoute("/form", resourcesPath, GET, POST, PUT, DELETE));
         registeredRoutes.add(new ParameterRoute("/parameters", GET));
         registeredRoutes.add(new RedirectRoute("/redirect", location, GET));
+        registeredRoutes.add(new MethodOptionsTwoRoute("/method_options2", GET, OPTIONS));
         return registeredRoutes;
     }
 
