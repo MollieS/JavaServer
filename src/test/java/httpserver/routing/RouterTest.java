@@ -2,6 +2,8 @@ package httpserver.routing;
 
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
+import httpserver.resourcemanagement.HTTPResourceHandler;
+import httpserver.resourcemanagement.ResourceParser;
 import org.junit.Test;
 
 import java.net.URI;
@@ -18,7 +20,8 @@ import static org.junit.Assert.assertTrue;
 public class RouterTest {
 
     private List<Route> registeredRoutes = Arrays.asList(new CoffeeRoute(GET), new TeaRoute(GET));
-    private Router router = new Router(registeredRoutes);
+    String path = getClass().getClassLoader().getResource("directory").getPath();
+    private Router router = new Router(new FileRoute(new HTTPResourceHandler(path, new ResourceParser())), registeredRoutes);
 
     @Test
     public void knowsAllRegisteredRoutes() {

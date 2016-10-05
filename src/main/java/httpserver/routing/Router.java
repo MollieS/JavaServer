@@ -11,9 +11,11 @@ import static httpserver.routing.Method.*;
 public class Router {
 
     private final List<Route> registeredRoutes;
+    private final FileRoute fileRoute;
 
-    public Router(List<Route> registeredRoutes) {
+    public Router(FileRoute fileRoute, List<Route> registeredRoutes) {
         this.registeredRoutes = registeredRoutes;
+        this.fileRoute = fileRoute;
     }
 
     public boolean hasRegistered(URI uri) {
@@ -26,13 +28,12 @@ public class Router {
     }
 
     public HTTPResponse getResponse(HTTPRequest httpRequest) {
-        HTTPResponse httpResponse = null;
         for (Route route : registeredRoutes) {
             if (isRegistered(httpRequest.getRequestURI(), route)) {
-                httpResponse = route.performAction(httpRequest);
+                return route.performAction(httpRequest);
             }
         }
-        return httpResponse;
+        return fileRoute.performAction(httpRequest);
     }
 
     private boolean isRegistered(URI uri, Route route) {

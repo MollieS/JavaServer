@@ -1,5 +1,6 @@
 package httpserver.httprequests;
 
+import httpserver.ResourceHandler;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
@@ -18,7 +19,8 @@ public class HTTPRequestHandlerTest {
 
     String path = getClass().getClassLoader().getResource("directory").getPath();
     private List<Route> routes = Arrays.asList(new CoffeeRoute(GET), new TeaRoute(GET), new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD), new RedirectRoute("http://localhost:5000", GET), new PartialContentRoute(new HTTPResourceHandler(path, new ResourceParser()), GET));
-    private Router router = new Router(routes);
+    ResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
+    private Router router = new Router(new FileRoute(resourceHandler), routes);
     private HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new HTTPResourceHandler(path, new ResourceParser()), router);
 
     @Test
