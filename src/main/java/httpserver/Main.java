@@ -1,6 +1,6 @@
 package httpserver;
 
-import httpserver.httpmessages.HTTPRequestHandler;
+import httpserver.httprequests.HTTPRequestHandler;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.Route;

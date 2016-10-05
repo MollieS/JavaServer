@@ -1,4 +1,4 @@
-package httpserver.httpmessages;
+package httpserver.httprequests;
 
 import httpserver.routing.Method;
 
@@ -11,10 +11,14 @@ public class HTTPRequestParser {
         Method requestMethod = getMethod(requestElements[0]);
         URI uri = URI.create(requestElements[1]);
         HTTPRequest httpRequest = new HTTPRequest(requestMethod, uri.getPath());
+        addDetails(request, uri, httpRequest);
+        return httpRequest;
+    }
+
+    private void addDetails(String request, URI uri, HTTPRequest httpRequest) {
         addRange(request, httpRequest);
         addData(request, httpRequest);
         addQuery(uri, httpRequest);
-        return httpRequest;
     }
 
     private void addRange(String request, HTTPRequest httpRequest) {

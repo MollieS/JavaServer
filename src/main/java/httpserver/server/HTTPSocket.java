@@ -2,10 +2,10 @@ package httpserver.server;
 
 import httpserver.ClientSocket;
 import httpserver.SocketConnectionException;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPRequestParser;
-import httpserver.httpmessages.HTTPResponse;
-import httpserver.httpmessages.HTTPResponseWriter;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.HTTPRequestParser;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseWriter;
 
 import java.io.*;
 import java.net.Socket;

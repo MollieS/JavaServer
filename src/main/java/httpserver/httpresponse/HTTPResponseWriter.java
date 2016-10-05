@@ -1,4 +1,4 @@
-package httpserver.httpmessages;
+package httpserver.httpresponse;
 
 import httpserver.routing.Method;
 
@@ -9,8 +9,10 @@ public class HTTPResponseWriter {
 
     private static final String PROTOCOL_VERSION = "HTTP/1.1";
     private static final String CONTENT_TYPE = "Content-Type : ";
+    private static final String CONTENT_RANGE = "Content-Range : ";
     private static final String ALLOW_HEADER = "Allow : ";
     private static final String LOCATION_HEADER = "Location : ";
+    private static final String DATE_HEADER = "Date : ";
     private static final String SPACE = " ";
     private final ByteArrayOutputStream byteArrayOutputStream;
 
@@ -28,16 +30,30 @@ public class HTTPResponseWriter {
     }
 
     private void writeResponseToByteStream(HTTPResponse httpResponse) throws IOException {
-        addHeader(httpResponse);
+        addStatusLine(httpResponse);
+        addDate(httpResponse);
         if (httpResponse.allowedMethods() != null) {
             addAllowedMethods(httpResponse);
         }
         if (httpResponse.hasLocation()) {
             addLocation(httpResponse);
         }
+        if (httpResponse.hasContentRange()) {
+            addContentRange(httpResponse);
+        }
         if (httpResponse.hasBody()) {
             addBody(httpResponse);
         }
+    }
+
+    private void addDate(HTTPResponse httpResponse) throws IOException {
+        byteArrayOutputStream.write((DATE_HEADER + httpResponse.getOriginTime()).getBytes());
+        byteArrayOutputStream.write("\n".getBytes());
+    }
+
+    private void addContentRange(HTTPResponse httpResponse) throws IOException {
+        byteArrayOutputStream.write((CONTENT_RANGE + httpResponse.getContentRange()).getBytes());
+        byteArrayOutputStream.write("\n".getBytes());
     }
 
     private void addLocation(HTTPResponse httpResponse) throws IOException {
@@ -58,7 +74,7 @@ public class HTTPResponseWriter {
         byteArrayOutputStream.write(httpResponse.getBody());
     }
 
-    private void addHeader(HTTPResponse httpResponse) throws IOException {
+    private void addStatusLine(HTTPResponse httpResponse) throws IOException {
         byteArrayOutputStream.write(getHeader(httpResponse));
     }
 

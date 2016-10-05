@@ -1,7 +1,10 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.Resource;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.ResponseMessage;
+import httpserver.resourcemanagement.HTTPResource;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static httpserver.httpmessages.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class FormRoute extends Route {
 
@@ -43,22 +46,23 @@ public class FormRoute extends Route {
     }
 
     private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
-        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+        ResponseMessage responseMessage = ResponseMessage.create(OK);
         switch (httpRequest.getMethod()) {
             case POST:
                 writeToFile(httpRequest);
+                break;
             case PUT:
                 writeToFile(httpRequest);
                 break;
             case GET:
-                httpResponse.setContentType("text/html");
-                httpResponse.setBody(readFromFile());
+                Resource resource = new HTTPResource(readFromFile());
+                responseMessage.withBody(resource);
                 break;
             case DELETE:
                 deleteFileContents();
                 break;
         }
-        return httpResponse;
+        return responseMessage;
     }
 
     private void deleteFileContents() throws IOException {

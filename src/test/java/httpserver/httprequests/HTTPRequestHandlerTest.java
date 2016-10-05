@@ -1,5 +1,6 @@
-package httpserver.httpmessages;
+package httpserver.httprequests;
 
+import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.*;
@@ -136,7 +137,7 @@ public class HTTPRequestHandlerTest {
         HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
 
         assertEquals(206, httpResponse.getStatusCode());
-        assertEquals("Found", httpResponse.getReasonPhrase());
+        assertEquals("Partial Content", httpResponse.getReasonPhrase());
     }
 
     @Test
@@ -148,7 +149,7 @@ public class HTTPRequestHandlerTest {
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals(206, httpResponse.getStatusCode());
-        assertEquals("Found", httpResponse.getReasonPhrase());
+        assertEquals("Partial Content", httpResponse.getReasonPhrase());
         assertEquals(" 206.\n", body);
         assertEquals(6, httpResponse.getContentRange());
     }

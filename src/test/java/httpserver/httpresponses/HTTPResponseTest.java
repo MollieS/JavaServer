@@ -1,5 +1,6 @@
-package httpserver.httpmessages;
+package httpserver.httpresponses;
 
+import httpserver.httpresponse.HTTPResponse;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -8,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class HTTPResponseTest {
 
-    private final HTTPResponse httpResponse = new HTTPResponse(200, "OK");
+    private final HTTPResponse httpResponse = new HTTPResponse(200, "OK", new ResponseDateFake());
 
     @Test
     public void hasAStatusCode() {
@@ -50,5 +51,12 @@ public class HTTPResponseTest {
         httpResponse.setContentType("text/plain");
 
         assertEquals("text/plain", httpResponse.getContentType());
+    }
+
+    @Test
+    public void knowsTheDateOfItsOrigin() {
+        String originTime = httpResponse.getOriginTime();
+
+        assertEquals("Wed, 5 Oct 2016 15:20:15 +0100", originTime);
     }
 }
