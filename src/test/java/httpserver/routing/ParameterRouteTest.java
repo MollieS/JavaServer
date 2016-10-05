@@ -13,13 +13,13 @@ import static org.junit.Assert.assertEquals;
 public class ParameterRouteTest {
 
     private ParameterRoute parameterRoute = new ParameterRoute(GET);
+    private HTTPRequest getRequest = new HTTPRequest(GET, "/parameters");
 
     @Test
     public void addsParametersToResponseBody() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/parameters");
-        httpRequest.setParams("variable_1=parameter");
+        getRequest.setParams("variable_1=parameter");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(httpRequest);
+        HTTPResponse httpResponse = parameterRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("variable_1 = parameter", body);
@@ -27,10 +27,9 @@ public class ParameterRouteTest {
 
     @Test
     public void addsMultipleParametersToResponseBody() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/parameters");
-        httpRequest.setParams("variable_1=parameter&variable_2=parameter2");
+        getRequest.setParams("variable_1=parameter&variable_2=parameter2");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(httpRequest);
+        HTTPResponse httpResponse = parameterRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("variable_1 = parameter\nvariable_2 = parameter2", body);
@@ -38,10 +37,9 @@ public class ParameterRouteTest {
 
     @Test
     public void canFormatSpecialCharacters() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/parameters");
-        httpRequest.setParams("variable_1=&,=!&variable_2=stuff");
+        getRequest.setParams("variable_1=&,=!&variable_2=stuff");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(httpRequest);
+        HTTPResponse httpResponse = parameterRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("variable_1 = &,=!\nvariable_2 = stuff", body);

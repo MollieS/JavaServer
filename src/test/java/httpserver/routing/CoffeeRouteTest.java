@@ -11,6 +11,7 @@ import static httpserver.routing.Method.*;
 import static org.junit.Assert.assertEquals;
 
 public class CoffeeRouteTest {
+
     private CoffeeRoute coffeeRoute = new CoffeeRoute(GET, HEAD, OPTIONS);
 
     @Test
