@@ -1,13 +1,15 @@
-package httpserver.httpmessages;
+package httpserver.httprequests;
 
 import httpserver.RequestHandler;
 import httpserver.ResourceHandler;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseDate;
 import httpserver.resourcemanagement.Resource;
 import httpserver.routing.Router;
 
-import static httpserver.httpmessages.StatusCode.NOTALLOWED;
-import static httpserver.httpmessages.StatusCode.NOTFOUND;
-import static httpserver.httpmessages.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.NOTALLOWED;
+import static httpserver.httpresponse.StatusCode.NOTFOUND;
+import static httpserver.httpresponse.StatusCode.OK;
 import static httpserver.routing.Method.GET;
 
 public class HTTPRequestHandler implements RequestHandler {
@@ -33,22 +35,21 @@ public class HTTPRequestHandler implements RequestHandler {
                 }
                 return httpResponse;
             }
-            return new HTTPResponse(NOTALLOWED.code, NOTALLOWED.reason);
+            return new HTTPResponse(NOTALLOWED.code, NOTALLOWED.reason, new HTTPResponseDate());
         }
         return getNotFoundResponse();
     }
 
     private HTTPResponse getOKResponse() {
-        return new HTTPResponse(OK.code, OK.reason);
+        return new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
     }
 
     private HTTPResponse getNotFoundResponse() {
-        return new HTTPResponse(NOTFOUND.code, NOTFOUND.reason);
+        return new HTTPResponse(NOTFOUND.code, NOTFOUND.reason, new HTTPResponseDate());
     }
 
     private void setBody(Resource resource, HTTPResponse httpResponse) {
         httpResponse.setContentType(resource.getContentType());
         httpResponse.setBody(resource.getContents());
     }
-
 }

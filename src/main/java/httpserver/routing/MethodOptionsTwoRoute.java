@@ -1,7 +1,10 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseDate;
+
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class MethodOptionsTwoRoute extends Route {
 
@@ -11,7 +14,7 @@ public class MethodOptionsTwoRoute extends Route {
 
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
-        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
+        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
         httpResponse.setAllowedMethods(super.getAllowedMethods());
         return httpResponse;
     }

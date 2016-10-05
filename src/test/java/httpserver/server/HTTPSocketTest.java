@@ -1,10 +1,11 @@
 package httpserver.server;
 
 import httpserver.SocketConnectionException;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPRequestParser;
-import httpserver.httpmessages.HTTPResponse;
-import httpserver.httpmessages.HTTPResponseWriter;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.HTTPRequestParser;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseWriter;
+import httpserver.httpresponses.ResponseDateFake;
 import org.junit.Test;
 
 import java.io.*;
@@ -16,16 +17,17 @@ import static org.junit.Assert.assertTrue;
 
 public class HTTPSocketTest {
 
-    private final SocketSpy socketSpy = new SocketSpy();
+    private final SocketFake socketFake = new SocketFake();
     private final SocketThatThrowsException socketThatThrowsException = new SocketThatThrowsException();
+    private HTTPResponse OkResponse = new HTTPResponse(200, "OK", new ResponseDateFake());
 
     @Test
     public void closesTheSocket() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         httpSocket.close();
 
-        assertTrue(socketSpy.isClosed);
+        assertTrue(socketFake.isClosed);
     }
 
     @Test(expected = SocketConnectionException.class)
@@ -37,42 +39,42 @@ public class HTTPSocketTest {
 
     @Test
     public void getsTheOutputStreamFromTheSocket() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
-        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
+        httpSocket.sendResponse(OkResponse);
 
-        assertTrue(socketSpy.getOutputStreamHasBeenCalled);
+        assertTrue(socketFake.getOutputStreamHasBeenCalled);
     }
 
     @Test
     public void writesTheHTTPResponseToTheSocketOutputStream() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
-        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
-        OutputStream outputStream = socketSpy.getOutputStream();
+        httpSocket.sendResponse(OkResponse);
+        OutputStream outputStream = socketFake.getOutputStream();
 
-        assertEquals("HTTP/1.1 200 OK\n", outputStream.toString());
+        assertTrue(outputStream.toString().contains("HTTP/1.1 200 OK\n"));
     }
 
     @Test(expected = SocketConnectionException.class)
     public void throwsASocketConnectionExceptionIfOutputStreamCannotBeRetrieved() {
         HTTPSocket httpSocket = createSocket(socketThatThrowsException);
 
-        httpSocket.sendResponse(new HTTPResponse(200, "OK"));
+        httpSocket.sendResponse(OkResponse);
     }
 
     @Test
     public void getsTheInputStreamFromTheSocket() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         httpSocket.getRequest();
 
-        assertTrue(socketSpy.getInputStreamHasBeenCalled);
+        assertTrue(socketFake.getInputStreamHasBeenCalled);
     }
 
     @Test
     public void getsTheRequestFromInputStream() {
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         HTTPRequest request = httpSocket.getRequest();
 
@@ -88,34 +90,44 @@ public class HTTPSocketTest {
 
     @Test
     public void sendsTheBodyOfTheResponseIfThereIsBody() {
-        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
-        httpResponse.setBody("This is the body".getBytes());
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        OkResponse.setBody("This is the body".getBytes());
+        HTTPSocket httpSocket = createSocket(socketFake);
 
-        httpSocket.sendResponse(httpResponse);
-        OutputStream outputStream = socketSpy.getOutputStream();
+        httpSocket.sendResponse(OkResponse);
+        OutputStream outputStream = socketFake.getOutputStream();
 
         assertTrue(outputStream.toString().contains("This is the body"));
     }
 
     @Test
     public void sendsTheLocationHeader() {
-        HTTPResponse httpResponse = new HTTPResponse(302, "Found");
+        HTTPResponse httpResponse = new HTTPResponse(302, "Found", new ResponseDateFake());
         httpResponse.setLocation("http://localhost:8080/");
-        HTTPSocket httpSocket = createSocket(socketSpy);
+        HTTPSocket httpSocket = createSocket(socketFake);
 
         httpSocket.sendResponse(httpResponse);
-        OutputStream outputStream = socketSpy.getOutputStream();
+        OutputStream outputStream = socketFake.getOutputStream();
 
         assertTrue(outputStream.toString().contains("Location : http://localhost:8080/"));
+    }
+
+    @Test
+    public void setsTheContentRangeHeader() {
+        HTTPResponse httpResponse = new HTTPResponse(206, "Partial Content", new ResponseDateFake());
+        httpResponse.setContentRange(6);
+        HTTPSocket httpSocket = createSocket(socketFake);
+
+        httpSocket.sendResponse(httpResponse);
+        OutputStream outputStream = socketFake.getOutputStream();
+
+        assertTrue(outputStream.toString().contains("Content-Range : 6"));
     }
 
     private HTTPSocket createSocket(Socket socket) {
         return new HTTPSocket(socket, new HTTPResponseWriter(new ByteArrayOutputStream()), new HTTPRequestParser());
     }
 
-
-    private class SocketSpy extends Socket {
+    private class SocketFake extends Socket {
 
         boolean isClosed = false;
         boolean getOutputStreamHasBeenCalled = false;

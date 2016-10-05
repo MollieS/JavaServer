@@ -1,11 +1,15 @@
 package httpserver.routing;
 
 import httpserver.ResourceHandler;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseDate;
 import httpserver.resourcemanagement.Resource;
 
 import java.util.Arrays;
+
+import static httpserver.httpresponse.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.PARTIAL;
 
 public class PartialContentRoute extends Route {
 
@@ -26,7 +30,7 @@ public class PartialContentRoute extends Route {
     }
 
     private HTTPResponse getOkResponse(Resource resource) {
-        HTTPResponse httpResponse = new HTTPResponse(200, "OK");
+        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
         httpResponse.setBody(resource.getContents());
         httpResponse.setContentType(resource.getContentType());
         return httpResponse;
@@ -54,7 +58,7 @@ public class PartialContentRoute extends Route {
     }
 
     private HTTPResponse getPartialResponse(Resource resource, byte[] body) {
-        HTTPResponse httpResponse = new HTTPResponse(206, "Found");
+        HTTPResponse httpResponse = new HTTPResponse(PARTIAL.code, PARTIAL.reason, new HTTPResponseDate());
         httpResponse.setBody(body);
         httpResponse.setContentType(resource.getContentType());
         httpResponse.setContentRange(body.length);

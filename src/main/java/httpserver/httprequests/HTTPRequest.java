@@ -1,4 +1,4 @@
-package httpserver.httpmessages;
+package httpserver.httprequests;
 
 import httpserver.routing.Method;
 

@@ -31,13 +31,13 @@ public class Resource {
 
     public String getContentType() {
         for (ResourceContentType type : ResourceContentType.values()) {
-            if (file.getName().contains(type.extension)) {
-                return type.contentType;
-            }
+            if (fileHasType(type)) return type.contentType;
         }
-        if (file.isDirectory()) {
-            return "text/html";
-        }
+        if (file.isDirectory()) return "text/html";
         return TEXT.contentType;
+    }
+
+    private boolean fileHasType(ResourceContentType type) {
+        return file.getName().contains(type.extension);
     }
 }

@@ -1,7 +1,8 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseDate;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static httpserver.httpmessages.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class FormRoute extends Route {
 
@@ -43,7 +44,7 @@ public class FormRoute extends Route {
     }
 
     private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
-        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
         switch (httpRequest.getMethod()) {
             case POST:
                 writeToFile(httpRequest);

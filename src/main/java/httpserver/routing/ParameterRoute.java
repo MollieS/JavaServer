@@ -1,9 +1,10 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseDate;
 
-import static httpserver.httpmessages.StatusCode.OK;
+import static httpserver.httpresponse.StatusCode.OK;
 
 public class ParameterRoute extends Route {
 
@@ -16,7 +17,7 @@ public class ParameterRoute extends Route {
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         if (methodIsAllowed(httpRequest.getMethod())) {
-            HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason);
+            HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
             if (httpRequest.hasParams()) {
                 httpResponse.setBody(formatParameters(httpRequest));
             }

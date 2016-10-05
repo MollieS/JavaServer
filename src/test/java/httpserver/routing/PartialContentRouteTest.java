@@ -1,8 +1,8 @@
 package httpserver.routing;
 
 import httpserver.ResourceHandler;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class PartialContentRouteTest {
         HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
 
         assertEquals(206, httpResponse.getStatusCode());
-        assertEquals("Found", httpResponse.getReasonPhrase());
+        assertEquals("Partial Content", httpResponse.getReasonPhrase());
     }
 
     @Test

@@ -1,5 +1,6 @@
-package httpserver.httpmessages;
+package httpserver.httpresponse;
 
+import httpserver.ResponseDate;
 import httpserver.routing.Method;
 
 import java.util.List;
@@ -8,15 +9,17 @@ public class HTTPResponse {
 
     private final String reasonPhrase;
     private final int statusCode;
+    private final String originDate;
     private byte[] body;
     private String contentType;
     private List<Method> allowedMethods;
     private String location;
     private int contentRange;
 
-    public HTTPResponse(int statusCode, String reasonPhrase) {
+    public HTTPResponse(int statusCode, String reasonPhrase, ResponseDate responseDate) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;
+        this.originDate = responseDate.getDate();
     }
 
     public int getStatusCode() {
@@ -73,5 +76,13 @@ public class HTTPResponse {
 
     public void setContentRange(int contentRange) {
         this.contentRange = contentRange;
+    }
+
+    public boolean hasContentRange() {
+        return contentRange != 0;
+    }
+
+    public String getOriginTime() {
+        return originDate;
     }
 }

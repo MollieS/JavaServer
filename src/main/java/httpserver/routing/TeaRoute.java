@@ -1,8 +1,9 @@
 package httpserver.routing;
 
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
-import httpserver.httpmessages.StatusCode;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.HTTPResponseDate;
+import httpserver.httpresponse.StatusCode;
 
 public class TeaRoute extends Route {
 
@@ -13,7 +14,7 @@ public class TeaRoute extends Route {
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         if (super.methodIsAllowed(httpRequest.getMethod())) {
-            return new HTTPResponse(StatusCode.OK.code, StatusCode.OK.reason);
+            return new HTTPResponse(StatusCode.OK.code, StatusCode.OK.reason, new HTTPResponseDate());
         }
         return super.methodNotAllowed();
     }

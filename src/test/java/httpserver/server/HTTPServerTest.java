@@ -1,8 +1,9 @@
 package httpserver.server;
 
 import httpserver.RequestHandler;
-import httpserver.httpmessages.HTTPRequest;
-import httpserver.httpmessages.HTTPResponse;
+import httpserver.httprequests.HTTPRequest;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponses.ResponseDateFake;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class HTTPServerTest {
 
         @Override
         public HTTPResponse handle(HTTPRequest httpRequest) {
-            return new HTTPResponse(200, "OK");
+            return new HTTPResponse(200, "OK", new ResponseDateFake());
         }
     }
 }
