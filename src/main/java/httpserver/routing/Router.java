@@ -20,15 +20,6 @@ public class Router implements HTTPRouter {
         this.fileRoute = fileRoute;
     }
 
-    public boolean hasRegistered(URI uri) {
-        for (Route route : registeredRoutes) {
-            if (isRegistered(uri, route)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public HTTPResponse route(HTTPRequest httpRequest) {
         for (Route route : registeredRoutes) {
             if (isRegistered(httpRequest.getRequestURI(), route)) {
