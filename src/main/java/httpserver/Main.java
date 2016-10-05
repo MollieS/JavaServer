@@ -1,6 +1,5 @@
 package httpserver;
 
-import httpserver.httprequests.HTTPRequestHandler;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.FileRoute;
@@ -22,14 +21,14 @@ public class Main {
         String url = serverRunner.buildUrl(args);
         HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
         List<Route> registeredRoutes = serverRunner.createRoutes(url, resourceHandler);
-        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(resourceHandler, new Router(new FileRoute(resourceHandler), registeredRoutes));
+        Router router = new Router(new FileRoute(resourceHandler), registeredRoutes);
         SocketServer socketServer = null;
             try {
                 socketServer = new HTTPSocketServer(new ServerSocket(port));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        HTTPServer httpServer = new HTTPServer(socketServer, httpRequestHandler);
+        HTTPServer httpServer = new HTTPServer(socketServer, router);
         while(true) {
             httpServer.start();
         }

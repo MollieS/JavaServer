@@ -3,7 +3,7 @@ package httpserver;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 
-public interface RequestHandler {
+public interface HTTPRouter {
 
-    HTTPResponse handle(HTTPRequest httpRequest);
+    HTTPResponse route(HTTPRequest httpRequest);
 }

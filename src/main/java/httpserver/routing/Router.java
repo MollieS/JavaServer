@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.HTTPRouter;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static httpserver.routing.Method.*;
 
-public class Router {
+public class Router implements HTTPRouter {
 
     private final List<Route> registeredRoutes;
     private final FileRoute fileRoute;
@@ -27,7 +28,7 @@ public class Router {
         return false;
     }
 
-    public HTTPResponse getResponse(HTTPRequest httpRequest) {
+    public HTTPResponse route(HTTPRequest httpRequest) {
         for (Route route : registeredRoutes) {
             if (isRegistered(httpRequest.getRequestURI(), route)) {
                 return route.performAction(httpRequest);
