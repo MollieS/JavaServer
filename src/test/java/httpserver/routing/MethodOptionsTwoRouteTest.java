@@ -13,7 +13,7 @@ public class MethodOptionsTwoRouteTest {
 
     @Test
     public void sendsTheCorrectResponseForAnOptionsRequest() {
-        MethodOptionsTwoRoute methodOptionsTwoRoute = new MethodOptionsTwoRoute("/method_options2", GET, OPTIONS);
+        MethodOptionsTwoRoute methodOptionsTwoRoute = new MethodOptionsTwoRoute(GET, OPTIONS);
 
         HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options2");
         HTTPResponse httpResponse  = methodOptionsTwoRoute.performAction(httpRequest);

@@ -6,8 +6,8 @@ import httpserver.httpmessages.StatusCode;
 
 public class TeaRoute extends Route {
 
-    public TeaRoute(String uri, Method...methods) {
-        super(uri, methods);
+    public TeaRoute(Method... methods) {
+        super("/tea", methods);
     }
 
     @Override

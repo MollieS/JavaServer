@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ParameterRouteTest {
 
-    private ParameterRoute parameterRoute = new ParameterRoute("/parameters", GET);
+    private ParameterRoute parameterRoute = new ParameterRoute(GET);
 
     @Test
     public void addsParametersToResponseBody() {

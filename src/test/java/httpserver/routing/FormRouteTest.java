@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class FormRouteTest {
 
     private String path = getClass().getClassLoader().getResource("directory").getPath() + ("/form");
-    private FormRoute formRoute = new FormRoute("/form", path, GET, POST, PUT, DELETE);
+    private FormRoute formRoute = new FormRoute(path, GET, POST, PUT, DELETE);
 
     @Before
     public void setUp() throws IOException {
@@ -113,7 +113,7 @@ public class FormRouteTest {
 
     @Test(expected = FormManagerException.class)
     public void throwsAnExceptionIfFormFileCannotBeAccessed() {
-        FormRoute formRoute = new FormRoute("/form", "/bad/path", GET);
+        FormRoute formRoute = new FormRoute("/bad/path", GET);
 
         HTTPRequest httpRequest = new HTTPRequest(GET, "/form");
 

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TeaRouteTest {
 
-    private TeaRoute teaRoute = new TeaRoute("/tea", GET);
+    private TeaRoute teaRoute = new TeaRoute(GET);
 
     @Test
     public void sendsA200ReponseForAGet() {

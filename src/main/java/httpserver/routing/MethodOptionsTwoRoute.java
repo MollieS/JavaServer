@@ -5,8 +5,8 @@ import httpserver.httpmessages.HTTPResponse;
 
 public class MethodOptionsTwoRoute extends Route {
 
-    public MethodOptionsTwoRoute(String uri, Method... methods) {
-        super(uri, methods);
+    public MethodOptionsTwoRoute(Method... methods) {
+        super("/method_options2", methods);
     }
 
     @Override

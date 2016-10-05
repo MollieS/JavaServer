@@ -16,8 +16,8 @@ public class FormRoute extends Route {
     private final String path;
     private final File file;
 
-    public FormRoute(String uri, String path, Method... methods) {
-        super(uri, methods);
+    public FormRoute(String path, Method... methods) {
+        super("/form", methods);
         this.path = path;
         this.file = new File(path);
     }
@@ -38,7 +38,7 @@ public class FormRoute extends Route {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new FormManagerException("Cannot access form: ", e);
+            throw new FormManagerException(e);
         }
     }
 

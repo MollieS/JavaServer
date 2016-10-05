@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RedirectRouteTest {
 
-    private RedirectRoute redirectRoute = new RedirectRoute("/redirect", "http://localhost:5000", GET);
+    private RedirectRoute redirectRoute = new RedirectRoute("http://localhost:5000", GET);
 
     @Test
     public void sendsA302Response() {

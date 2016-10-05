@@ -1,5 +1,7 @@
 package httpserver;
 
+import httpserver.resourcemanagement.HTTPResourceHandler;
+import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.Route;
 import org.junit.Test;
 
@@ -9,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 
 public class ServerRunnerTest {
 
+    private String path = getClass().getClassLoader().getResource("directory").getPath();
+    private ResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
     private ServerRunner serverRunner = new ServerRunner();
 
     @Test
@@ -49,9 +53,9 @@ public class ServerRunnerTest {
 
     @Test
     public void returnsAllTheRegisteredRoutes() {
-        List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", "directory/path");
+        List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", "directory/path", resourceHandler);
 
-        assertEquals(7, registeredRoutes.size());
+        assertEquals(8, registeredRoutes.size());
     }
 
     @Test

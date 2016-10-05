@@ -7,8 +7,8 @@ import static httpserver.httpmessages.StatusCode.OK;
 
 public class MethodOptionsRoute extends Route {
 
-    public MethodOptionsRoute(String uri, Method... methods) {
-        super(uri, methods);
+    public MethodOptionsRoute(Method... methods) {
+        super("/method_options", methods);
     }
 
     @Override

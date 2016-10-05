@@ -22,6 +22,9 @@ public class HTTPRequestHandler implements RequestHandler {
 
     public HTTPResponse handle(HTTPRequest httpRequest) {
         Resource resource = resourceHandler.getResource(httpRequest.getRequestURI());
+        if (router.hasRegistered(httpRequest.getRequestURI())) {
+            return router.getResponse(httpRequest);
+        }
         if (resource.exists()) {
             if (router.allowsMethod(httpRequest.getMethod())) {
                 HTTPResponse httpResponse = getOKResponse();
@@ -31,9 +34,6 @@ public class HTTPRequestHandler implements RequestHandler {
                 return httpResponse;
             }
             return new HTTPResponse(NOTALLOWED.code, NOTALLOWED.reason);
-        }
-        if (router.hasRegistered(httpRequest.getRequestURI())) {
-            return router.getResponse(httpRequest);
         }
         return getNotFoundResponse();
     }

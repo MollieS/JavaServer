@@ -15,9 +15,9 @@ import static org.junit.Assert.*;
 
 public class HTTPRequestHandlerTest {
 
-    private List<Route> routes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET), new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD), new RedirectRoute("/redirect", "http://localhost:5000", GET));
-    private Router router = new Router(routes);
     String path = getClass().getClassLoader().getResource("directory").getPath();
+    private List<Route> routes = Arrays.asList(new CoffeeRoute(GET), new TeaRoute(GET), new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD), new RedirectRoute("http://localhost:5000", GET), new PartialContentRoute(new HTTPResourceHandler(path, new ResourceParser()), GET));
+    private Router router = new Router(routes);
     private HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler(new HTTPResourceHandler(path, new ResourceParser()), router);
 
     @Test
@@ -125,6 +125,31 @@ public class HTTPRequestHandlerTest {
         assertEquals(302, httpResponse.getStatusCode());
         assertEquals("Found", httpResponse.getReasonPhrase());
         assertEquals("http://localhost:5000/", httpResponse.getLocation());
+    }
 
+    @Test
+    public void returnsTheCorrectResponseForAPartialContentGetWithFullRange() {
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
+        httpRequest.setRangeEnd(0);
+        httpRequest.setRangeEnd(4);
+
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+
+        assertEquals(206, httpResponse.getStatusCode());
+        assertEquals("Found", httpResponse.getReasonPhrase());
+    }
+
+    @Test
+    public void returnsTheCorrectResponseForAPartialContentGetWithRangeEnd() {
+        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
+        httpRequest.setRangeEnd(6);
+
+        HTTPResponse httpResponse = httpRequestHandler.handle(httpRequest);
+        String body = new String(httpResponse.getBody(), Charset.defaultCharset());
+
+        assertEquals(206, httpResponse.getStatusCode());
+        assertEquals("Found", httpResponse.getReasonPhrase());
+        assertEquals(" 206.\n", body);
+        assertEquals(6, httpResponse.getContentRange());
     }
 }

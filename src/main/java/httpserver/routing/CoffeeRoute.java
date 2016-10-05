@@ -7,8 +7,8 @@ import static httpserver.httpmessages.StatusCode.TEAPOT;
 
 public class CoffeeRoute extends Route {
 
-    public CoffeeRoute(String uri, Method... methods) {
-        super(uri, methods);
+    public CoffeeRoute(Method... methods) {
+        super("/coffee", methods);
     }
 
     public HTTPResponse performAction(HTTPRequest httpRequest) {

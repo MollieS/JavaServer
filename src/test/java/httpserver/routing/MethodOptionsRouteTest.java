@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 public class MethodOptionsRouteTest {
 
-    private MethodOptionsRoute methodOptionsRoute = new MethodOptionsRoute("/method_options", GET, PUT, POST, HEAD, OPTIONS);
+    private MethodOptionsRoute methodOptionsRoute = new MethodOptionsRoute(GET, PUT, POST, HEAD, OPTIONS);
 
     @Test
     public void returnsA200ResponseForAGetRequest() {

@@ -12,6 +12,7 @@ public class HTTPResponse {
     private String contentType;
     private List<Method> allowedMethods;
     private String location;
+    private int contentRange;
 
     public HTTPResponse(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
@@ -64,5 +65,13 @@ public class HTTPResponse {
 
     public boolean hasLocation() {
         return (location != null);
+    }
+
+    public int getContentRange() {
+        return contentRange;
+    }
+
+    public void setContentRange(int contentRange) {
+        this.contentRange = contentRange;
     }
 }

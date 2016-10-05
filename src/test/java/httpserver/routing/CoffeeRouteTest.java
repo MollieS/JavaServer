@@ -11,7 +11,7 @@ import static httpserver.routing.Method.*;
 import static org.junit.Assert.assertEquals;
 
 public class CoffeeRouteTest {
-    private CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET, HEAD, OPTIONS);
+    private CoffeeRoute coffeeRoute = new CoffeeRoute(GET, HEAD, OPTIONS);
 
     @Test
     public void returnsTheCorrectStatusForAGet() {
@@ -36,7 +36,7 @@ public class CoffeeRouteTest {
 
     @Test
     public void hasAURI() {
-        CoffeeRoute coffeeRoute = new CoffeeRoute("/coffee", GET);
+        CoffeeRoute coffeeRoute = new CoffeeRoute(GET);
 
         assertEquals(URI.create("/coffee"), coffeeRoute.getUri());
     }

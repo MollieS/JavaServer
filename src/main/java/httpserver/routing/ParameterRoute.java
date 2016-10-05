@@ -9,8 +9,8 @@ public class ParameterRoute extends Route {
 
     private final String PARAM_NOTATION = "variable_";
 
-    public ParameterRoute(String uri, Method... methods) {
-        super(uri, methods);
+    public ParameterRoute(Method... methods) {
+        super("/parameters", methods);
     }
 
     @Override

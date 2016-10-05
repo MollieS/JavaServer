@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 public class RouterTest {
 
-    private List<Route> registeredRoutes = Arrays.asList(new CoffeeRoute("/coffee", GET), new TeaRoute("/tea", GET));
+    private List<Route> registeredRoutes = Arrays.asList(new CoffeeRoute(GET), new TeaRoute(GET));
     private Router router = new Router(registeredRoutes);
 
     @Test

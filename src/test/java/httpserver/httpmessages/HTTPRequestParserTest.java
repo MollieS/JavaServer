@@ -7,6 +7,7 @@ import java.net.URI;
 import static httpserver.routing.Method.BOGUS;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestParserTest {
 
@@ -56,5 +57,45 @@ public class HTTPRequestParserTest {
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertEquals("variable_1=parameter", httpRequest.getParams());
+    }
+
+    @Test
+    public void canGetRangeStartFromARequest() {
+        String request = "GET /partial_content.txt \n\n Range : bytes=1-4";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(1, httpRequest.getRangeStart());
+        assertTrue(httpRequest.hasRange());
+    }
+
+    @Test
+    public void canGetRangeEndFromARequest() {
+        String request = "GET /partial_content.txt \n\n Range : bytes=0-4";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(5, httpRequest.getRangeEnd());
+        assertTrue(httpRequest.hasRange());
+    }
+
+    @Test
+    public void rangeStartIsZeroIfNoneGiven() {
+        String request = "GET /partial_content.txt \n\n Range : bytes=-4";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(0, httpRequest.getRangeStart());
+        assertTrue(httpRequest.hasRange());
+    }
+
+    @Test
+    public void rangeEndIsZeroIfNoneGiven() {
+        String request = "GET /partial_content.txt \n\n Range : bytes=4- ";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(0, httpRequest.getRangeEnd());
+        assertTrue(httpRequest.hasRange());
     }
 }

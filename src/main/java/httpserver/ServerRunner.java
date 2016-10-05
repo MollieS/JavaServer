@@ -35,15 +35,16 @@ public class ServerRunner {
         return PUBLIC_DIR;
     }
 
-    public List<Route> createRoutes(String location, String resourcesPath) {
+    public List<Route> createRoutes(String location, String resourcesPath, ResourceHandler resourceHandler) {
         List<Route> registeredRoutes = new ArrayList<>();
-        registeredRoutes.add(new CoffeeRoute("/coffee", GET));
-        registeredRoutes.add(new TeaRoute("/tea", GET));
-        registeredRoutes.add(new MethodOptionsRoute("/method_options", GET, POST, PUT, OPTIONS, HEAD));
-        registeredRoutes.add(new FormRoute("/form", resourcesPath, GET, POST, PUT, DELETE));
-        registeredRoutes.add(new ParameterRoute("/parameters", GET));
-        registeredRoutes.add(new RedirectRoute("/redirect", location, GET));
-        registeredRoutes.add(new MethodOptionsTwoRoute("/method_options2", GET, OPTIONS));
+        registeredRoutes.add(new CoffeeRoute(GET));
+        registeredRoutes.add(new TeaRoute(GET));
+        registeredRoutes.add(new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD));
+        registeredRoutes.add(new FormRoute(resourcesPath, GET, POST, PUT, DELETE));
+        registeredRoutes.add(new ParameterRoute(GET));
+        registeredRoutes.add(new RedirectRoute(location, GET));
+        registeredRoutes.add(new MethodOptionsTwoRoute(GET, OPTIONS));
+        registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
         return registeredRoutes;
     }
 
