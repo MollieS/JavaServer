@@ -1,15 +1,17 @@
 package httpserver.resourcemanagement;
 
+import httpserver.Resource;
+
 import java.io.File;
 
 import static httpserver.resourcemanagement.ResourceContentType.TEXT;
 
-public class Resource {
+public class FileResource implements Resource {
 
     private final File file;
     private byte[] contents;
 
-    public Resource(File file) {
+    public FileResource(File file) {
         this.file = file;
     }
 

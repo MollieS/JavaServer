@@ -38,11 +38,11 @@ public class HTTPResponseWriter {
         if (httpResponse.hasLocation()) {
             addLocation(httpResponse);
         }
-        if (httpResponse.hasBody()) {
-            addBody(httpResponse);
-        }
         if (httpResponse.hasContentRange()) {
             addContentRange(httpResponse);
+        }
+        if (httpResponse.hasBody()) {
+            addBody(httpResponse);
         }
     }
 

@@ -2,7 +2,7 @@ package httpserver.routing;
 
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.HTTPResponseDate;
+import httpserver.httpresponse.ResponseMessage;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,6 +37,6 @@ public abstract class Route {
     }
 
     public HTTPResponse methodNotAllowed() {
-        return new HTTPResponse(NOTALLOWED.code, NOTALLOWED.reason, new HTTPResponseDate());
+        return ResponseMessage.create(NOTALLOWED);
     }
 }

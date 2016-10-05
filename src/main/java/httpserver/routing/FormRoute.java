@@ -1,8 +1,10 @@
 package httpserver.routing;
 
+import httpserver.Resource;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.HTTPResponseDate;
+import httpserver.httpresponse.ResponseMessage;
+import httpserver.resourcemanagement.HTTPResource;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,22 +46,23 @@ public class FormRoute extends Route {
     }
 
     private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
-        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
+        ResponseMessage responseMessage = ResponseMessage.create(OK);
         switch (httpRequest.getMethod()) {
             case POST:
                 writeToFile(httpRequest);
+                break;
             case PUT:
                 writeToFile(httpRequest);
                 break;
             case GET:
-                httpResponse.setContentType("text/html");
-                httpResponse.setBody(readFromFile());
+                Resource resource = new HTTPResource(readFromFile());
+                responseMessage.withBody(resource);
                 break;
             case DELETE:
                 deleteFileContents();
                 break;
         }
-        return httpResponse;
+        return responseMessage;
     }
 
     private void deleteFileContents() throws IOException {

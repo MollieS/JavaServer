@@ -4,7 +4,7 @@ import httpserver.RequestHandler;
 import httpserver.ResourceHandler;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.HTTPResponseDate;
-import httpserver.resourcemanagement.Resource;
+import httpserver.resourcemanagement.FileResource;
 import httpserver.routing.Router;
 
 import static httpserver.httpresponse.StatusCode.NOTALLOWED;
@@ -23,7 +23,7 @@ public class HTTPRequestHandler implements RequestHandler {
     }
 
     public HTTPResponse handle(HTTPRequest httpRequest) {
-        Resource resource = resourceHandler.getResource(httpRequest.getRequestURI());
+        FileResource resource = resourceHandler.getResource(httpRequest.getRequestURI());
         if (router.hasRegistered(httpRequest.getRequestURI())) {
             return router.getResponse(httpRequest);
         }
@@ -48,7 +48,7 @@ public class HTTPRequestHandler implements RequestHandler {
         return new HTTPResponse(NOTFOUND.code, NOTFOUND.reason, new HTTPResponseDate());
     }
 
-    private void setBody(Resource resource, HTTPResponse httpResponse) {
+    private void setBody(FileResource resource, HTTPResponse httpResponse) {
         httpResponse.setContentType(resource.getContentType());
         httpResponse.setBody(resource.getContents());
     }

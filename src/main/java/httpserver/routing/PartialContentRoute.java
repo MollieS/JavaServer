@@ -3,8 +3,10 @@ package httpserver.routing;
 import httpserver.ResourceHandler;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.HTTPResponseDate;
-import httpserver.resourcemanagement.Resource;
+import httpserver.httpresponse.ResponseMessage;
+import httpserver.resourcemanagement.FileResource;
+import httpserver.resourcemanagement.HTTPResource;
+import httpserver.Resource;
 
 import java.util.Arrays;
 
@@ -22,46 +24,32 @@ public class PartialContentRoute extends Route {
 
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
-        Resource resource = resourceHandler.getResource(super.getUri());
+        FileResource resource = resourceHandler.getResource(super.getUri());
         if (httpRequest.hasRange()) {
-            return getPartialContent(httpRequest, resource);
+            Resource partialResource = getPartialContent(httpRequest, resource);
+            return ResponseMessage.create(PARTIAL).withBody(partialResource);
         }
-        return getOkResponse(resource);
+        return ResponseMessage.create(OK).withBody(resource);
     }
 
-    private HTTPResponse getOkResponse(Resource resource) {
-        HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
-        httpResponse.setBody(resource.getContents());
-        httpResponse.setContentType(resource.getContentType());
-        return httpResponse;
-    }
-
-    private HTTPResponse getPartialContent(HTTPRequest httpRequest, Resource resource) {
+    private HTTPResource getPartialContent(HTTPRequest httpRequest, FileResource resource) {
         int rangeStart = getRangeStart(httpRequest, resource);
         int rangeEnd = getRangeEnd(httpRequest, resource);
         byte[] body = Arrays.copyOfRange(resource.getContents(), rangeStart, rangeEnd);
-        return getPartialResponse(resource, body);
+        return new HTTPResource(body);
     }
 
-    private int getRangeEnd(HTTPRequest httpRequest, Resource resource) {
+    private int getRangeEnd(HTTPRequest httpRequest, FileResource resource) {
         if (httpRequest.hasRangeEnd() && httpRequest.hasRangeStart()) {
             return httpRequest.getRangeEnd();
         }
         return resource.getContents().length;
     }
 
-    private int getRangeStart(HTTPRequest httpRequest, Resource resource) {
+    private int getRangeStart(HTTPRequest httpRequest, FileResource resource) {
         if (!httpRequest.hasRangeStart()) {
             return (resource.getContents().length - httpRequest.getRangeEnd()) + 1;
         }
         return httpRequest.getRangeStart();
-    }
-
-    private HTTPResponse getPartialResponse(Resource resource, byte[] body) {
-        HTTPResponse httpResponse = new HTTPResponse(PARTIAL.code, PARTIAL.reason, new HTTPResponseDate());
-        httpResponse.setBody(body);
-        httpResponse.setContentType(resource.getContentType());
-        httpResponse.setContentRange(body.length);
-        return httpResponse;
     }
 }

@@ -2,7 +2,9 @@ package httpserver.routing;
 
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
-import httpserver.httpresponse.HTTPResponseDate;
+import httpserver.httpresponse.ResponseMessage;
+import httpserver.resourcemanagement.HTTPResource;
+import httpserver.Resource;
 
 import static httpserver.httpresponse.StatusCode.OK;
 
@@ -17,13 +19,18 @@ public class ParameterRoute extends Route {
     @Override
     public HTTPResponse performAction(HTTPRequest httpRequest) {
         if (methodIsAllowed(httpRequest.getMethod())) {
-            HTTPResponse httpResponse = new HTTPResponse(OK.code, OK.reason, new HTTPResponseDate());
-            if (httpRequest.hasParams()) {
-                httpResponse.setBody(formatParameters(httpRequest));
-            }
-            return httpResponse;
+            ResponseMessage responseMessage = ResponseMessage.create(OK);
+            addBody(httpRequest, responseMessage);
+            return responseMessage;
         }
         return methodNotAllowed();
+    }
+
+    private void addBody(HTTPRequest httpRequest, ResponseMessage responseMessage) {
+        if (httpRequest.hasParams()) {
+            Resource resource = new HTTPResource(formatParameters(httpRequest));
+            responseMessage.withBody(resource);
+        }
     }
 
     private byte[] formatParameters(HTTPRequest httpRequest) {
@@ -33,11 +40,15 @@ public class ParameterRoute extends Route {
             stringBuilder.append(String.format("variable_%s = ", String.valueOf(i)));
             String params = allParams[i].replace(String.valueOf(i) + "=", "");
             stringBuilder.append(params);
-            if (stringBuilder.toString().endsWith("&")) {
-                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-                stringBuilder.append("\n");
-            }
+            addMultipleParameters(stringBuilder);
         }
         return stringBuilder.toString().getBytes();
+    }
+
+    private void addMultipleParameters(StringBuilder stringBuilder) {
+        if (stringBuilder.toString().endsWith("&")) {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            stringBuilder.append("\n");
+        }
     }
 }
