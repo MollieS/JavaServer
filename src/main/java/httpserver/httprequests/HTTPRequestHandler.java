@@ -7,10 +7,7 @@ import httpserver.httpresponse.HTTPResponseDate;
 import httpserver.resourcemanagement.FileResource;
 import httpserver.routing.Router;
 
-import static httpserver.httpresponse.StatusCode.NOTALLOWED;
-import static httpserver.httpresponse.StatusCode.NOTFOUND;
-import static httpserver.httpresponse.StatusCode.OK;
-import static httpserver.routing.Method.GET;
+import static httpserver.httpresponse.StatusCode.*;
 
 public class HTTPRequestHandler implements RequestHandler {
 
@@ -23,21 +20,7 @@ public class HTTPRequestHandler implements RequestHandler {
     }
 
     public HTTPResponse handle(HTTPRequest httpRequest) {
-        FileResource resource = resourceHandler.getResource(httpRequest.getRequestURI());
-        if (router.hasRegistered(httpRequest.getRequestURI())) {
-            return router.getResponse(httpRequest);
-        }
-        if (resource.exists()) {
-            if (router.allowsMethod(httpRequest.getMethod())) {
-                HTTPResponse httpResponse = getOKResponse();
-                if (httpRequest.getMethod() == GET) {
-                    setBody(resource, httpResponse);
-                }
-                return httpResponse;
-            }
-            return new HTTPResponse(NOTALLOWED.code, NOTALLOWED.reason, new HTTPResponseDate());
-        }
-        return getNotFoundResponse();
+        return router.getResponse(httpRequest);
     }
 
     private HTTPResponse getOKResponse() {
