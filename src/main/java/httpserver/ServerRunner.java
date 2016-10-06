@@ -1,8 +1,10 @@
 package httpserver;
 
 import httpserver.routing.*;
+import httpserver.server.HTTPLogger;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,11 @@ public class ServerRunner {
     private final static String PUBLIC_DIR = "/Users/molliestephenson/Java/Server/cob_spec/public";
     private final static int DEFAULT_PORT = 5000;
     private final static String URL = "http://localhost:";
+    private URL logPath;
+
+    public ServerRunner() {
+        this.logPath = getClass().getClassLoader().getResource("logs");
+    }
 
     public int parsePort(String[] arguments) {
         for (int i = 0; i < arguments.length; i++) {
@@ -36,6 +43,10 @@ public class ServerRunner {
         return PUBLIC_DIR;
     }
 
+    public HTTPLogger createLogger() throws IOException {
+        return new HTTPLogger(getResourcePath("logs"));
+    }
+
     public List<Route> createRoutes(String location, ResourceHandler resourceHandler, String path) throws IOException {
         String resourcesPath = getResourcePath(path);
         List<Route> registeredRoutes = new ArrayList<>();
@@ -49,12 +60,13 @@ public class ServerRunner {
         registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
         registeredRoutes.add(new CookieRoute(GET));
         registeredRoutes.add(new EatCookieRoute(GET));
-        registeredRoutes.add(new LogsRoute(GET));
+        registeredRoutes.add(new LogsRoute(logPath.getPath(), GET));
         return registeredRoutes;
     }
 
     private String getResourcePath(String path) throws IOException {
-        return getClass().getClassLoader().getResources(path).toString();
+        String formPath = getClass().getClassLoader().getResources(path).toString();
+        return formPath;
     }
 
     public String buildUrl(String[] args) {

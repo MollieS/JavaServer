@@ -6,6 +6,7 @@ import java.net.URI;
 
 public class HTTPRequest {
 
+    private static final String PROTOCOL_VERSION = "HTTP/1.1";
     private final Method method;
     private final URI requestURI;
     private String data;
@@ -16,12 +17,14 @@ public class HTTPRequest {
     private boolean hasRangeStart;
     private String cookie;
     private String authorization;
+    private String statusHeader;
 
     public HTTPRequest(Method method, String requestURI) {
         this.method = method;
         this.requestURI = URI.create(requestURI);
         this.hasRangeStart = false;
         this.hasRangeEnd = false;
+        this.statusHeader = method.name() + " " + requestURI + " " + PROTOCOL_VERSION;
     }
 
     public Method getMethod() {
@@ -104,5 +107,9 @@ public class HTTPRequest {
 
     public boolean hasAuthorization() {
         return authorization != null;
+    }
+
+    public String getStatusHeader() {
+        return statusHeader;
     }
 }

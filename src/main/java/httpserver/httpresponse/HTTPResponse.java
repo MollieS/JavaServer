@@ -81,8 +81,4 @@ public class HTTPResponse implements Response {
         }
         return this;
     }
-
-    public List<Method> getAllowedMethods() {
-        return allowedMethods;
-    }
 }

@@ -27,11 +27,6 @@ class HTTPResponseFake implements Response {
     }
 
     @Override
-    public List<Method> getAllowedMethods() {
-        return allowedMethods;
-    }
-
-    @Override
     public boolean hasBody() {
         return (body != null);
     }

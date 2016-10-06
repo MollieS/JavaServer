@@ -3,12 +3,14 @@ package httpserver;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.Route;
+import httpserver.server.HTTPLogger;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ServerRunnerTest {
 
@@ -75,5 +77,12 @@ public class ServerRunnerTest {
         String url = serverRunner.buildUrl(args);
 
         assertEquals("http://localhost:4000", url);
+    }
+
+    @Test
+    public void createsALogger() throws IOException {
+        HTTPLogger logger = serverRunner.createLogger();
+
+        assertNotNull(logger);
     }
 }

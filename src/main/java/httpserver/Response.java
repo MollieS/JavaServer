@@ -1,14 +1,10 @@
 package httpserver;
 
 import httpserver.httpresponse.ResponseHeader;
-import httpserver.routing.Method;
 
 import java.util.HashMap;
-import java.util.List;
 
 public interface Response {
-
-    List<Method> getAllowedMethods();
 
     int getStatusCode();
 
