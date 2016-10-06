@@ -17,9 +17,10 @@ public class FormRoute extends Route {
 
     private final String path;
     private final File file;
+    private final static String URI = "/form";
 
     public FormRoute(String path, Method... methods) {
-        super("/form", methods);
+        super(URI, methods);
         this.path = path;
         this.file = new File(path);
     }

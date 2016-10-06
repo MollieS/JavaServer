@@ -5,6 +5,7 @@ import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.Route;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -43,6 +44,15 @@ public class ServerRunnerTest {
     }
 
     @Test
+    public void removesEndingForwardSlash() {
+        String[] args = {"-p", "4000", "-d", "/directory/path/"};
+
+        String path = serverRunner.parseDirectoryPath(args);
+
+        assertEquals("/directory/path", path);
+    }
+
+    @Test
     public void returnsTheDefaultDirectoryPathIfNoneGiven() {
         String[] args = {"-p", "4000"};
 
@@ -52,8 +62,8 @@ public class ServerRunnerTest {
     }
 
     @Test
-    public void returnsAllTheRegisteredRoutes() {
-        List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", resourceHandler);
+    public void returnsAllTheRegisteredRoutes() throws IOException {
+        List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", resourceHandler, "/form");
 
         assertEquals(8, registeredRoutes.size());
     }

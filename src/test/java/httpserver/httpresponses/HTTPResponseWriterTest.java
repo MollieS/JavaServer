@@ -1,6 +1,7 @@
 package httpserver.httpresponses;
 
 import httpserver.Resource;
+import httpserver.Response;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.HTTPResponseWriter;
 import httpserver.httpresponse.ResponseWriterException;
@@ -20,11 +21,10 @@ import static org.junit.Assert.assertTrue;
 public class HTTPResponseWriterTest {
 
     private final HTTPResponseWriter httpResponseWriter = new HTTPResponseWriter(new ByteArrayOutputStream());
-    private HTTPResponse okResponse = HTTPResponse.create(OK);
+    private HTTPResponseFake okResponse = new HTTPResponseFake(OK);
 
     @Test
     public void returnsHeaderForAResponseWithNoBody() {
-
         String response = new String(httpResponseWriter.parse(okResponse), Charset.forName("UTF-8"));
 
         assertTrue(response.contains("HTTP/1.1 200 OK\n"));
@@ -32,7 +32,7 @@ public class HTTPResponseWriterTest {
 
     @Test
     public void returnsAHeaderForA404Response() {
-        HTTPResponse httpResponse = HTTPResponse.create(NOTFOUND);
+        Response httpResponse = new HTTPResponseFake(NOTFOUND);
 
         String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
@@ -48,7 +48,7 @@ public class HTTPResponseWriterTest {
 
     @Test
     public void addsAllowedMethodsHeader() {
-        okResponse.withAllowedMethods(Arrays.asList(PUT, GET));
+        okResponse.addAllowedMethod(Arrays.asList(PUT, GET));
 
         String response = new String(httpResponseWriter.parse(okResponse), Charset.forName("UTF-8"));
 
@@ -57,8 +57,8 @@ public class HTTPResponseWriterTest {
 
     @Test
     public void addsLocationHeader() {
-        HTTPResponse httpResponse = HTTPResponse.create(REDIRECT);
-        httpResponse.withLocation("http://localhost:9000/");
+        HTTPResponseFake httpResponse = new HTTPResponseFake(REDIRECT);
+        httpResponse.addLocation("http://localhost:9000/");
 
         String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
@@ -67,9 +67,9 @@ public class HTTPResponseWriterTest {
 
     @Test
     public void addsContentRangeHeader() {
-        HTTPResponse httpResponse = HTTPResponse.create(PARTIAL);
-        Resource resource = new HTTPResource("hello ".getBytes());
-        httpResponse.withBody(resource);
+        HTTPResponseFake httpResponse = new HTTPResponseFake(PARTIAL);
+        httpResponse.setContentRange(6);
+
 
         String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
@@ -78,7 +78,7 @@ public class HTTPResponseWriterTest {
 
     @Test
     public void addsDateHeader() {
-        HTTPResponse httpResponse = HTTPResponse.create(PARTIAL);
+        HTTPResponseFake httpResponse = new HTTPResponseFake(PARTIAL);
 
         String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
