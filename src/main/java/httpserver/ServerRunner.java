@@ -25,7 +25,7 @@ public class ServerRunner {
 
     public String parseDirectoryPath(String[] arguments) {
         for (int i = 0; i < arguments.length; i++) {
-            if(arguments[i].equals("-d")) {
+            if (arguments[i].equals("-d")) {
                 String path = arguments[i + 1];
                 if (path.endsWith("/")) {
                     return path.substring(0, path.length() - 1);
@@ -36,13 +36,8 @@ public class ServerRunner {
         return PUBLIC_DIR;
     }
 
-    public List<Route> createRoutes(String location, ResourceHandler resourceHandler) {
-        String resourcesPath = null;
-        try {
-            resourcesPath = getClass().getClassLoader().getResources("/form").toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public List<Route> createRoutes(String location, ResourceHandler resourceHandler, String path) throws IOException {
+        String resourcesPath = getResourcePath(path);
         List<Route> registeredRoutes = new ArrayList<>();
         registeredRoutes.add(new CoffeeRoute(GET));
         registeredRoutes.add(new TeaRoute(GET));
@@ -53,6 +48,10 @@ public class ServerRunner {
         registeredRoutes.add(new MethodOptionsTwoRoute(GET, OPTIONS));
         registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
         return registeredRoutes;
+    }
+
+    private String getResourcePath(String path) throws IOException {
+        return getClass().getClassLoader().getResources(path).toString();
     }
 
     public String buildUrl(String[] args) {

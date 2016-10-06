@@ -20,14 +20,15 @@ public class Main {
         String path = serverRunner.parseDirectoryPath(args);
         String url = serverRunner.buildUrl(args);
         HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
-        List<Route> registeredRoutes = serverRunner.createRoutes(url, resourceHandler);
-        Router router = new Router(new FileRoute(resourceHandler), registeredRoutes);
         SocketServer socketServer = null;
+        List<Route> registeredRoutes = null;
             try {
+                registeredRoutes = serverRunner.createRoutes(url, resourceHandler, "/form");
                 socketServer = new HTTPSocketServer(new ServerSocket(port));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        Router router = new Router(new FileRoute(resourceHandler), registeredRoutes);
         HTTPServer httpServer = new HTTPServer(socketServer, router);
         while(true) {
             httpServer.start();
