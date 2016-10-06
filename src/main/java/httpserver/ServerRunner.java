@@ -47,6 +47,8 @@ public class ServerRunner {
         registeredRoutes.add(new RedirectRoute(location, GET));
         registeredRoutes.add(new MethodOptionsTwoRoute(GET, OPTIONS));
         registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
+        registeredRoutes.add(new CookieRoute(GET));
+        registeredRoutes.add(new EatCookieRoute(GET));
         return registeredRoutes;
     }
 

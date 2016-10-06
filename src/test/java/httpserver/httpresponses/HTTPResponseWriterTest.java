@@ -1,21 +1,16 @@
 package httpserver.httpresponses;
 
-import httpserver.Resource;
 import httpserver.Response;
-import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.HTTPResponseWriter;
 import httpserver.httpresponse.ResponseWriterException;
-import httpserver.resourcemanagement.HTTPResource;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 import static httpserver.httpresponse.StatusCode.*;
 import static httpserver.routing.Method.GET;
-import static httpserver.routing.Method.PUT;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPResponseWriterTest {
@@ -47,12 +42,21 @@ public class HTTPResponseWriterTest {
     }
 
     @Test
-    public void addsAllowedMethodsHeader() {
-        okResponse.addAllowedMethod(Arrays.asList(PUT, GET));
+    public void addsBody() {
+        okResponse.addBody("hello");
 
         String response = new String(httpResponseWriter.parse(okResponse), Charset.forName("UTF-8"));
 
-        assertTrue(response.contains("PUT"));
+        assertTrue(response.contains("hello"));
+    }
+
+    @Test
+    public void addsAllowedMethodsHeader() {
+        okResponse.addAllowedMethod(GET);
+
+        String response = new String(httpResponseWriter.parse(okResponse), Charset.forName("UTF-8"));
+
+        assertTrue(response.contains("GET"));
     }
 
     @Test
@@ -70,7 +74,6 @@ public class HTTPResponseWriterTest {
         HTTPResponseFake httpResponse = new HTTPResponseFake(PARTIAL);
         httpResponse.setContentRange(6);
 
-
         String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
         assertTrue(response.contains("Content-Range : 6"));
@@ -83,6 +86,15 @@ public class HTTPResponseWriterTest {
         String response = new String(httpResponseWriter.parse(httpResponse), Charset.forName("UTF-8"));
 
         assertTrue(response.contains("Date : Wed, 5 Oct"));
+    }
+
+    @Test
+    public void canAddCookieHeader() {
+        okResponse.addCookie("type=chocolate");
+
+        String response = new String(httpResponseWriter.parse(okResponse), Charset.forName("UTF-8"));
+
+        assertTrue(response.contains("Set-Cookie : type=chocolate"));
     }
 
     private class ByteArrayThatThrowsException extends ByteArrayOutputStream {

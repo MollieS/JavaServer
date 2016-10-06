@@ -1,8 +1,9 @@
 package httpserver.routing;
 
 import httpserver.ResourceHandler;
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.ResponseHeader;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import static httpserver.ByteArrayConverter.getString;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,13 +26,13 @@ public class PartialContentRouteTest {
     public void sendsTheCorrectResponseForAGETRequest() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
 
-        HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
+        Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
         assertTrue(body.contains("206"));
-        assertEquals("text/plain", httpResponse.getContentType());
+        assertEquals("text/plain", getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE)));
     }
 
     @Test
@@ -39,7 +41,7 @@ public class PartialContentRouteTest {
         httpRequest.setRangeStart(0);
         httpRequest.setRangeEnd(4);
 
-        HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
+        Response httpResponse = partialContentRoute.performAction(httpRequest);
 
         assertEquals(206, httpResponse.getStatusCode());
         assertEquals("Partial Content", httpResponse.getReasonPhrase());
@@ -51,12 +53,12 @@ public class PartialContentRouteTest {
         httpRequest.setRangeStart(0);
         httpRequest.setRangeEnd(4);
 
-        HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
+        Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals("This ", body);
-        assertEquals("text/plain", httpResponse.getContentType());
-        assertEquals(5, httpResponse.getContentRange());
+        assertEquals("text/plain", getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE)));
+        assertEquals("5", getString(httpResponse.getValue(ResponseHeader.CONTENT_RANGE)));
     }
 
     @Test
@@ -64,12 +66,12 @@ public class PartialContentRouteTest {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
         httpRequest.setRangeEnd(6);
 
-        HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
+        Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals(" 206.\n", body);
-        assertEquals("text/plain", httpResponse.getContentType());
-        assertEquals(6, httpResponse.getContentRange());
+        assertEquals("text/plain", getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE)));
+        assertEquals("6", getString(httpResponse.getValue(ResponseHeader.CONTENT_RANGE)));
     }
 
     @Test
@@ -77,11 +79,11 @@ public class PartialContentRouteTest {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
         httpRequest.setRangeStart(70);
 
-        HTTPResponse httpResponse = partialContentRoute.performAction(httpRequest);
+        Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals("a 206.\n", body);
-        assertEquals("text/plain", httpResponse.getContentType());
-        assertEquals(7, httpResponse.getContentRange());
+        assertEquals("text/plain", getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE)));
+        assertEquals("7", getString(httpResponse.getValue(ResponseHeader.CONTENT_RANGE)));
     }
 }

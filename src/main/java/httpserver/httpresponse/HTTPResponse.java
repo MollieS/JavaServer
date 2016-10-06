@@ -4,114 +4,85 @@ import httpserver.Resource;
 import httpserver.Response;
 import httpserver.routing.Method;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static httpserver.httpresponse.StatusCode.TEAPOT;
-import static httpserver.resourcemanagement.ResourceContentType.TEXT;
+import static httpserver.httpresponse.ResponseHeader.CONTENT_RANGE;
+import static httpserver.httpresponse.ResponseHeader.CONTENT_TYPE;
+import static httpserver.httpresponse.ResponseHeader.DATE;
 
 public class HTTPResponse implements Response {
 
     private final int statusCode;
     private final String reasonPhrase;
-    private final String originTime;
     private byte[] body;
-    private String contentType;
-    private int contentRange;
-    private String location;
     private List<Method> allowedMethods;
+    private HashMap<ResponseHeader, byte[]> headers = new HashMap<>();
 
     private HTTPResponse(int code, String reason, HTTPResponseDate httpResponseDate) {
         this.statusCode = code;
         this.reasonPhrase = reason;
-        this.originTime = httpResponseDate.getDate();
+        headers.put(DATE, httpResponseDate.getDate().getBytes());
     }
 
     public static HTTPResponse create(StatusCode statusCode) {
-        HTTPResponse httpResponse = new HTTPResponse(statusCode.code, statusCode.reason, new HTTPResponseDate());
-        if (statusCode == TEAPOT) {
-            httpResponse.setBody(TEAPOT.reason);
-            httpResponse.setContentType(TEXT.contentType);
-        }
-        return httpResponse;
-    }
-
-    public HTTPResponse withAllowedMethods(List<Method> allowedMethods) {
-        this.allowedMethods = allowedMethods;
-        return this;
-    }
-
-    public HTTPResponse withBody(Resource resource) {
-        this.body = resource.getContents();
-        this.contentType = resource.getContentType();
-        if (this.statusCode == 206) {
-            setContentRange(body.length);
-        }
-        return this;
-    }
-
-    public HTTPResponse withLocation(String location) {
-        setLocation(location);
-        return this;
-    }
-
-    public boolean hasLocation() {
-        return location != null;
+        return new HTTPResponse(statusCode.code, statusCode.reason, new HTTPResponseDate());
     }
 
     public byte[] getBody() {
         return body;
     }
 
+    @Override
     public boolean hasBody() {
         return body != null;
     }
 
+    @Override
     public int getStatusCode() {
         return statusCode;
     }
 
+    @Override
     public String getReasonPhrase() {
         return reasonPhrase;
     }
 
-    public String getContentType() {
-        return contentType;
+
+    @Override
+    public boolean hasHeader(ResponseHeader header) {
+        return headers.containsKey(header);
     }
 
-    public String getLocation() {
-        return location;
+    @Override
+    public byte[] getValue(ResponseHeader header) {
+        for (Map.Entry headersSet : headers.entrySet()) {
+            if (headersSet.getKey() == header) {
+                return (byte[]) headersSet.getValue();
+            }
+        }
+        return new byte[0];
     }
 
-    public boolean hasContentRange() {
-        return contentRange != 0;
+    @Override
+    public HTTPResponse withHeaders(HashMap<ResponseHeader, byte[]> headers) {
+        this.headers = headers;
+        return this;
     }
 
-    public int getContentRange() {
-        return contentRange;
-    }
-
-    public String getOriginTime() {
-        return originTime;
+    @Override
+    public Response withBody(Resource resource) {
+        this.body = resource.getContents();
+        headers.put(CONTENT_TYPE, resource.getContentType().getBytes());
+        if (this.statusCode == 206) {
+            String contentRange = String.valueOf(resource.getContents().length);
+            headers.put(CONTENT_RANGE, contentRange.getBytes());
+        }
+        return this;
     }
 
     public List<Method> getAllowedMethods() {
         return allowedMethods;
     }
-
-    private void setBody(String body) {
-        this.body = body.getBytes();
-    }
-
-    private void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    private void setContentRange(int contentRange) {
-        this.contentRange = contentRange;
-    }
-
-    private void setLocation(String location) {
-        this.location = location;
-    }
-
 }

@@ -1,7 +1,7 @@
 package httpserver.routing;
 
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class FormRouteTest {
     public void canPostToFormAndGetA200Response() {
         postRequest.setData("data=fatcat");
 
-        HTTPResponse httpResponse = formRoute.performAction(postRequest);
+        Response httpResponse = formRoute.performAction(postRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -50,7 +50,7 @@ public class FormRouteTest {
 
         formRoute.performAction(postRequest);
 
-        HTTPResponse httpResponse = formRoute.performAction(getRequest);
+        Response httpResponse = formRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("data=fatcat", body);
@@ -67,7 +67,7 @@ public class FormRouteTest {
 
         formRoute.performAction(httpRequest2);
 
-        HTTPResponse httpResponse = formRoute.performAction(getRequest);
+        Response httpResponse = formRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("data=goodbye", body);
@@ -79,7 +79,7 @@ public class FormRouteTest {
         formRoute.performAction(postRequest);
 
         HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
+        Response httpResponse = formRoute.performAction(httpRequest2);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -90,7 +90,7 @@ public class FormRouteTest {
         formRoute.performAction(postRequest);
 
         HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
+        Response httpResponse = formRoute.performAction(httpRequest2);
 
         assertNull(httpResponse.getBody());
     }
@@ -99,7 +99,7 @@ public class FormRouteTest {
     public void canGiveAMethodNotAllowedResponse() {
         HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/form");
 
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest);
+        Response httpResponse = formRoute.performAction(httpRequest);
 
         assertEquals(405, httpResponse.getStatusCode());
     }

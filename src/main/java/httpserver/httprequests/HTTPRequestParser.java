@@ -18,13 +18,23 @@ public class HTTPRequestParser {
         addRange(request, httpRequest);
         addData(request, httpRequest);
         addQuery(uri, httpRequest);
+        addCookie(request, httpRequest);
         return httpRequest;
     }
 
+    private void addCookie(String request, HTTPRequest httpRequest) {
+        if (request.contains("Cookie")) {
+            String[] lines = request.split("\n");
+            String cookieLine = getRangeLine(lines, "Cookie");
+            String cookie = cookieLine.split(": ")[1];
+            httpRequest.setCookie(cookie);
+        }
+    }
+
     private void addRange(String request, HTTPRequest httpRequest) {
-        String[] lines = request.split("\n");
         if (request.contains("Range")) {
-            String rangeLine = getRangeLine(lines);
+            String[] lines = request.split("\n");
+            String rangeLine = getRangeLine(lines, "Range");
             String[] range = rangeLine.split("=")[1].split("-");
             setRangeStart(httpRequest, range[0]);
             setRangeEnd(httpRequest, range);
@@ -43,10 +53,10 @@ public class HTTPRequestParser {
         }
     }
 
-    private String getRangeLine(String[] lines) {
+    private String getRangeLine(String[] lines, String header) {
         String rangeLine = null;
         for (String line : lines) {
-            if (line.contains("Range")) {
+            if (line.contains(header)) {
                 rangeLine = line;
             }
         }

@@ -1,6 +1,7 @@
 package httpserver.routing;
 
 import httpserver.ResourceHandler;
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.FileResource;
@@ -19,7 +20,7 @@ public class FileRoute extends Route {
     }
 
     @Override
-    public HTTPResponse performAction(HTTPRequest httpRequest) {
+    public Response performAction(HTTPRequest httpRequest) {
         if (!methodIsAllowed(httpRequest.getMethod())) {
             return HTTPResponse.create(NOTALLOWED);
         }

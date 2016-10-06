@@ -1,7 +1,7 @@
 package httpserver.routing;
 
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -19,7 +19,7 @@ public class ParameterRouteTest {
     public void addsParametersToResponseBody() {
         getRequest.setParams("variable_1=parameter");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(getRequest);
+        Response httpResponse = parameterRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("variable_1 = parameter", body);
@@ -29,7 +29,7 @@ public class ParameterRouteTest {
     public void addsMultipleParametersToResponseBody() {
         getRequest.setParams("variable_1=parameter&variable_2=parameter2");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(getRequest);
+        Response httpResponse = parameterRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("variable_1 = parameter\nvariable_2 = parameter2", body);
@@ -39,7 +39,7 @@ public class ParameterRouteTest {
     public void canFormatSpecialCharacters() {
         getRequest.setParams("variable_1=&,=!&variable_2=stuff");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(getRequest);
+        Response httpResponse = parameterRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("variable_1 = &,=!\nvariable_2 = stuff", body);
@@ -49,7 +49,7 @@ public class ParameterRouteTest {
     public void canGiveA405ForMethodNotAllowed() {
         HTTPRequest httpRequest = new HTTPRequest(POST, "/parameters");
 
-        HTTPResponse httpResponse = parameterRoute.performAction(httpRequest);
+        Response httpResponse = parameterRoute.performAction(httpRequest);
 
         assertEquals(405, httpResponse.getStatusCode());
     }

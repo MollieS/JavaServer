@@ -14,6 +14,7 @@ public class HTTPRequest {
     private int rangeEnd;
     private boolean hasRangeEnd;
     private boolean hasRangeStart;
+    private String cookie;
 
     public HTTPRequest(Method method, String requestURI) {
         this.method = method;
@@ -78,5 +79,17 @@ public class HTTPRequest {
 
     public boolean hasRangeStart() {
         return hasRangeStart;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
+
+    public boolean hasCookie() {
+        return (cookie != null);
     }
 }

@@ -1,9 +1,11 @@
 package httpserver.routing;
 
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.ResponseHeader;
 import org.junit.Test;
 
+import static httpserver.ByteArrayConverter.getString;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 
@@ -15,7 +17,7 @@ public class RedirectRouteTest {
     public void sendsA302Response() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/redirect");
 
-        HTTPResponse httpResponse = redirectRoute.performAction(httpRequest);
+        Response httpResponse = redirectRoute.performAction(httpRequest);
 
         assertEquals(302, httpResponse.getStatusCode());
     }
@@ -24,8 +26,8 @@ public class RedirectRouteTest {
     public void redirectsToRoot() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/redirect");
 
-        HTTPResponse httpResponse = redirectRoute.performAction(httpRequest);
+        Response httpResponse = redirectRoute.performAction(httpRequest);
 
-        assertEquals("http://localhost:5000/", httpResponse.getLocation());
+        assertEquals("http://localhost:5000/", getString(httpResponse.getValue(ResponseHeader.LOCATION)));
     }
 }

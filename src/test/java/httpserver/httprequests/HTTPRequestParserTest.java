@@ -98,4 +98,23 @@ public class HTTPRequestParserTest {
         assertEquals(0, httpRequest.getRangeEnd());
         assertTrue(httpRequest.hasRange());
     }
+
+    @Test
+    public void canAddParamsForACookie() {
+        String request = "GET /cookie?type=chocolate \n";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals("type=chocolate", httpRequest.getParams());
+    }
+
+    @Test
+    public void canAddCookie() {
+        String request = "GET /eat_cookie \n\n Cookie : type=chocolate\n";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals("type=chocolate", httpRequest.getCookie());
+
+    }
 }

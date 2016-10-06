@@ -1,8 +1,9 @@
 package httpserver.routing;
 
 import httpserver.ResourceHandler;
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.ResponseHeader;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
 import org.junit.Assert;
@@ -12,9 +13,9 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+import static httpserver.ByteArrayConverter.getString;
 import static httpserver.routing.Method.*;
 import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -29,7 +30,7 @@ public class RouterTest {
     public void getsTheCorrectHTTPResponseForAGetToCoffee() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(418, httpResponse.getStatusCode());
     }
@@ -49,7 +50,7 @@ public class RouterTest {
     public void returnsA418ResponseForAGETToCoffee() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(418, httpResponse.getStatusCode());
         assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
@@ -59,7 +60,7 @@ public class RouterTest {
     public void returnsA200ResponseForAGETToTea() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/tea");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -68,7 +69,7 @@ public class RouterTest {
     public void returnsA405ResponseForAPOST() {
         HTTPRequest httpRequest = new HTTPRequest(POST, "/file1");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(405, httpResponse.getStatusCode());
     }
@@ -77,7 +78,7 @@ public class RouterTest {
     public void returnsA200ResponseForOptionsRequestToMethodOptions() {
         HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -86,7 +87,7 @@ public class RouterTest {
     public void returnsA200ResponseForAHEADRequestToRoot() {
         HTTPRequest httpRequest = new HTTPRequest(HEAD, "/");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -95,19 +96,19 @@ public class RouterTest {
     public void addsAllowedMethodsToAnOptionsRequest() {
         HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
-        assertNotNull(httpResponse.getAllowedMethods());
+        assertTrue(httpResponse.hasHeader(ResponseHeader.ALLOW));
     }
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToRoot() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/");
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
-        assertEquals("text/html", httpResponse.getContentType());
+        assertEquals("text/html", getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE)));
         assertTrue(httpResponse.hasBody());
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
         assertTrue(body.contains("file1"));
@@ -116,17 +117,17 @@ public class RouterTest {
     @Test
     public void buildsTheCorrectResponseForAGETRequestToAJPEG() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/image.jpeg");
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
-        assertEquals("image/jpeg", httpResponse.getContentType());
+        assertEquals("image/jpeg", getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE)));
     }
 
     @Test
     public void aHeadRequestDoesNotContainBody() {
         HTTPRequest httpRequest = new HTTPRequest(HEAD, "/");
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         Assert.assertFalse(httpResponse.hasBody());
     }
@@ -135,7 +136,7 @@ public class RouterTest {
     public void returnsTheCorrectResponseForAnUnknownURL() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/foobar");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(404, httpResponse.getStatusCode());
         assertEquals("Not Found", httpResponse.getReasonPhrase());
@@ -145,11 +146,11 @@ public class RouterTest {
     public void returnsTheCorrectResponseForARedirect() {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/redirect");
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(302, httpResponse.getStatusCode());
         assertEquals("Found", httpResponse.getReasonPhrase());
-        assertEquals("http://localhost:5000/", httpResponse.getLocation());
+        assertEquals("http://localhost:5000/", getString(httpResponse.getValue(ResponseHeader.LOCATION)));
     }
 
     @Test
@@ -158,7 +159,7 @@ public class RouterTest {
         httpRequest.setRangeEnd(0);
         httpRequest.setRangeEnd(4);
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
 
         assertEquals(206, httpResponse.getStatusCode());
         assertEquals("Partial Content", httpResponse.getReasonPhrase());
@@ -169,12 +170,12 @@ public class RouterTest {
         HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
         httpRequest.setRangeEnd(6);
 
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
         assertEquals(206, httpResponse.getStatusCode());
         assertEquals("Partial Content", httpResponse.getReasonPhrase());
         assertEquals(" 206.\n", body);
-        assertEquals(6, httpResponse.getContentRange());
+        assertEquals("6", getString(httpResponse.getValue(ResponseHeader.CONTENT_RANGE)));
     }
 }

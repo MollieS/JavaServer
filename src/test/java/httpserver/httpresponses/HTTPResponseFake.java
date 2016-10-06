@@ -1,26 +1,29 @@
 package httpserver.httpresponses;
 
+import httpserver.Resource;
 import httpserver.Response;
+import httpserver.httpresponse.ResponseHeader;
 import httpserver.httpresponse.StatusCode;
 import httpserver.routing.Method;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static httpserver.httpresponse.ResponseHeader.*;
 
 class HTTPResponseFake implements Response {
 
     private final StatusCode statusCode;
+    private final HashMap<ResponseHeader, byte[]> headers;
     private List<Method> allowedMethods;
-    private String location;
-    private int contentRange;
     private byte[] body;
+    private int contentRange;
 
     public HTTPResponseFake(StatusCode code) {
         this.statusCode = code;
-    }
-
-    @Override
-    public String getOriginTime() {
-        return "Wed, 5 Oct";
+        this.headers = new HashMap<ResponseHeader, byte[]>();
+        headers.put(DATE, "Wed, 5 Oct".getBytes());
     }
 
     @Override
@@ -29,28 +32,8 @@ class HTTPResponseFake implements Response {
     }
 
     @Override
-    public boolean hasLocation() {
-        return (location != null);
-    }
-
-    @Override
-    public boolean hasContentRange() {
-        return (contentRange != 0);
-    }
-
-    @Override
     public boolean hasBody() {
         return (body != null);
-    }
-
-    @Override
-    public int getContentRange() {
-        return contentRange;
-    }
-
-    @Override
-    public String getLocation() {
-        return location;
     }
 
     @Override
@@ -69,23 +52,47 @@ class HTTPResponseFake implements Response {
     }
 
     @Override
-    public String getContentType() {
+    public boolean hasHeader(ResponseHeader header) {
+        return headers.containsKey(header);
+    }
+
+    @Override
+    public byte[] getValue(ResponseHeader header) {
+        for (Map.Entry entry : headers.entrySet()) {
+            if (entry.getKey() == header) {
+                return (byte[]) entry.getValue();
+            }
+        }
+        return new byte[0];
+    }
+
+    @Override
+    public Response withHeaders(HashMap<ResponseHeader, byte[]> headers) {
         return null;
     }
 
-    public void addAllowedMethod(List<Method> methods) {
-        this.allowedMethods = methods;
+    @Override
+    public Response withBody(Resource resource) {
+        return null;
     }
 
-    public void addLocation(String location) {
-        this.location = location;
+    public void addAllowedMethod(Method methods) {
+       headers.put(ALLOW, methods.name().getBytes());
     }
 
     public void addBody(String body) {
         this.body = body.getBytes();
     }
 
+    public void addLocation(String s) {
+        headers.put(LOCATION, s.getBytes());
+    }
+
     public void setContentRange(int contentRange) {
-        this.contentRange = contentRange;
+        headers.put(CONTENT_RANGE, String.valueOf(contentRange).getBytes());
+    }
+
+    public void addCookie(String s) {
+        headers.put(COOKIE, s.getBytes());
     }
 }

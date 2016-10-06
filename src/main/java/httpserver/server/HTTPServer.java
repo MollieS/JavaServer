@@ -2,9 +2,9 @@ package httpserver.server;
 
 import httpserver.ClientSocket;
 import httpserver.HTTPRouter;
+import httpserver.Response;
 import httpserver.SocketServer;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
 
 public class HTTPServer {
 
@@ -19,7 +19,7 @@ public class HTTPServer {
     public void start() {
         ClientSocket socket = socketServer.serve();
         HTTPRequest httpRequest = socket.getRequest();
-        HTTPResponse httpResponse = router.route(httpRequest);
+        Response httpResponse = router.route(httpRequest);
         socket.sendResponse(httpResponse);
         socket.close();
     }

@@ -1,5 +1,6 @@
 package httpserver.routing;
 
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 
@@ -14,7 +15,7 @@ public class TeaRoute extends Route {
     }
 
     @Override
-    public HTTPResponse performAction(HTTPRequest httpRequest) {
+    public Response performAction(HTTPRequest httpRequest) {
         if (super.methodIsAllowed(httpRequest.getMethod())) {
             return HTTPResponse.create(OK);
         }

@@ -2,6 +2,7 @@ package httpserver.routing;
 
 import httpserver.Resource;
 import httpserver.ResourceHandler;
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.FileResource;
@@ -22,7 +23,7 @@ public class PartialContentRoute extends Route {
     }
 
     @Override
-    public HTTPResponse performAction(HTTPRequest httpRequest) {
+    public Response performAction(HTTPRequest httpRequest) {
         FileResource resource = resourceHandler.getResource(super.getUri());
         if (httpRequest.hasRange()) {
             Resource partialResource = getPartialContent(httpRequest, resource);
