@@ -19,7 +19,17 @@ public class HTTPRequestParser {
         addData(request, httpRequest);
         addQuery(uri, httpRequest);
         addCookie(request, httpRequest);
+        addAuthorization(request, httpRequest);
         return httpRequest;
+    }
+
+    private void addAuthorization(String request, HTTPRequest httpRequest) {
+        if (request.contains("Authorization")) {
+            String[] lines = request.split("\n");
+            String cookieLine = getRangeLine(lines, "Authorization");
+            String cookie = cookieLine.split("Basic ")[1];
+            httpRequest.setAuthorization(cookie.trim());
+        }
     }
 
     private void addCookie(String request, HTTPRequest httpRequest) {

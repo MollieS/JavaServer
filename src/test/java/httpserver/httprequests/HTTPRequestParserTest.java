@@ -3,6 +3,8 @@ package httpserver.httprequests;
 import org.junit.Test;
 
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.Base64;
 
 import static httpserver.routing.Method.BOGUS;
 import static httpserver.routing.Method.GET;
@@ -115,6 +117,17 @@ public class HTTPRequestParserTest {
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertEquals("type=chocolate", httpRequest.getCookie());
+    }
 
+    @Test
+    public void canAddAuthorization() {
+        Base64.Encoder encoder = Base64.getEncoder();
+        byte[] details = encoder.encode("aladdin : carpet".getBytes());
+        String codedDetails = new String(details, Charset.defaultCharset());
+        String request = "GET /logs \n\n Authorization : Basic " + codedDetails + "\n";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(codedDetails, httpRequest.getAuthorization());
     }
 }

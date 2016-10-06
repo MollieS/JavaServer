@@ -15,6 +15,7 @@ public class HTTPRequest {
     private boolean hasRangeEnd;
     private boolean hasRangeStart;
     private String cookie;
+    private String authorization;
 
     public HTTPRequest(Method method, String requestURI) {
         this.method = method;
@@ -91,5 +92,17 @@ public class HTTPRequest {
 
     public boolean hasCookie() {
         return (cookie != null);
+    }
+
+    public String getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(String authorization) {
+        this.authorization = authorization;
+    }
+
+    public boolean hasAuthorization() {
+        return authorization != null;
     }
 }

@@ -49,6 +49,7 @@ public class ServerRunner {
         registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
         registeredRoutes.add(new CookieRoute(GET));
         registeredRoutes.add(new EatCookieRoute(GET));
+        registeredRoutes.add(new LogsRoute(GET));
         return registeredRoutes;
     }
 
