@@ -1,11 +1,16 @@
 package httpserver.httpmessages;
 
+import httpserver.routing.Method;
+
+import java.util.List;
+
 public class HTTPResponse {
 
     private final String reasonPhrase;
     private final int statusCode;
     private byte[] body;
     private String contentType;
+    private List<Method> allowedMethods;
 
     public HTTPResponse(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
@@ -38,5 +43,13 @@ public class HTTPResponse {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public void setAllowedMethods(List<Method> allowedMethods) {
+        this.allowedMethods = allowedMethods;
+    }
+
+    public List<Method> allowedMethods() {
+        return allowedMethods;
     }
 }

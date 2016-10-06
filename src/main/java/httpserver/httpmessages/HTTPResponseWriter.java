@@ -1,5 +1,7 @@
 package httpserver.httpmessages;
 
+import httpserver.routing.Method;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -15,28 +17,39 @@ public class HTTPResponseWriter {
     }
 
     public byte[] parse(HTTPResponse httpResponse) {
-        addHeader(httpResponse, byteArrayOutputStream);
+        try {
+            writeResponseToByteStream(httpResponse);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new ResponseWriterException("Error writing response: ", e);
+        }
+    }
+
+    private void writeResponseToByteStream(HTTPResponse httpResponse) throws IOException {
+        addHeader(httpResponse);
+        if (httpResponse.allowedMethods() != null) {
+            addAllowedMethods(httpResponse);
+        }
         if (httpResponse.hasBody()) {
-            addBody(httpResponse, byteArrayOutputStream);
-        }
-        return byteArrayOutputStream.toByteArray();
-    }
-
-    private void addBody(HTTPResponse httpResponse, ByteArrayOutputStream byteArrayOutputStream) {
-        try {
-            byteArrayOutputStream.write(getContentType(httpResponse));
-            byteArrayOutputStream.write(httpResponse.getBody());
-        } catch (IOException e) {
-            e.printStackTrace();
+            addBody(httpResponse);
         }
     }
 
-    private void addHeader(HTTPResponse httpResponse, ByteArrayOutputStream byteArrayOutputStream) {
-        try {
-            byteArrayOutputStream.write(getHeader(httpResponse));
-        } catch (IOException e) {
-            throw new ByteWriterException("Cannot write header : ", e);
+    private void addAllowedMethods(HTTPResponse httpResponse) throws IOException {
+        byteArrayOutputStream.write(("Allow : ").getBytes());
+        for (Method method : httpResponse.allowedMethods()) {
+            byteArrayOutputStream.write((method + ",").getBytes());
         }
+        byteArrayOutputStream.write("\n".getBytes());
+    }
+
+    private void addBody(HTTPResponse httpResponse) throws IOException {
+        byteArrayOutputStream.write(getContentType(httpResponse));
+        byteArrayOutputStream.write(httpResponse.getBody());
+    }
+
+    private void addHeader(HTTPResponse httpResponse) throws IOException {
+        byteArrayOutputStream.write(getHeader(httpResponse));
     }
 
     private byte[] getHeader(HTTPResponse httpResponse) {

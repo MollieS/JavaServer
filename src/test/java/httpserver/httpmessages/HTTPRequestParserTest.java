@@ -2,6 +2,10 @@ package httpserver.httpmessages;
 
 import org.junit.Test;
 
+import java.net.URI;
+
+import static httpserver.routing.Method.BOGUS;
+import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 
 public class HTTPRequestParserTest {
@@ -14,7 +18,7 @@ public class HTTPRequestParserTest {
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
-        assertEquals("GET", httpRequest.getMethod());
+        assertEquals(GET, httpRequest.getMethod());
     }
 
     @Test
@@ -23,6 +27,25 @@ public class HTTPRequestParserTest {
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
-        assertEquals("/", httpRequest.getRequestURI());
+        assertEquals(URI.create("/"), httpRequest.getRequestURI());
+    }
+
+    @Test
+    public void canParseABogusRequest() {
+        String request = "INVALID / HTTP/1.1";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(BOGUS, httpRequest.getMethod());
+    }
+
+    @Test
+    public void canGetDataFromARequest() {
+        String request = "POST /form \n\n\n\ndata=fatcat";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertEquals(URI.create("/form"), httpRequest.getRequestURI());
+        assertEquals("data=fatcat", httpRequest.getData());
     }
 }

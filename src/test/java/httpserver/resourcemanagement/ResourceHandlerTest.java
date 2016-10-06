@@ -2,6 +2,7 @@ package httpserver.resourcemanagement;
 
 import org.junit.Test;
 
+import java.net.URI;
 import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertFalse;
@@ -14,14 +15,14 @@ public class ResourceHandlerTest {
 
     @Test
     public void returnsADirectoryResource() {
-        Resource resource = resourceHandler.getResource("/");
+        Resource resource = resourceHandler.getResource(URI.create("/"));
 
         assertTrue(resource.isADirectory());
     }
 
     @Test
     public void returnsAResourceThatContainsDirectoryContent() {
-        Resource resource = resourceHandler.getResource("/");
+        Resource resource = resourceHandler.getResource(URI.create("/"));
 
         String body = new String(resource.getContents(), Charset.forName("UTF-8"));
 
@@ -30,7 +31,7 @@ public class ResourceHandlerTest {
 
     @Test
     public void returnsANonExistentResourceForAFileThatDoesNotExist() {
-        Resource resource = resourceHandler.getResource("/foobar");
+        Resource resource = resourceHandler.getResource(URI.create("/foobar"));
 
         assertFalse(resource.exists());
     }

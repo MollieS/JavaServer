@@ -4,6 +4,8 @@ import httpserver.ClientSocket;
 import httpserver.httpmessages.HTTPRequest;
 import httpserver.httpmessages.HTTPResponse;
 
+import static httpserver.routing.Method.GET;
+
 public class SocketFake implements ClientSocket {
 
     @Override
@@ -18,6 +20,6 @@ public class SocketFake implements ClientSocket {
 
     @Override
     public HTTPRequest getRequest() {
-        return new HTTPRequest("GET", "/");
+        return new HTTPRequest(GET, "/");
     }
 }
