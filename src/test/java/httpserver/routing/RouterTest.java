@@ -21,9 +21,9 @@ import static org.junit.Assert.assertTrue;
 
 public class RouterTest {
 
-    String path = getClass().getClassLoader().getResource("directory").getPath();
+    private String path = getClass().getClassLoader().getResource("directory").getPath();
     private List<Route> routes = Arrays.asList(new CoffeeRoute(GET), new TeaRoute(GET), new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD), new RedirectRoute("http://localhost:5000", GET), new PartialContentRoute(new HTTPResourceHandler(path, new ResourceParser()), GET));
-    ResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
+    private ResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
     private Router router = new Router(new FileRoute(resourceHandler), routes);
 
     @Test

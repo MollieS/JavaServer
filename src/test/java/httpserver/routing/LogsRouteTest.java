@@ -5,6 +5,7 @@ import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.ResponseHeader;
 import org.junit.Test;
 
+import static httpserver.ByteArrayConverter.getString;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
 
@@ -28,6 +29,6 @@ public class LogsRouteTest {
 
         Response httpResponse = logsRoute.performAction(httpRequest);
 
-        assertEquals("Basic realm=/logs", httpResponse.getValue(ResponseHeader.AUTH));
+        assertEquals("Basic realm=/logs", getString(httpResponse.getValue(ResponseHeader.AUTH)));
     }
 }

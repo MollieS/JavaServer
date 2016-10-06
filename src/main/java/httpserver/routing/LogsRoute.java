@@ -22,7 +22,7 @@ public class LogsRoute extends Route {
 
     @Override
     public Response performAction(HTTPRequest httpRequest) {
-        headers.put(ResponseHeader.AUTH, (AUTHENTICATION_SCHEME + "realm=" + URI).getBytes());
+        headers.put(ResponseHeader.AUTH, (AUTHENTICATION_SCHEME + " " + "realm=" + URI).getBytes());
         return HTTPResponse.create(UNAUTHORIZED).withHeaders(headers);
     }
 }

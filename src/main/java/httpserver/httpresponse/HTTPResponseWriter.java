@@ -36,6 +36,7 @@ public class HTTPResponseWriter {
                 byteArrayOutputStream.write(HEADER_END);
             }
         }
+        byteArrayOutputStream.write(HEADER_END);
         if (httpResponse.hasBody()) {
             addBody(httpResponse);
         }
