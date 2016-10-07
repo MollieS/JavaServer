@@ -27,7 +27,7 @@ public class MethodOptionsRoute extends Route {
             if (httpRequest.getMethod() == Method.OPTIONS) {
                 byte[] allowedMethods = formatAllowedMethods();
                 headers.put(ALLOW, allowedMethods);
-                httpResponse.withHeaders(headers);
+                return httpResponse.withHeaders(headers);
             }
             return httpResponse;
         }

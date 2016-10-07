@@ -15,11 +15,17 @@ public class HTTPRequest implements Request {
     private final HashMap<RequestHeader, String> headers;
     private String statusHeader;
 
-    public HTTPRequest(Method method, String requestURI) {
+    private HTTPRequest(Method method, String requestURI) {
         this.method = method;
         this.requestURI = URI.create(requestURI);
         this.statusHeader = method.name() + " " + requestURI + " " + PROTOCOL_VERSION;
         this.headers = new HashMap<>();
+    }
+
+    private HTTPRequest(Method method, URI requestURI, HashMap<RequestHeader, String> headers) {
+        this.method = method;
+        this.requestURI = requestURI;
+        this.headers = headers;
     }
 
     @Override
@@ -37,12 +43,6 @@ public class HTTPRequest implements Request {
         return null;
     }
 
-    public void addHeader(HashMap<RequestHeader, String> requestHeaders) {
-        for (Map.Entry<RequestHeader, String> header : requestHeaders.entrySet()) {
-            this.headers.put(header.getKey(), header.getValue());
-        }
-    }
-
     public Method getMethod() {
         return method;
     }
@@ -53,5 +53,13 @@ public class HTTPRequest implements Request {
 
     public String getStatusHeader() {
         return statusHeader;
+    }
+
+    public static HTTPRequest create(Method requestMethod, String path) {
+        return new HTTPRequest(requestMethod, path);
+    }
+
+    public HTTPRequest withHeaders(HashMap<RequestHeader, String> headers) {
+        return new HTTPRequest(this.method, this.requestURI, headers);
     }
 }

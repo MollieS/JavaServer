@@ -3,7 +3,6 @@ package httpserver.routing;
 import httpserver.Request;
 import httpserver.ResourceHandler;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httprequests.RequestFake;
 import httpserver.httpresponse.ResponseHeader;
 import httpserver.resourcemanagement.HTTPResourceHandler;
@@ -50,7 +49,7 @@ public class RouterTest {
 
     @Test
     public void returnsA418ResponseForAGETToCoffee() {
-        Request httpRequest = new HTTPRequest(GET, "/coffee");
+        Request httpRequest = new RequestFake(GET, "/coffee");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -60,7 +59,7 @@ public class RouterTest {
 
     @Test
     public void returnsA200ResponseForAGETToTea() {
-        Request httpRequest = new HTTPRequest(GET, "/tea");
+        Request httpRequest = new RequestFake(GET, "/tea");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -69,7 +68,7 @@ public class RouterTest {
 
     @Test
     public void returnsA405ResponseForAPOST() {
-        Request httpRequest = new HTTPRequest(POST, "/file1");
+        Request httpRequest = new RequestFake(POST, "/file1");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -78,7 +77,7 @@ public class RouterTest {
 
     @Test
     public void returnsA200ResponseForOptionsRequestToMethodOptions() {
-        Request httpRequest = new HTTPRequest(OPTIONS, "/method_options");
+        Request httpRequest = new RequestFake(OPTIONS, "/method_options");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -87,7 +86,7 @@ public class RouterTest {
 
     @Test
     public void returnsA200ResponseForAHEADRequestToRoot() {
-        HTTPRequest httpRequest = new HTTPRequest(HEAD, "/");
+        Request httpRequest = new RequestFake(HEAD, "/");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -96,7 +95,7 @@ public class RouterTest {
 
     @Test
     public void addsAllowedMethodsToAnOptionsRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
+        Request httpRequest = new RequestFake(OPTIONS, "/method_options");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -105,7 +104,7 @@ public class RouterTest {
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToRoot() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/");
+        Request httpRequest = new RequestFake(GET, "/");
         Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
@@ -118,7 +117,7 @@ public class RouterTest {
 
     @Test
     public void buildsTheCorrectResponseForAGETRequestToAJPEG() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/image.jpeg");
+        Request httpRequest = new RequestFake(GET, "/image.jpeg");
         Response httpResponse = router.route(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
@@ -128,7 +127,7 @@ public class RouterTest {
 
     @Test
     public void aHeadRequestDoesNotContainBody() {
-        HTTPRequest httpRequest = new HTTPRequest(HEAD, "/");
+        Request httpRequest = new RequestFake(HEAD, "/");
         Response httpResponse = router.route(httpRequest);
 
         Assert.assertFalse(httpResponse.hasBody());
@@ -136,7 +135,7 @@ public class RouterTest {
 
     @Test
     public void returnsTheCorrectResponseForAnUnknownURL() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/foobar");
+        Request httpRequest = new RequestFake(GET, "/foobar");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -146,7 +145,7 @@ public class RouterTest {
 
     @Test
     public void returnsTheCorrectResponseForARedirect() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/redirect");
+        Request httpRequest = new RequestFake(GET, "/redirect");
 
         Response httpResponse = router.route(httpRequest);
 

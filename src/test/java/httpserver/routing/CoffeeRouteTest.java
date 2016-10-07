@@ -1,7 +1,8 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import httpserver.httpresponse.ResponseHeader;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class CoffeeRouteTest {
 
     @Test
     public void returnsTheCorrectStatusForAGet() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
+        Request httpRequest = new RequestFake(GET, "/coffee");
 
         Response httpResponse = coffeeRoute.performAction(httpRequest);
 
@@ -27,7 +28,7 @@ public class CoffeeRouteTest {
 
     @Test
     public void addsBodyToResponseForGet() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
+        Request httpRequest = new RequestFake(GET, "/coffee");
 
         Response httpResponse = coffeeRoute.performAction(httpRequest);
         String body = getString(httpResponse.getBody());
@@ -46,7 +47,7 @@ public class CoffeeRouteTest {
 
     @Test
     public void returnsA405ForMethodNotAllowed() {
-        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/coffee");
+        Request httpRequest = new RequestFake(BOGUS, "/coffee");
 
         Response httpResponse = coffeeRoute.performAction(httpRequest);
 

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestTest {
 
-    private HTTPRequest httpRequest = new HTTPRequest(GET, "/");
+    private HTTPRequest httpRequest = HTTPRequest.create(GET, "/");
     private HashMap<RequestHeader, String> headers = new HashMap<>();
 
     @Test
@@ -29,7 +29,7 @@ public class HTTPRequestTest {
     @Test
     public void knowsIfItHasParameters() {
         headers.put(PARAMS, "data=hello");
-        httpRequest.addHeader(headers);
+        httpRequest = httpRequest.withHeaders(headers);
 
         assertTrue(httpRequest.hasHeader(PARAMS));
         assertEquals("data=hello", httpRequest.getValue(PARAMS));
@@ -38,7 +38,7 @@ public class HTTPRequestTest {
     @Test
     public void knowsIfRangeStartIsSet() {
         headers.put(RANGE_START, "1");
-        httpRequest.addHeader(headers);
+        httpRequest = httpRequest.withHeaders(headers);
 
         assertTrue(httpRequest.hasHeader(RANGE_START));
         assertEquals("1", httpRequest.getValue(RANGE_START));
@@ -47,13 +47,15 @@ public class HTTPRequestTest {
     @Test
     public void knowsIfRangeEndIsSet() {
         headers.put(RANGE_END, "1");
-        httpRequest.addHeader(headers);
+        httpRequest = HTTPRequest.create(GET, "/").withHeaders(headers);
 
         assertTrue(httpRequest.hasHeader(RANGE_END));
     }
 
     @Test
     public void returnsNullIfHeaderIsNotSet() {
+        httpRequest = HTTPRequest.create(GET, "/");
+
         assertNull(httpRequest.getValue(PARAMS));
     }
 }

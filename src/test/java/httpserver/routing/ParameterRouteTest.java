@@ -1,7 +1,7 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class ParameterRouteTest {
 
     @Test
     public void canGiveA405ForMethodNotAllowed() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/parameters");
+        Request httpRequest = new RequestFake(POST, "/parameters");
 
         Response httpResponse = parameterRoute.performAction(httpRequest);
 

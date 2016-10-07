@@ -17,15 +17,16 @@ public class HTTPRequestParser {
     }
 
     private HTTPRequest createRequest(String request, URI uri, Method requestMethod) {
-        HTTPRequest httpRequest = new HTTPRequest(requestMethod, uri.getPath());
         HashMap<RequestHeader, String> headers = new HashMap<>();
         for (RequestHeader requestHeader : RequestHeader.values()) {
             if (request.contains(requestHeader.header())) {
                 headers.put(requestHeader, getHeaderData(requestHeader, request, uri));
             }
         }
-        httpRequest.addHeader(headers);
-        return httpRequest;
+        if (headers.isEmpty()) {
+            return HTTPRequest.create(requestMethod, uri.getPath());
+        }
+        return HTTPRequest.create(requestMethod, uri.getPath()).withHeaders(headers);
     }
 
     private String getHeaderData(RequestHeader requestHeader, String request, URI uri) {

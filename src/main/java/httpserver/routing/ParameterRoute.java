@@ -20,18 +20,19 @@ public class ParameterRoute extends Route {
     @Override
     public Response performAction(Request httpRequest) {
         if (methodIsAllowed(httpRequest.getMethod())) {
-            HTTPResponse httpResponse = HTTPResponse.create(OK);
-            addBody(httpRequest, httpResponse);
+            Response httpResponse = HTTPResponse.create(OK);
+            httpResponse = addBody(httpRequest, httpResponse);
             return httpResponse;
         }
         return methodNotAllowed();
     }
 
-    private void addBody(Request httpRequest, HTTPResponse httpResponse) {
+    private Response addBody(Request httpRequest, Response httpResponse) {
         if (httpRequest.hasHeader(PARAMS)) {
             Resource resource = new HTTPResource(formatParameters(httpRequest));
-            httpResponse.withBody(resource);
+            return httpResponse.withBody(resource);
         }
+        return httpResponse;
     }
 
     private byte[] formatParameters(Request httpRequest) {

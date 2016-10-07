@@ -23,7 +23,6 @@ public class MethodOptionsTwoRoute extends Route {
     public Response performAction(Request httpRequest) {
         HTTPResponse httpResponse = HTTPResponse.create(OK);
         headers.put(ALLOW, formatAllowedMethods());
-        httpResponse.withHeaders(headers);
-        return httpResponse;
+        return httpResponse.withHeaders(headers);
     }
 }

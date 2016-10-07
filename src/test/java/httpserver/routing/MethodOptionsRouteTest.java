@@ -1,7 +1,8 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -17,7 +18,7 @@ public class MethodOptionsRouteTest {
 
     @Test
     public void returnsA200ResponseForAGetRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/method_options");
+        Request httpRequest = new RequestFake(GET, "/method_options");
 
         Response httpResponse = methodOptionsRoute.performAction(httpRequest);
 
@@ -27,7 +28,7 @@ public class MethodOptionsRouteTest {
 
     @Test
     public void returnsA200ResponseForAPostRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/method_options");
+        Request httpRequest = new RequestFake(POST, "/method_options");
 
         Response httpResponse = methodOptionsRoute.performAction(httpRequest);
 
@@ -37,7 +38,7 @@ public class MethodOptionsRouteTest {
 
     @Test
     public void returnsA405IfMethodNotAllowed() {
-        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/method_options");
+        Request httpRequest = new RequestFake(BOGUS, "/method_options");
 
         Response httpResponse = methodOptionsRoute.performAction(httpRequest);
 
@@ -46,7 +47,7 @@ public class MethodOptionsRouteTest {
 
     @Test
     public void returnsResponseWithMethodsForOptionsRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
+        Request httpRequest = new RequestFake(OPTIONS, "/method_options");
 
         Response httpResponse = methodOptionsRoute.performAction(httpRequest);
         String allowedMethods = new String(httpResponse.getValue(ALLOW), Charset.defaultCharset());

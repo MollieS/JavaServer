@@ -21,6 +21,19 @@ public class HTTPResponse implements Response {
         headers.put(DATE, httpResponseDate.getDate().getBytes());
     }
 
+    public HTTPResponse(int statusCode, String reasonPhrase, HashMap<ResponseHeader, byte[]> headers) {
+        this.statusCode = statusCode;
+        this.reasonPhrase = reasonPhrase;
+        this.headers = headers;
+    }
+
+    public HTTPResponse(int statusCode, String reasonPhrase, HashMap newHeaders, byte[] contents) {
+        this.statusCode = statusCode;
+        this.reasonPhrase = reasonPhrase;
+        this.headers = newHeaders;
+        this.body = contents;
+    }
+
     public static HTTPResponse create(StatusCode statusCode) {
         return new HTTPResponse(statusCode.code, statusCode.reason, new HTTPResponseDate());
     }
@@ -62,18 +75,31 @@ public class HTTPResponse implements Response {
 
     @Override
     public HTTPResponse withHeaders(HashMap<ResponseHeader, byte[]> headers) {
-        this.headers = headers;
-        return this;
+        headers = addHeaders(headers);
+        return new HTTPResponse(this.statusCode, this.reasonPhrase, headers);
+    }
+
+    private HashMap<ResponseHeader, byte[]> addHeaders(HashMap<ResponseHeader, byte[]> headers) {
+        HashMap newHeaders = new HashMap();
+        copyHeaders(newHeaders, this.headers);
+        copyHeaders(newHeaders, headers);
+        return newHeaders;
+    }
+
+    private void copyHeaders(HashMap newHeaders, HashMap<ResponseHeader, byte[]> headers) {
+        for (Map.Entry entry : headers.entrySet()) {
+            newHeaders.put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
     public Response withBody(Resource resource) {
-        this.body = resource.getContents();
-        headers.put(CONTENT_TYPE, resource.getContentType().getBytes());
+        HashMap newHeaders = new HashMap();
+        newHeaders.put(CONTENT_TYPE, resource.getContentType().getBytes());
         if (this.statusCode == 206) {
             String contentRange = String.valueOf(resource.getContents().length);
-            headers.put(CONTENT_RANGE, contentRange.getBytes());
+            newHeaders.put(CONTENT_RANGE, contentRange.getBytes());
         }
-        return this;
+        return new HTTPResponse(this.statusCode, this.reasonPhrase, newHeaders, resource.getContents());
     }
 }

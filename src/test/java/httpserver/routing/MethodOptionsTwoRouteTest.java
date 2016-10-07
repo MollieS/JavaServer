@@ -1,7 +1,8 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -17,7 +18,7 @@ public class MethodOptionsTwoRouteTest {
     @Test
     public void sendsTheCorrectResponseForAnOptionsRequest() {
         MethodOptionsTwoRoute methodOptionsTwoRoute = new MethodOptionsTwoRoute(GET, OPTIONS);
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options2");
+        Request httpRequest = new RequestFake(OPTIONS, "/method_options2");
 
         Response httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
         String allowedMethods = new String(httpResponse.getValue(ALLOW), Charset.defaultCharset());
@@ -32,7 +33,7 @@ public class MethodOptionsTwoRouteTest {
     public void sendsTheCorrectResponseForAGetRequest() {
         MethodOptionsTwoRoute methodOptionsTwoRoute = new MethodOptionsTwoRoute(GET, OPTIONS);
 
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/method_options2");
+        Request httpRequest = new RequestFake(GET, "/method_options2");
         Response httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
 
         assertEquals(200, httpResponse.getStatusCode());

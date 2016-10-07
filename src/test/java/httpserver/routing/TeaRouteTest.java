@@ -1,7 +1,7 @@
 package httpserver.routing;
 
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
 import static httpserver.routing.Method.GET;
@@ -14,7 +14,7 @@ public class TeaRouteTest {
 
     @Test
     public void sendsA200ReponseForAGet() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/tea");
+        RequestFake httpRequest = new RequestFake(GET, "/tea");
 
         Response httpResponse = teaRoute.performAction(httpRequest);
 
@@ -24,7 +24,7 @@ public class TeaRouteTest {
 
     @Test
     public void sendsA405IfMethodNotAllowed() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/tea");
+        RequestFake httpRequest = new RequestFake(POST, "/tea");
 
         Response httpResponse = teaRoute.performAction(httpRequest);
 

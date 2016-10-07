@@ -3,7 +3,6 @@ package httpserver.routing;
 import httpserver.Request;
 import httpserver.Resource;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResource;
 
@@ -48,7 +47,7 @@ public class FormRoute extends Route {
         }
     }
 
-    private HTTPResponse getHttpResponse(Request httpRequest) throws IOException {
+    private Response getHttpResponse(Request httpRequest) throws IOException {
         HTTPResponse httpResponse = HTTPResponse.create(OK);
         switch (httpRequest.getMethod()) {
             case POST:
@@ -59,8 +58,7 @@ public class FormRoute extends Route {
                 break;
             case GET:
                 Resource resource = new HTTPResource(readFromFile());
-                httpResponse.withBody(resource);
-                break;
+                return httpResponse.withBody(resource);
             case DELETE:
                 deleteFileContents();
                 break;

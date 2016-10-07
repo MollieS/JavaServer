@@ -20,6 +20,6 @@ public class SocketFake implements ClientSocket {
 
     @Override
     public HTTPRequest getRequest() {
-        return new HTTPRequest(GET, "/");
+        return HTTPRequest.create(GET, "/");
     }
 }
