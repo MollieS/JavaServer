@@ -81,7 +81,7 @@ public class ServerRunnerTest {
 
     @Test
     public void createsALogger() throws IOException {
-        HTTPLogger logger = serverRunner.createLogger();
+        HTTPLogger logger = serverRunner.createLogger("/");
 
         assertNotNull(logger);
     }

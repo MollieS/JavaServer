@@ -43,29 +43,24 @@ public class ServerRunner {
         return PUBLIC_DIR;
     }
 
-    public HTTPLogger createLogger() {
-        return new HTTPLogger(logPath.getPath());
+    public HTTPLogger createLogger(String path) {
+        return new HTTPLogger(path);
     }
 
     public List<Route> createRoutes(String location, ResourceHandler resourceHandler, String path) throws IOException {
-        String resourcesPath = getResourcePath(path);
         List<Route> registeredRoutes = new ArrayList<>();
         registeredRoutes.add(new CoffeeRoute(GET));
         registeredRoutes.add(new TeaRoute(GET));
         registeredRoutes.add(new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD));
-        registeredRoutes.add(new FormRoute(resourcesPath, GET, POST, PUT, DELETE));
+        registeredRoutes.add(new FormRoute(path + "/form", GET, POST, PUT, DELETE));
         registeredRoutes.add(new ParameterRoute(GET));
         registeredRoutes.add(new RedirectRoute(location, GET));
         registeredRoutes.add(new MethodOptionsTwoRoute(GET, OPTIONS));
         registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
         registeredRoutes.add(new CookieRoute(GET));
         registeredRoutes.add(new EatCookieRoute(GET));
-        registeredRoutes.add(new LogsRoute(logPath.getPath(), GET));
+        registeredRoutes.add(new LogsRoute(path + "/logs", GET));
         return registeredRoutes;
-    }
-
-    private String getResourcePath(String path) throws IOException {
-        return getClass().getClassLoader().getResources(path).toString();
     }
 
     public String buildUrl(String[] args) {

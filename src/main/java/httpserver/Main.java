@@ -25,9 +25,9 @@ public class Main {
         List<Route> registeredRoutes = null;
         HTTPLogger logger = null;
             try {
-                registeredRoutes = serverRunner.createRoutes(url, resourceHandler, "/form");
+                registeredRoutes = serverRunner.createRoutes(url, resourceHandler, path);
                 socketServer = new HTTPSocketServer(new ServerSocket(port));
-                logger = serverRunner.createLogger();
+                logger = serverRunner.createLogger(path + "/logs");
             } catch (IOException e) {
                 e.printStackTrace();
             }
