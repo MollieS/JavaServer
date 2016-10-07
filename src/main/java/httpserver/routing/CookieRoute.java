@@ -28,7 +28,7 @@ public class CookieRoute extends Route {
         Resource resource = new HTTPResource(body);
         if (httpRequest.hasHeader(PARAMS)) {
             headers.put(ResponseHeader.COOKIE, httpRequest.getValue(PARAMS).getBytes());
-            return HTTPResponse.create(OK).withBody(resource).withHeaders(headers);
+            return HTTPResponse.create(OK).withHeaders(headers).withBody(resource);
         }
         return HTTPResponse.create(OK).withBody(resource);
     }

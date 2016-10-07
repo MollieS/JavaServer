@@ -3,7 +3,6 @@ package httpserver.routing;
 import httpserver.HTTPRouter;
 import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 
 import java.net.URI;
 import java.util.List;

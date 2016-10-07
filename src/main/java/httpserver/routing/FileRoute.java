@@ -22,7 +22,7 @@ public class FileRoute extends Route {
     @Override
     public Response performAction(Request httpRequest) {
         if (!methodIsAllowed(httpRequest.getMethod())) {
-            return HTTPResponse.create(NOTALLOWED);
+            return methodNotAllowed();
         }
         FileResource resource = resourceHandler.getResource(httpRequest.getRequestURI());
         if (resource.exists()) {

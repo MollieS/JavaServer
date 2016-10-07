@@ -24,13 +24,21 @@ public class MethodOptionsRoute extends Route {
         HTTPResponse httpResponse;
         if (methodIsAllowed(httpRequest.getMethod())) {
             httpResponse = HTTPResponse.create(OK);
-            if (httpRequest.getMethod() == Method.OPTIONS) {
-                byte[] allowedMethods = formatAllowedMethods();
-                headers.put(ALLOW, allowedMethods);
-                return httpResponse.withHeaders(headers);
+            if (isAnOptionsRequest(httpRequest)) {
+                return optionsResponse(httpResponse);
             }
             return httpResponse;
         }
         return super.methodNotAllowed();
+    }
+
+    private Response optionsResponse(HTTPResponse httpResponse) {
+        byte[] allowedMethods = formatAllowedMethods();
+        headers.put(ALLOW, allowedMethods);
+        return httpResponse.withHeaders(headers);
+    }
+
+    private boolean isAnOptionsRequest(Request httpRequest) {
+        return httpRequest.getMethod() == Method.OPTIONS;
     }
 }

@@ -17,10 +17,10 @@ public class CoffeeRoute extends Route {
     }
 
     public Response performAction(Request httpRequest) {
-        if (super.methodIsAllowed(httpRequest.getMethod())) {
+        if (methodIsAllowed(httpRequest.getMethod())) {
             Resource resource = new HTTPResource(TEAPOT.reason.getBytes());
             return HTTPResponse.create(TEAPOT).withBody(resource);
         }
-        return super.methodNotAllowed();
+        return methodNotAllowed();
     }
 }

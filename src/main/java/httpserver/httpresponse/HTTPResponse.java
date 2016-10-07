@@ -96,6 +96,7 @@ public class HTTPResponse implements Response {
     public Response withBody(Resource resource) {
         HashMap newHeaders = new HashMap();
         newHeaders.put(CONTENT_TYPE, resource.getContentType().getBytes());
+        copyHeaders(newHeaders, this.headers);
         if (this.statusCode == 206) {
             String contentRange = String.valueOf(resource.getContents().length);
             newHeaders.put(CONTENT_RANGE, contentRange.getBytes());
