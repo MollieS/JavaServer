@@ -1,9 +1,10 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Resource;
 import httpserver.ResourceHandler;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestHeader;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.FileResource;
 import httpserver.resourcemanagement.HTTPResource;
@@ -23,33 +24,35 @@ public class PartialContentRoute extends Route {
     }
 
     @Override
-    public Response performAction(HTTPRequest httpRequest) {
+    public Response performAction(Request httpRequest) {
         FileResource resource = resourceHandler.getResource(super.getUri());
-        if (httpRequest.hasRange()) {
+        if (httpRequest.hasHeader(RequestHeader.RANGE)) {
             Resource partialResource = getPartialContent(httpRequest, resource);
             return HTTPResponse.create(PARTIAL).withBody(partialResource);
         }
         return HTTPResponse.create(OK).withBody(resource);
     }
 
-    private HTTPResource getPartialContent(HTTPRequest httpRequest, FileResource resource) {
+    private HTTPResource getPartialContent(Request httpRequest, FileResource resource) {
         int rangeStart = getRangeStart(httpRequest, resource);
         int rangeEnd = getRangeEnd(httpRequest, resource);
         byte[] body = Arrays.copyOfRange(resource.getContents(), rangeStart, rangeEnd);
         return new HTTPResource(body);
     }
 
-    private int getRangeEnd(HTTPRequest httpRequest, FileResource resource) {
-        if (httpRequest.hasRangeEnd() && httpRequest.hasRangeStart()) {
-            return httpRequest.getRangeEnd();
+    private int getRangeEnd(Request httpRequest, FileResource resource) {
+        if (httpRequest.hasHeader(RequestHeader.RANGE_END) && httpRequest.hasHeader(RequestHeader.RANGE_START)) {
+            String rangeEnd = httpRequest.getValue(RequestHeader.RANGE_END);
+            return Integer.valueOf(rangeEnd) + 1;
         }
         return resource.getContents().length;
     }
 
-    private int getRangeStart(HTTPRequest httpRequest, FileResource resource) {
-        if (!httpRequest.hasRangeStart()) {
-            return (resource.getContents().length - httpRequest.getRangeEnd()) + 1;
+    private int getRangeStart(Request httpRequest, FileResource resource) {
+        if (!httpRequest.hasHeader(RequestHeader.RANGE_START)) {
+            int rangeEnd = Integer.parseInt(httpRequest.getValue(RequestHeader.RANGE_END));
+            return (resource.getContents().length - (rangeEnd + 1)) + 1;
         }
-        return httpRequest.getRangeStart();
+        return Integer.parseInt(httpRequest.getValue(RequestHeader.RANGE_START));
     }
 }

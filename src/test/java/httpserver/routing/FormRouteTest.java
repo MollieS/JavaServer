@@ -2,6 +2,7 @@ package httpserver.routing;
 
 import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +21,8 @@ public class FormRouteTest {
 
     private String path = getClass().getClassLoader().getResource("directory").getPath() + ("/form");
     private FormRoute formRoute = new FormRoute(path, GET, POST, PUT, DELETE);
-    private HTTPRequest postRequest = new HTTPRequest(POST, "/form");
-    private HTTPRequest getRequest = new HTTPRequest(GET, "/form");
+    private RequestFake postRequest = new RequestFake(POST, "/form");
+    private RequestFake getRequest = new RequestFake(GET, "/form");
 
     @Before
     public void setUp() throws IOException {
@@ -62,7 +63,7 @@ public class FormRouteTest {
 
         formRoute.performAction(postRequest);
 
-        HTTPRequest httpRequest2 = new HTTPRequest(PUT, "/");
+        RequestFake httpRequest2 = new RequestFake(PUT, "/");
         httpRequest2.setData("data=goodbye");
 
         formRoute.performAction(httpRequest2);

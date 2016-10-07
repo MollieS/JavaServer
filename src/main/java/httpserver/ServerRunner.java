@@ -43,8 +43,8 @@ public class ServerRunner {
         return PUBLIC_DIR;
     }
 
-    public HTTPLogger createLogger() throws IOException {
-        return new HTTPLogger(getResourcePath("logs"));
+    public HTTPLogger createLogger() {
+        return new HTTPLogger(logPath.getPath());
     }
 
     public List<Route> createRoutes(String location, ResourceHandler resourceHandler, String path) throws IOException {
@@ -65,8 +65,7 @@ public class ServerRunner {
     }
 
     private String getResourcePath(String path) throws IOException {
-        String formPath = getClass().getClassLoader().getResources(path).toString();
-        return formPath;
+        return getClass().getClassLoader().getResources(path).toString();
     }
 
     public String buildUrl(String[] args) {

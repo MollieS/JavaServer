@@ -1,7 +1,7 @@
 package httpserver.routing;
 
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import httpserver.httpresponse.ResponseHeader;
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +21,7 @@ public class LogsRouteTest {
     private String logsPath = getClass().getClassLoader().getResource("directory").getPath() + "/logs";
     private LogsRoute logsRoute = new LogsRoute(logsPath, GET);
     private File file = new File(logsPath);
+    private RequestFake httpRequest = new RequestFake(GET, "/logs");
 
     @Before
     public void setUp() throws IOException {
@@ -38,8 +39,6 @@ public class LogsRouteTest {
 
     @Test
     public void sendsA401IfNotAuthIsGiven() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/logs");
-
         Response httpResponse = logsRoute.performAction(httpRequest);
 
         assertEquals(401, httpResponse.getStatusCode());
@@ -48,8 +47,6 @@ public class LogsRouteTest {
 
     @Test
     public void hasAnAuthenticationChallenge() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/logs");
-
         Response httpResponse = logsRoute.performAction(httpRequest);
 
         assertEquals("Basic realm=/logs", getString(httpResponse.getValue(ResponseHeader.AUTH)));
@@ -57,7 +54,6 @@ public class LogsRouteTest {
 
     @Test
     public void sendsA200PasswordIfCredentialsMatch() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/logs");
         addAuthorization(httpRequest);
 
         Response response = logsRoute.performAction(httpRequest);
@@ -68,7 +64,6 @@ public class LogsRouteTest {
     @Test
     public void readsContentsOfLogsAnReturnsThemInBody() throws IOException {
         Files.write(file.toPath(), "GET / HTTP/1.1".getBytes());
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/logs");
         addAuthorization(httpRequest);
 
         Response response = logsRoute.performAction(httpRequest);
@@ -80,7 +75,6 @@ public class LogsRouteTest {
     @Test
     public void returnsAMessageInBodyIfLogsCannotBeRead() {
         file.delete();
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/logs");
         addAuthorization(httpRequest);
 
         Response response = logsRoute.performAction(httpRequest);
@@ -89,7 +83,7 @@ public class LogsRouteTest {
         assertEquals(body, "Cannot read logs");
     }
 
-    private void addAuthorization(HTTPRequest httpRequest) {
+    private void addAuthorization(RequestFake httpRequest) {
         byte[] codedCredentials = Base64.getEncoder().encode("admin:hunter2".getBytes());
         String credentials = getString(codedCredentials);
         httpRequest.setAuthorization(credentials);

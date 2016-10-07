@@ -1,7 +1,7 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.ResponseHeader;
 
@@ -16,15 +16,15 @@ import static httpserver.httpresponse.StatusCode.NOTALLOWED;
 public abstract class Route {
 
     private final URI uri;
-    private final HashMap<ResponseHeader, byte[]> headers;
+    private final HashMap<ResponseHeader, byte[]> responseHeaders;
     private List<Method> allowedMethods;
 
-    public abstract Response performAction(HTTPRequest httpRequest);
+    public abstract Response performAction(Request request);
 
     public Route(String uri, Method...methods) {
         this.uri = URI.create(uri);
         this.allowedMethods = new ArrayList<>();
-        this.headers = new HashMap<ResponseHeader, byte[]>();
+        this.responseHeaders = new HashMap<>();
         Collections.addAll(allowedMethods, methods);
     }
 
@@ -44,8 +44,8 @@ public abstract class Route {
         return HTTPResponse.create(NOTALLOWED);
     }
 
-    public HashMap<ResponseHeader, byte[]> getHeaders() {
-        return headers;
+    public HashMap<ResponseHeader, byte[]> getResponseHeaders() {
+        return responseHeaders;
     }
 
     public byte[] formatAllowedMethods() {

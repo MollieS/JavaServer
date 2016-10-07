@@ -1,8 +1,10 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.ResourceHandler;
 import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import httpserver.httpresponse.ResponseHeader;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
@@ -28,7 +30,7 @@ public class RouterTest {
 
     @Test
     public void getsTheCorrectHTTPResponseForAGetToCoffee() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
+        RequestFake httpRequest = new RequestFake(GET, "/coffee");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -48,7 +50,7 @@ public class RouterTest {
 
     @Test
     public void returnsA418ResponseForAGETToCoffee() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
+        Request httpRequest = new HTTPRequest(GET, "/coffee");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -58,7 +60,7 @@ public class RouterTest {
 
     @Test
     public void returnsA200ResponseForAGETToTea() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/tea");
+        Request httpRequest = new HTTPRequest(GET, "/tea");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -67,7 +69,7 @@ public class RouterTest {
 
     @Test
     public void returnsA405ResponseForAPOST() {
-        HTTPRequest httpRequest = new HTTPRequest(POST, "/file1");
+        Request httpRequest = new HTTPRequest(POST, "/file1");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -76,7 +78,7 @@ public class RouterTest {
 
     @Test
     public void returnsA200ResponseForOptionsRequestToMethodOptions() {
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options");
+        Request httpRequest = new HTTPRequest(OPTIONS, "/method_options");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -155,9 +157,9 @@ public class RouterTest {
 
     @Test
     public void returnsTheCorrectResponseForAPartialContentGetWithFullRange() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-        httpRequest.setRangeEnd(0);
-        httpRequest.setRangeEnd(4);
+        RequestFake httpRequest = new RequestFake(GET, "/partial_content.txt");
+        httpRequest.setRangeEnd("0");
+        httpRequest.setRangeEnd("4");
 
         Response httpResponse = router.route(httpRequest);
 
@@ -167,8 +169,8 @@ public class RouterTest {
 
     @Test
     public void returnsTheCorrectResponseForAPartialContentGetWithRangeEnd() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-        httpRequest.setRangeEnd(6);
+        RequestFake httpRequest = new RequestFake(GET, "/partial_content.txt");
+        httpRequest.setRangeEnd("6");
 
         Response httpResponse = router.route(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());

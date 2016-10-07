@@ -1,7 +1,7 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.ResponseHeader;
 
@@ -18,11 +18,11 @@ public class RedirectRoute extends Route {
     public RedirectRoute(String baseLocation, Method... methods) {
         super("/redirect", methods);
         this.baseLocation = baseLocation;
-        this.headers = getHeaders();
+        this.headers = getResponseHeaders();
     }
 
     @Override
-    public Response performAction(HTTPRequest httpRequest) {
+    public Response performAction(Request httpRequest) {
         headers.put(LOCATION, (baseLocation + "/").getBytes());
         return HTTPResponse.create(REDIRECT).withHeaders(headers);
     }

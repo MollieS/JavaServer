@@ -3,6 +3,9 @@ package httpserver.httprequests;
 import httpserver.routing.Method;
 
 import java.net.URI;
+import java.util.HashMap;
+
+import static httpserver.httprequests.RequestHeader.*;
 
 public class HTTPRequestParser {
 
@@ -15,55 +18,70 @@ public class HTTPRequestParser {
 
     private HTTPRequest createRequest(String request, URI uri, Method requestMethod) {
         HTTPRequest httpRequest = new HTTPRequest(requestMethod, uri.getPath());
-        addRange(request, httpRequest);
-        addData(request, httpRequest);
-        addQuery(uri, httpRequest);
-        addCookie(request, httpRequest);
-        addAuthorization(request, httpRequest);
+        HashMap<RequestHeader, String> headers = new HashMap<>();
+        for (RequestHeader requestHeader : RequestHeader.values()) {
+            if (request.contains(requestHeader.header())) {
+                headers.put(requestHeader, getHeaderData(requestHeader, request, uri));
+            }
+        }
+        httpRequest.addHeader(headers);
         return httpRequest;
     }
 
-    private void addAuthorization(String request, HTTPRequest httpRequest) {
-        if (request.contains("Authorization")) {
-            String[] lines = request.split("\n");
-            String cookieLine = getRangeLine(lines, "Authorization");
-            String cookie = cookieLine.split("Basic ")[1];
-            httpRequest.setAuthorization(cookie.trim());
+    private String getHeaderData(RequestHeader requestHeader, String request, URI uri) {
+        switch (requestHeader) {
+            case AUTHORIZATION:
+                return getHeaderValue(request, requestHeader, "Basic ");
+            case COOKIE:
+                return getHeaderValue(request, requestHeader, ": ");
+            case PARAMS:
+                return uri.getQuery();
+            case DATA:
+                return getData(request);
+            case RANGE:
+                return getRange(request);
+            case RANGE_START:
+                return getRangeStart(request);
+            case RANGE_END:
+                return getRangeEnd(request);
         }
+        return null;
     }
 
-    private void addCookie(String request, HTTPRequest httpRequest) {
-        if (request.contains("Cookie")) {
-            String[] lines = request.split("\n");
-            String cookieLine = getRangeLine(lines, "Cookie");
-            String cookie = cookieLine.split(": ")[1];
-            httpRequest.setCookie(cookie);
+    private String getRangeStart(String request) {
+        String[] ranges = splitRangeLine(request);
+        if (!ranges[0].equals("")) {
+            return ranges[0];
         }
+        return null;
     }
 
-    private void addRange(String request, HTTPRequest httpRequest) {
-        if (request.contains("Range")) {
-            String[] lines = request.split("\n");
-            String rangeLine = getRangeLine(lines, "Range");
-            String[] range = rangeLine.split("=")[1].split("-");
-            setRangeStart(httpRequest, range[0]);
-            setRangeEnd(httpRequest, range);
+    private String getRangeEnd(String request) {
+        String[] ranges = splitRangeLine(request);
+        if (ranges.length > 1 && !(ranges[1].trim().equals(""))) {
+            return ranges[1].trim();
         }
+        return null;
     }
 
-    private void setRangeEnd(HTTPRequest httpRequest, String[] range) {
-        if (range.length > 1 && !(range[1].trim().equals(""))) {
-            httpRequest.setRangeEnd(Integer.valueOf(range[1].trim()));
-        }
+    private String[] splitRangeLine(String request) {
+        String range = getRange(request);
+        return range.split("=")[1].split("-");
     }
 
-    private void setRangeStart(HTTPRequest httpRequest, String s) {
-        if (!s.equals("")) {
-            httpRequest.setRangeStart(Integer.valueOf(s));
-        }
+    private String getRange(String request) {
+        String[] lines = request.split("\n");
+        String rangeLine = getHeaderLine(lines, RANGE.header());
+        return rangeLine.split(":")[1].trim();
     }
 
-    private String getRangeLine(String[] lines, String header) {
+    private String getHeaderValue(String request, RequestHeader requestHeader, String term) {
+        String[] lines = request.split("\n");
+        String cookieLine = getHeaderLine(lines, requestHeader.header());
+        return cookieLine.split(term)[1].trim();
+    }
+
+    private String getHeaderLine(String[] lines, String header) {
         String rangeLine = null;
         for (String line : lines) {
             if (line.contains(header)) {
@@ -73,22 +91,9 @@ public class HTTPRequestParser {
         return rangeLine;
     }
 
-    private void addQuery(URI uri, HTTPRequest httpRequest) {
-        if (uri.getQuery() != null) {
-            httpRequest.setParams(uri.getQuery());
-        }
-    }
-
-    private void addData(String request, HTTPRequest httpRequest) {
-        if (request.contains("data=")) {
-            parseData(request, httpRequest);
-        }
-    }
-
-    private void parseData(String request, HTTPRequest httpRequest) {
+    private String getData(String request) {
         String[] lines = request.split("\n");
-        String lastLine = lines[lines.length - 1];
-        httpRequest.setData(lastLine.trim());
+        return lines[lines.length - 1].trim();
     }
 
     private Method getMethod(String requestMethod) {

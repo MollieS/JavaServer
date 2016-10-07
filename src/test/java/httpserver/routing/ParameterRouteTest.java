@@ -2,6 +2,7 @@ package httpserver.routing;
 
 import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class ParameterRouteTest {
 
     private ParameterRoute parameterRoute = new ParameterRoute(GET);
-    private HTTPRequest getRequest = new HTTPRequest(GET, "/parameters");
+    private RequestFake getRequest = new RequestFake(GET, "/parameters");
 
     @Test
     public void addsParametersToResponseBody() {

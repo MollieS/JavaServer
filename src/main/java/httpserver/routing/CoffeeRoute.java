@@ -1,8 +1,8 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Resource;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResource;
 
@@ -16,7 +16,7 @@ public class CoffeeRoute extends Route {
         super(URI, methods);
     }
 
-    public Response performAction(HTTPRequest httpRequest) {
+    public Response performAction(Request httpRequest) {
         if (super.methodIsAllowed(httpRequest.getMethod())) {
             Resource resource = new HTTPResource(TEAPOT.reason.getBytes());
             return HTTPResponse.create(TEAPOT).withBody(resource);

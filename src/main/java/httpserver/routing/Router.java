@@ -1,6 +1,7 @@
 package httpserver.routing;
 
 import httpserver.HTTPRouter;
+import httpserver.Request;
 import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
 
@@ -20,7 +21,7 @@ public class Router implements HTTPRouter {
         this.fileRoute = fileRoute;
     }
 
-    public Response route(HTTPRequest httpRequest) {
+    public Response route(Request httpRequest) {
         for (Route route : registeredRoutes) {
             if (isRegistered(httpRequest.getRequestURI(), route)) {
                 return route.performAction(httpRequest);

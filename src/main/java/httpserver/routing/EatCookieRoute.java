@@ -1,11 +1,12 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Resource;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResource;
 
+import static httpserver.httprequests.RequestHeader.COOKIE;
 import static httpserver.httpresponse.StatusCode.OK;
 
 public class EatCookieRoute extends Route {
@@ -16,9 +17,9 @@ public class EatCookieRoute extends Route {
     }
 
     @Override
-    public Response performAction(HTTPRequest httpRequest) {
-        if (httpRequest.hasCookie()) {
-            String type = httpRequest.getCookie().split("=")[1];
+    public Response performAction(Request httpRequest) {
+        if (httpRequest.hasHeader(COOKIE)) {
+            String type = httpRequest.getValue(COOKIE).split("=")[1];
             Resource resource = new HTTPResource(("mmmm " + type).getBytes());
             return HTTPResponse.create(OK).withBody(resource);
         }

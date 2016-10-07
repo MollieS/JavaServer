@@ -1,7 +1,7 @@
 package httpserver.routing;
 
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import httpserver.httpresponse.ResponseHeader;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class CookieRouteTest {
 
     @Test
     public void sendsA200ResponseForAGetRequest() {
-        HTTPRequest request = new HTTPRequest(GET, "/cookie");
+        RequestFake request = new RequestFake(GET, "/cookie");
 
         Response httpResponse = cookieRoute.performAction(request);
 
@@ -26,7 +26,7 @@ public class CookieRouteTest {
 
     @Test
     public void sendsTheCorrectBodyForAGetRequest() {
-        HTTPRequest request = new HTTPRequest(GET, "/cookie");
+        RequestFake request = new RequestFake(GET, "/cookie");
 
         Response httpResponse = cookieRoute.performAction(request);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
@@ -36,7 +36,7 @@ public class CookieRouteTest {
 
     @Test
     public void addsACookieToResponseIfRequestHasParams() {
-        HTTPRequest request = new HTTPRequest(GET, "/cookie");
+        RequestFake request = new RequestFake(GET, "/cookie");
         request.setParams("chocolate");
 
         Response httpResponse = cookieRoute.performAction(request);

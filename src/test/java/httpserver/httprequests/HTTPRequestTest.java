@@ -3,14 +3,18 @@ package httpserver.httprequests;
 import org.junit.Test;
 
 import java.net.URI;
+import java.util.HashMap;
 
+import static httpserver.httprequests.RequestHeader.*;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestTest {
 
     private HTTPRequest httpRequest = new HTTPRequest(GET, "/");
+    private HashMap<RequestHeader, String> headers = new HashMap<>();
 
     @Test
     public void hasAMethod() {
@@ -24,37 +28,32 @@ public class HTTPRequestTest {
 
     @Test
     public void knowsIfItHasParameters() {
-        httpRequest.setParams("data=hello");
+        headers.put(PARAMS, "data=hello");
+        httpRequest.addHeader(headers);
 
-        assertTrue(httpRequest.hasParams());
+        assertTrue(httpRequest.hasHeader(PARAMS));
+        assertEquals("data=hello", httpRequest.getValue(PARAMS));
     }
 
     @Test
     public void knowsIfRangeStartIsSet() {
-        httpRequest.setRangeStart(1);
+        headers.put(RANGE_START, "1");
+        httpRequest.addHeader(headers);
 
-        assertTrue(httpRequest.hasRangeStart());
+        assertTrue(httpRequest.hasHeader(RANGE_START));
+        assertEquals("1", httpRequest.getValue(RANGE_START));
     }
 
     @Test
     public void knowsIfRangeEndIsSet() {
-        httpRequest.setRangeEnd(1);
+        headers.put(RANGE_END, "1");
+        httpRequest.addHeader(headers);
 
-        assertTrue(httpRequest.hasRangeEnd());
+        assertTrue(httpRequest.hasHeader(RANGE_END));
     }
 
     @Test
-    public void knowsIfItHasARangeIfOnlyEndIsSet() {
-        httpRequest.setRangeEnd(1);
-
-        assertTrue(httpRequest.hasRange());
+    public void returnsNullIfHeaderIsNotSet() {
+        assertNull(httpRequest.getValue(PARAMS));
     }
-
-    @Test
-    public void knowsIfItHasARangeIfOnlyStartIsSet() {
-        httpRequest.setRangeStart(1);
-
-        assertTrue(httpRequest.hasRange());
-    }
-
 }

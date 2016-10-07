@@ -1,8 +1,8 @@
 package httpserver.server;
 
 import httpserver.HTTPRouter;
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class HTTPServerTest {
     private class RouterDummy implements HTTPRouter {
 
         @Override
-        public Response route(HTTPRequest httpRequest) {
+        public Response route(Request httpRequest) {
             return null;
         }
     }

@@ -1,7 +1,7 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.ResponseHeader;
 
@@ -16,11 +16,11 @@ public class MethodOptionsRoute extends Route {
 
     public MethodOptionsRoute(Method... methods) {
         super("/method_options", methods);
-        this.headers = getHeaders();
+        this.headers = getResponseHeaders();
     }
 
     @Override
-    public Response performAction(HTTPRequest httpRequest) {
+    public Response performAction(Request httpRequest) {
         HTTPResponse httpResponse;
         if (methodIsAllowed(httpRequest.getMethod())) {
             httpResponse = HTTPResponse.create(OK);

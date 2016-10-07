@@ -1,7 +1,7 @@
 package httpserver.routing;
 
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -15,7 +15,7 @@ public class EatCookieRouteTest {
 
     @Test
     public void sendsAnOkResponseForAGetRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/eat_cookie");
+        RequestFake httpRequest = new RequestFake(GET, "/eat_cookie");
 
         Response httpResponse = eatCookieRoute.performAction(httpRequest);
 
@@ -25,7 +25,7 @@ public class EatCookieRouteTest {
 
     @Test
     public void sendsTheCorrectBodyIfRequestHasCookie() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/eat_cookue");
+        RequestFake httpRequest = new RequestFake(GET, "/eat_cookue");
         httpRequest.setCookie("type=chocolate");
 
         Response httpResponse = eatCookieRoute.performAction(httpRequest);

@@ -7,7 +7,6 @@ import httpserver.httpresponse.StatusCode;
 import httpserver.routing.Method;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static httpserver.httpresponse.ResponseHeader.*;
@@ -16,13 +15,11 @@ class HTTPResponseFake implements Response {
 
     private final StatusCode statusCode;
     private final HashMap<ResponseHeader, byte[]> headers;
-    private List<Method> allowedMethods;
     private byte[] body;
-    private int contentRange;
 
     public HTTPResponseFake(StatusCode code) {
         this.statusCode = code;
-        this.headers = new HashMap<ResponseHeader, byte[]>();
+        this.headers = new HashMap<>();
         headers.put(DATE, "Wed, 5 Oct".getBytes());
     }
 

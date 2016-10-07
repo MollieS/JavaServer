@@ -1,14 +1,15 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Resource;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.ResponseHeader;
 import httpserver.resourcemanagement.HTTPResource;
 
 import java.util.HashMap;
 
+import static httpserver.httprequests.RequestHeader.PARAMS;
 import static httpserver.httpresponse.StatusCode.OK;
 
 public class CookieRoute extends Route {
@@ -19,14 +20,14 @@ public class CookieRoute extends Route {
 
     public CookieRoute(Method... methods) {
         super(URI, methods);
-        this.headers = getHeaders();
+        this.headers = getResponseHeaders();
     }
 
     @Override
-    public Response performAction(HTTPRequest httpRequest) {
+    public Response performAction(Request httpRequest) {
         Resource resource = new HTTPResource(body);
-        if (httpRequest.hasParams()) {
-            headers.put(ResponseHeader.COOKIE, httpRequest.getParams().getBytes());
+        if (httpRequest.hasHeader(PARAMS)) {
+            headers.put(ResponseHeader.COOKIE, httpRequest.getValue(PARAMS).getBytes());
             return HTTPResponse.create(OK).withBody(resource).withHeaders(headers);
         }
         return HTTPResponse.create(OK).withBody(resource);

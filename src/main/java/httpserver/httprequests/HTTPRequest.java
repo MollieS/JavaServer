@@ -1,30 +1,46 @@
 package httpserver.httprequests;
 
+import httpserver.Request;
 import httpserver.routing.Method;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
-public class HTTPRequest {
+public class HTTPRequest implements Request {
 
     private static final String PROTOCOL_VERSION = "HTTP/1.1";
     private final Method method;
     private final URI requestURI;
-    private String data;
-    private String params;
-    private int rangeStart;
-    private int rangeEnd;
-    private boolean hasRangeEnd;
-    private boolean hasRangeStart;
-    private String cookie;
-    private String authorization;
+    private final HashMap<RequestHeader, String> headers;
     private String statusHeader;
 
     public HTTPRequest(Method method, String requestURI) {
         this.method = method;
         this.requestURI = URI.create(requestURI);
-        this.hasRangeStart = false;
-        this.hasRangeEnd = false;
         this.statusHeader = method.name() + " " + requestURI + " " + PROTOCOL_VERSION;
+        this.headers = new HashMap<>();
+    }
+
+    @Override
+    public boolean hasHeader(RequestHeader header) {
+        return (headers.containsKey(header) && headers.get(header) != null);
+    }
+
+    @Override
+    public String getValue(RequestHeader header) {
+        for (Map.Entry<RequestHeader, String> entry : headers.entrySet()) {
+            if (entry.getKey() == header) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public void addHeader(HashMap<RequestHeader, String> requestHeaders) {
+        for (Map.Entry<RequestHeader, String> header : requestHeaders.entrySet()) {
+            this.headers.put(header.getKey(), header.getValue());
+        }
     }
 
     public Method getMethod() {
@@ -33,80 +49,6 @@ public class HTTPRequest {
 
     public URI getRequestURI() {
         return requestURI;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public boolean hasParams() {
-        return params != null;
-    }
-
-    public void setRangeStart(int rangeStart) {
-        this.rangeStart = rangeStart;
-        this.hasRangeStart = true;
-    }
-
-    public void setRangeEnd(int rangeEnd) {
-        this.rangeEnd = rangeEnd + 1;
-        this.hasRangeEnd = true;
-    }
-
-    public boolean hasRange() {
-        return hasRangeStart || hasRangeEnd;
-    }
-
-    public int getRangeStart() {
-        return rangeStart;
-    }
-
-    public int getRangeEnd() {
-        return rangeEnd;
-    }
-
-    public boolean hasRangeEnd() {
-        return hasRangeEnd;
-    }
-
-    public boolean hasRangeStart() {
-        return hasRangeStart;
-    }
-
-    public String getCookie() {
-        return cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
-
-    public boolean hasCookie() {
-        return (cookie != null);
-    }
-
-    public String getAuthorization() {
-        return authorization;
-    }
-
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
-    }
-
-    public boolean hasAuthorization() {
-        return authorization != null;
     }
 
     public String getStatusHeader() {

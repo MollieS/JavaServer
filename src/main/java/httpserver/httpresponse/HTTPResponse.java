@@ -2,22 +2,17 @@ package httpserver.httpresponse;
 
 import httpserver.Resource;
 import httpserver.Response;
-import httpserver.routing.Method;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static httpserver.httpresponse.ResponseHeader.CONTENT_RANGE;
-import static httpserver.httpresponse.ResponseHeader.CONTENT_TYPE;
-import static httpserver.httpresponse.ResponseHeader.DATE;
+import static httpserver.httpresponse.ResponseHeader.*;
 
 public class HTTPResponse implements Response {
 
     private final int statusCode;
     private final String reasonPhrase;
     private byte[] body;
-    private List<Method> allowedMethods;
     private HashMap<ResponseHeader, byte[]> headers = new HashMap<>();
 
     private HTTPResponse(int code, String reason, HTTPResponseDate httpResponseDate) {

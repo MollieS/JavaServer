@@ -2,7 +2,7 @@ package httpserver.routing;
 
 import httpserver.ResourceHandler;
 import httpserver.Response;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.httprequests.RequestFake;
 import httpserver.httpresponse.ResponseHeader;
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
@@ -21,11 +21,10 @@ public class PartialContentRouteTest {
     private String path = getClass().getClassLoader().getResource("directory").getPath();
     private ResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
     private PartialContentRoute partialContentRoute = new PartialContentRoute(resourceHandler, GET);
+    private RequestFake httpRequest = new RequestFake(GET, "/partial_content.txt");
 
     @Test
     public void sendsTheCorrectResponseForAGETRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-
         Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
@@ -37,9 +36,8 @@ public class PartialContentRouteTest {
 
     @Test
     public void sendsTheCorrectHeaderResponseForAPartialGetRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-        httpRequest.setRangeStart(0);
-        httpRequest.setRangeEnd(4);
+        httpRequest.setRangeStart("0");
+        httpRequest.setRangeEnd("4");
 
         Response httpResponse = partialContentRoute.performAction(httpRequest);
 
@@ -49,9 +47,8 @@ public class PartialContentRouteTest {
 
     @Test
     public void sendsTheCorrectResponseWithBodyForAPartialGetRequest() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-        httpRequest.setRangeStart(0);
-        httpRequest.setRangeEnd(4);
+        httpRequest.setRangeStart("0");
+        httpRequest.setRangeEnd("4");
 
         Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
@@ -63,8 +60,7 @@ public class PartialContentRouteTest {
 
     @Test
     public void sendsTheCorrectBodyForARequestWithNoStartRange() throws IOException {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-        httpRequest.setRangeEnd(6);
+        httpRequest.setRangeEnd("6");
 
         Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
@@ -76,8 +72,7 @@ public class PartialContentRouteTest {
 
     @Test
     public void sendsTheCorrectBodyForARequestWithNoRangeStart() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/partial_content.txt");
-        httpRequest.setRangeStart(70);
+        httpRequest.setRangeStart("70");
 
         Response httpResponse = partialContentRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());

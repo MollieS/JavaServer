@@ -14,7 +14,7 @@ public class HTTPLogger {
     }
 
     public void log(String request) {
-        PrintWriter printWriter = null;
+        PrintWriter printWriter;
         try {
             createNewFile();
             printWriter = createPrintWriter();
