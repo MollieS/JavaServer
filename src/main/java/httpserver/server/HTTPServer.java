@@ -6,6 +6,8 @@ import httpserver.Response;
 import httpserver.SocketServer;
 import httpserver.httprequests.HTTPRequest;
 
+import java.util.concurrent.ExecutorService;
+
 public class HTTPServer {
 
     private final SocketServer socketServer;
@@ -18,12 +20,32 @@ public class HTTPServer {
         this.logger = logger;
     }
 
-    public void start() {
-        ClientSocket socket = socketServer.serve();
-        HTTPRequest httpRequest = socket.getRequest();
+    public void start(ExecutorService executorService) {
+        ClientSocket httpSocket;
+        while ((httpSocket = socketServer.serve()) != null) {
+            executorService.execute(new ServerTask(httpSocket));
+        }
+    }
+
+    private void processRequest(ClientSocket httpSocket) {
+        HTTPRequest httpRequest = httpSocket.getRequest();
         logger.log(httpRequest.getStatusHeader());
         Response httpResponse = router.route(httpRequest);
-        socket.sendResponse(httpResponse);
-        socket.close();
+        httpSocket.sendResponse(httpResponse);
+    }
+
+    private class ServerTask implements Runnable {
+
+        private final ClientSocket socket;
+
+        public ServerTask(ClientSocket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            processRequest(socket);
+        }
     }
 }
+

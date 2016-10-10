@@ -12,6 +12,8 @@ import httpserver.server.HTTPSocketServer;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -24,17 +26,20 @@ public class Main {
         SocketServer socketServer = null;
         List<Route> registeredRoutes = null;
         HTTPLogger logger = null;
-            try {
-                registeredRoutes = serverRunner.createRoutes(url, resourceHandler, path);
-                socketServer = new HTTPSocketServer(new ServerSocket(port));
-                logger = serverRunner.createLogger(path + "/logs");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            registeredRoutes = serverRunner.createRoutes(url, resourceHandler, path);
+            socketServer = new HTTPSocketServer(new ServerSocket(port));
+            logger = serverRunner.createLogger(path + "/logs");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Router router = new Router(new FileRoute(resourceHandler), registeredRoutes);
         HTTPServer httpServer = new HTTPServer(socketServer, router, logger);
-        while(true) {
-            httpServer.start();
+        ExecutorService executorService = Executors.newFixedThreadPool(40);
+        try {
+            httpServer.start(executorService);
+        } finally {
+            executorService.shutdown();
         }
     }
 }

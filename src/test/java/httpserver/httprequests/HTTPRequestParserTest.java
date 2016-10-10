@@ -147,4 +147,15 @@ public class HTTPRequestParserTest {
 
         assertEquals(codedDetails, httpRequest.getValue(AUTHORIZATION));
     }
+
+    @Test
+    public void canAddEtag() {
+        String request = "PATCH /partial-content.txt \n\n If-Matches : etag";
+
+        HTTPRequest httpRequest = httpRequestParser.parse(request);
+
+        assertTrue(httpRequest.hasHeader(ETAG));
+        assertEquals("etag", httpRequest.getValue(ETAG));
+    }
+
 }

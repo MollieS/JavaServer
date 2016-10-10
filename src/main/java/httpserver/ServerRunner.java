@@ -60,6 +60,7 @@ public class ServerRunner {
         registeredRoutes.add(new CookieRoute(GET));
         registeredRoutes.add(new EatCookieRoute(GET));
         registeredRoutes.add(new LogsRoute(path + "/logs", GET));
+        registeredRoutes.add(new PatchContentRoute(resourceHandler, GET, PATCH));
         return registeredRoutes;
     }
 

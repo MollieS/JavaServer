@@ -58,7 +58,7 @@ public class FormRoute extends Route {
                 break;
             case GET:
                 Resource resource = new HTTPResource(readFromFile());
-                return httpResponse.withBody(resource);
+                return HTTPResponse.create(OK).withBody(resource);
             case DELETE:
                 deleteFileContents();
                 break;
@@ -71,6 +71,9 @@ public class FormRoute extends Route {
     }
 
     private byte[] readFromFile() throws IOException {
+        if (!file.exists()) {
+            file.createNewFile();
+        }
         return Files.readAllBytes(file.toPath());
     }
 

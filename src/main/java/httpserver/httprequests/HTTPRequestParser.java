@@ -45,8 +45,20 @@ public class HTTPRequestParser {
                 return getRangeStart(request);
             case RANGE_END:
                 return getRangeEnd(request);
+            case ETAG:
+                return getEtag(request);
+            case BODY:
+                return getBody(request);
         }
         return null;
+    }
+
+    private String getBody(String request) {
+        return getData(request);
+    }
+
+    private String getEtag(String request) {
+        return getHeaderValue(request, ETAG, ": ");
     }
 
     private String getRangeStart(String request) {

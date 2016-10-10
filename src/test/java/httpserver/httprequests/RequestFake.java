@@ -71,4 +71,12 @@ public class RequestFake implements Request {
         headers.put(RANGE, "range");
         headers.put(RANGE_END, rangeEnd);
     }
+
+    public void addEtag(String etag) {
+        headers.put(ETAG, etag);
+    }
+
+    public void addBody(String s) {
+        headers.put(BODY, s);
+    }
 }

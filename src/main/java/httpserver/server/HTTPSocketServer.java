@@ -9,6 +9,7 @@ import httpserver.httpresponse.HTTPResponseWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class HTTPSocketServer implements SocketServer {
 
@@ -21,7 +22,8 @@ public class HTTPSocketServer implements SocketServer {
     @Override
     public ClientSocket serve() {
         try {
-            return new HTTPSocket(serverSocket.accept(), new HTTPResponseWriter(new ByteArrayOutputStream()), new HTTPRequestParser());
+            Socket socket = serverSocket.accept();
+            return new HTTPSocket(socket, new HTTPResponseWriter(new ByteArrayOutputStream()), new HTTPRequestParser());
         } catch (IOException e) {
             throw new SocketConnectionException("Error accepting requests: ", e.getCause());
         }
