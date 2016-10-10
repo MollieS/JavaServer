@@ -57,8 +57,6 @@ public class LogsRoute extends Route {
 
     private byte[] readLogs() {
         byte[] logs;
-        System.out.println(logsFile.canRead());
-        System.out.println(logsFile.toPath());
         try {
             logs = Files.readAllBytes(logsFile.toPath());
         } catch (IOException e) {

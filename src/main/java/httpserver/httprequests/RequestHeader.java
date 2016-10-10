@@ -8,6 +8,8 @@ public enum RequestHeader {
     RANGE_START("Range"),
     RANGE_END("Range"),
     RANGE("Range"),
+    ETAG("If-Match"),
+    BODY("content"),
     DATA("data=");
 
     private final String header;
