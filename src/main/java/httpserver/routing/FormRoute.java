@@ -1,7 +1,8 @@
 package httpserver.routing;
 
+import httpserver.Request;
 import httpserver.Resource;
-import httpserver.httprequests.HTTPRequest;
+import httpserver.Response;
 import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTTPResource;
 
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static httpserver.httprequests.RequestHeader.DATA;
 import static httpserver.httpresponse.StatusCode.OK;
 
 public class FormRoute extends Route {
@@ -26,7 +28,7 @@ public class FormRoute extends Route {
     }
 
     @Override
-    public HTTPResponse performAction(HTTPRequest httpRequest) {
+    public Response performAction(Request httpRequest) {
         if (methodIsAllowed(httpRequest.getMethod())) {
             try {
                 return getHttpResponse(httpRequest);
@@ -45,7 +47,7 @@ public class FormRoute extends Route {
         }
     }
 
-    private HTTPResponse getHttpResponse(HTTPRequest httpRequest) throws IOException {
+    private Response getHttpResponse(Request httpRequest) throws IOException {
         HTTPResponse httpResponse = HTTPResponse.create(OK);
         switch (httpRequest.getMethod()) {
             case POST:
@@ -56,8 +58,7 @@ public class FormRoute extends Route {
                 break;
             case GET:
                 Resource resource = new HTTPResource(readFromFile());
-                httpResponse.withBody(resource);
-                break;
+                return httpResponse.withBody(resource);
             case DELETE:
                 deleteFileContents();
                 break;
@@ -73,16 +74,16 @@ public class FormRoute extends Route {
         return Files.readAllBytes(file.toPath());
     }
 
-    private void writeToFile(HTTPRequest httpRequest) throws IOException {
+    private void writeToFile(Request httpRequest) throws IOException {
         Path path = Paths.get(this.path);
-        if (httpRequest.getData() != null) {
+        if (httpRequest.hasHeader(DATA)) {
             clearForm(path);
             writeToForm(httpRequest, path);
         }
     }
 
-    private void writeToForm(HTTPRequest httpRequest, Path path) throws IOException {
-        Files.write(path, httpRequest.getData().getBytes());
+    private void writeToForm(Request httpRequest, Path path) throws IOException {
+        Files.write(path, httpRequest.getValue(DATA).getBytes());
     }
 
     private void clearForm(Path file) throws IOException {

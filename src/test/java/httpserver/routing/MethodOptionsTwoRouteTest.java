@@ -1,9 +1,13 @@
 package httpserver.routing;
 
-import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.Request;
+import httpserver.Response;
+import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
+import static httpserver.httpresponse.ResponseHeader.ALLOW;
 import static httpserver.routing.Method.GET;
 import static httpserver.routing.Method.OPTIONS;
 import static org.junit.Assert.assertEquals;
@@ -14,12 +18,13 @@ public class MethodOptionsTwoRouteTest {
     @Test
     public void sendsTheCorrectResponseForAnOptionsRequest() {
         MethodOptionsTwoRoute methodOptionsTwoRoute = new MethodOptionsTwoRoute(GET, OPTIONS);
+        Request httpRequest = new RequestFake(OPTIONS, "/method_options2");
 
-        HTTPRequest httpRequest = new HTTPRequest(OPTIONS, "/method_options2");
-        HTTPResponse httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
+        Response httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
+        String allowedMethods = new String(httpResponse.getValue(ALLOW), Charset.defaultCharset());
 
-        assertTrue(httpResponse.getAllowedMethods().contains(GET));
-        assertTrue(httpResponse.getAllowedMethods().contains(OPTIONS));
+        assertTrue(allowedMethods.contains("GET"));
+        assertTrue(allowedMethods.contains("OPTIONS"));
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
     }
@@ -28,11 +33,9 @@ public class MethodOptionsTwoRouteTest {
     public void sendsTheCorrectResponseForAGetRequest() {
         MethodOptionsTwoRoute methodOptionsTwoRoute = new MethodOptionsTwoRoute(GET, OPTIONS);
 
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/method_options2");
-        HTTPResponse httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
+        Request httpRequest = new RequestFake(GET, "/method_options2");
+        Response httpResponse = methodOptionsTwoRoute.performAction(httpRequest);
 
-        assertTrue(httpResponse.getAllowedMethods().contains(GET));
-        assertTrue(httpResponse.getAllowedMethods().contains(OPTIONS));
         assertEquals(200, httpResponse.getStatusCode());
         assertEquals("OK", httpResponse.getReasonPhrase());
     }

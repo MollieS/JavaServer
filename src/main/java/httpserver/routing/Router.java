@@ -1,8 +1,8 @@
 package httpserver.routing;
 
 import httpserver.HTTPRouter;
-import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.Request;
+import httpserver.Response;
 
 import java.net.URI;
 import java.util.List;
@@ -20,7 +20,7 @@ public class Router implements HTTPRouter {
         this.fileRoute = fileRoute;
     }
 
-    public HTTPResponse route(HTTPRequest httpRequest) {
+    public Response route(Request httpRequest) {
         for (Route route : registeredRoutes) {
             if (isRegistered(httpRequest.getRequestURI(), route)) {
                 return route.performAction(httpRequest);

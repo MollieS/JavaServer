@@ -1,25 +1,46 @@
 package httpserver.httprequests;
 
+import httpserver.Request;
 import httpserver.routing.Method;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
-public class HTTPRequest {
+public class HTTPRequest implements Request {
 
+    private static final String PROTOCOL_VERSION = "HTTP/1.1";
     private final Method method;
     private final URI requestURI;
-    private String data;
-    private String params;
-    private int rangeStart;
-    private int rangeEnd;
-    private boolean hasRangeEnd;
-    private boolean hasRangeStart;
+    private final HashMap<RequestHeader, String> headers;
+    private String statusHeader;
 
-    public HTTPRequest(Method method, String requestURI) {
+    private HTTPRequest(Method method, String requestURI) {
         this.method = method;
         this.requestURI = URI.create(requestURI);
-        this.hasRangeStart = false;
-        this.hasRangeEnd = false;
+        this.statusHeader = method.name() + " " + requestURI + " " + PROTOCOL_VERSION;
+        this.headers = new HashMap<>();
+    }
+
+    private HTTPRequest(Method method, URI requestURI, HashMap<RequestHeader, String> headers) {
+        this.method = method;
+        this.requestURI = requestURI;
+        this.headers = headers;
+    }
+
+    @Override
+    public boolean hasHeader(RequestHeader header) {
+        return (headers.containsKey(header) && headers.get(header) != null);
+    }
+
+    @Override
+    public String getValue(RequestHeader header) {
+        for (Map.Entry<RequestHeader, String> entry : headers.entrySet()) {
+            if (entry.getKey() == header) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     public Method getMethod() {
@@ -30,53 +51,15 @@ public class HTTPRequest {
         return requestURI;
     }
 
-    public String getData() {
-        return data;
+    public String getStatusHeader() {
+        return statusHeader;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public static HTTPRequest create(Method requestMethod, String path) {
+        return new HTTPRequest(requestMethod, path);
     }
 
-    public void setParams(String params) {
-        this.params = params;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public boolean hasParams() {
-        return params != null;
-    }
-
-    public void setRangeStart(int rangeStart) {
-        this.rangeStart = rangeStart;
-        this.hasRangeStart = true;
-    }
-
-    public void setRangeEnd(int rangeEnd) {
-        this.rangeEnd = rangeEnd + 1;
-        this.hasRangeEnd = true;
-    }
-
-    public boolean hasRange() {
-        return hasRangeStart || hasRangeEnd;
-    }
-
-    public int getRangeStart() {
-        return rangeStart;
-    }
-
-    public int getRangeEnd() {
-        return rangeEnd;
-    }
-
-    public boolean hasRangeEnd() {
-        return hasRangeEnd;
-    }
-
-    public boolean hasRangeStart() {
-        return hasRangeStart;
+    public HTTPRequest withHeaders(HashMap<RequestHeader, String> headers) {
+        return new HTTPRequest(this.method, this.requestURI, headers);
     }
 }

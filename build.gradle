@@ -20,6 +20,9 @@ dependencies {
 }
 
 jar {
+    from('src/main/java') {
+        include 'resources/**'
+    }
     manifest {
         attributes 'Main-Class' : 'httpserver.Main'
     }

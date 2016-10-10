@@ -7,6 +7,7 @@ public enum StatusCode {
     TEAPOT("I'm a teapot", 418),
     REDIRECT("Found", 302),
     PARTIAL("Partial Content", 206),
+    UNAUTHORIZED("Unauthorized", 401),
     NOTALLOWED("Method Not Allowed", 405);
 
     public final String reason;

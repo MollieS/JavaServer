@@ -1,10 +1,10 @@
 package httpserver.server;
 
 import httpserver.ClientSocket;
+import httpserver.Response;
 import httpserver.SocketConnectionException;
 import httpserver.httprequests.HTTPRequest;
 import httpserver.httprequests.HTTPRequestParser;
-import httpserver.httpresponse.HTTPResponse;
 import httpserver.httpresponse.HTTPResponseWriter;
 
 import java.io.IOException;
@@ -35,10 +35,10 @@ public class HTTPSocket implements ClientSocket {
     }
 
     @Override
-    public void sendResponse(HTTPResponse httpResponse) {
+    public void sendResponse(Response response) {
         try {
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(httpResponseWriter.parse(httpResponse));
+            outputStream.write(httpResponseWriter.parse(response));
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get output stream: ", e.getCause());
         }

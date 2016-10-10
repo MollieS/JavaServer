@@ -1,30 +1,24 @@
 package httpserver;
 
-import httpserver.routing.Method;
+import httpserver.httpresponse.ResponseHeader;
 
-import java.util.List;
+import java.util.HashMap;
 
 public interface Response {
-
-    String getOriginTime();
-
-    List<Method> getAllowedMethods();
-
-    boolean hasLocation();
-
-    boolean hasContentRange();
-
-    boolean hasBody();
-
-    int getContentRange();
-
-    String getLocation();
-
-    byte[] getBody();
 
     int getStatusCode();
 
     String getReasonPhrase();
 
-    String getContentType();
+    boolean hasBody();
+
+    byte[] getBody();
+
+    boolean hasHeader(ResponseHeader header);
+
+    byte[] getValue(ResponseHeader header);
+
+    Response withHeaders(HashMap<ResponseHeader, byte[]> headers);
+
+    Response withBody(Resource resource);
 }

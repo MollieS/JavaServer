@@ -5,6 +5,7 @@ import httpserver.resourcemanagement.ResourceParser;
 import httpserver.routing.FileRoute;
 import httpserver.routing.Route;
 import httpserver.routing.Router;
+import httpserver.server.HTTPLogger;
 import httpserver.server.HTTPServer;
 import httpserver.server.HTTPSocketServer;
 
@@ -22,14 +23,16 @@ public class Main {
         HTTPResourceHandler resourceHandler = new HTTPResourceHandler(path, new ResourceParser());
         SocketServer socketServer = null;
         List<Route> registeredRoutes = null;
+        HTTPLogger logger = null;
             try {
-                registeredRoutes = serverRunner.createRoutes(url, resourceHandler, "/form");
+                registeredRoutes = serverRunner.createRoutes(url, resourceHandler, path);
                 socketServer = new HTTPSocketServer(new ServerSocket(port));
+                logger = serverRunner.createLogger(path + "/logs");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         Router router = new Router(new FileRoute(resourceHandler), registeredRoutes);
-        HTTPServer httpServer = new HTTPServer(socketServer, router);
+        HTTPServer httpServer = new HTTPServer(socketServer, router, logger);
         while(true) {
             httpServer.start();
         }

@@ -1,8 +1,8 @@
 package httpserver.server;
 
 import httpserver.ClientSocket;
+import httpserver.Response;
 import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
 
 import static httpserver.routing.Method.GET;
 
@@ -14,12 +14,12 @@ public class SocketFake implements ClientSocket {
     }
 
     @Override
-    public void sendResponse(HTTPResponse httpResponse) {
+    public void sendResponse(Response response) {
 
     }
 
     @Override
     public HTTPRequest getRequest() {
-        return new HTTPRequest(GET, "/");
+        return HTTPRequest.create(GET, "/");
     }
 }

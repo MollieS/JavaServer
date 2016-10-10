@@ -1,12 +1,14 @@
 package httpserver.routing;
 
-import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.Request;
+import httpserver.Response;
+import httpserver.httprequests.RequestFake;
+import httpserver.httpresponse.ResponseHeader;
 import org.junit.Test;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 
+import static httpserver.ByteArrayConverter.getString;
 import static httpserver.routing.Method.*;
 import static org.junit.Assert.assertEquals;
 
@@ -16,9 +18,9 @@ public class CoffeeRouteTest {
 
     @Test
     public void returnsTheCorrectStatusForAGet() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
+        Request httpRequest = new RequestFake(GET, "/coffee");
 
-        HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
+        Response httpResponse = coffeeRoute.performAction(httpRequest);
 
         assertEquals(418, httpResponse.getStatusCode());
         assertEquals("I'm a teapot", httpResponse.getReasonPhrase());
@@ -26,13 +28,14 @@ public class CoffeeRouteTest {
 
     @Test
     public void addsBodyToResponseForGet() {
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/coffee");
+        Request httpRequest = new RequestFake(GET, "/coffee");
 
-        HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
-        String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
+        Response httpResponse = coffeeRoute.performAction(httpRequest);
+        String body = getString(httpResponse.getBody());
+        String contentType = getString(httpResponse.getValue(ResponseHeader.CONTENT_TYPE));
 
         assertEquals("I'm a teapot", body);
-        assertEquals("text/plain", httpResponse.getContentType());
+        assertEquals("text/plain", contentType);
     }
 
     @Test
@@ -44,9 +47,9 @@ public class CoffeeRouteTest {
 
     @Test
     public void returnsA405ForMethodNotAllowed() {
-        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/coffee");
+        Request httpRequest = new RequestFake(BOGUS, "/coffee");
 
-        HTTPResponse httpResponse = coffeeRoute.performAction(httpRequest);
+        Response httpResponse = coffeeRoute.performAction(httpRequest);
 
         assertEquals(405, httpResponse.getStatusCode());
     }

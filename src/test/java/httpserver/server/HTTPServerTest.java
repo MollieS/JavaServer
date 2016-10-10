@@ -1,8 +1,8 @@
 package httpserver.server;
 
 import httpserver.HTTPRouter;
-import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.Request;
+import httpserver.Response;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class HTTPServerTest {
 
     @Test
     public void canAcceptConnectionsOnThePortWhenListening() throws IOException {
-        HTTPServer httpServer = new HTTPServer(connectionsSocketServer, new RouterDummy());
+        HTTPServer httpServer = new HTTPServer(connectionsSocketServer, new RouterDummy(), new LoggerDummy());
 
         httpServer.start();
 
@@ -25,8 +25,19 @@ public class HTTPServerTest {
     private class RouterDummy implements HTTPRouter {
 
         @Override
-        public HTTPResponse route(HTTPRequest httpRequest) {
+        public Response route(Request httpRequest) {
             return null;
+        }
+    }
+
+    private class LoggerDummy extends HTTPLogger {
+
+        public LoggerDummy() {
+            super("/path");
+        }
+
+        @Override
+        public void log(String request) {
         }
     }
 }

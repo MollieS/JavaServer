@@ -1,7 +1,8 @@
 package httpserver.routing;
 
-import httpserver.httprequests.HTTPRequest;
-import httpserver.httpresponse.HTTPResponse;
+import httpserver.Request;
+import httpserver.Response;
+import httpserver.httprequests.RequestFake;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +21,8 @@ public class FormRouteTest {
 
     private String path = getClass().getClassLoader().getResource("directory").getPath() + ("/form");
     private FormRoute formRoute = new FormRoute(path, GET, POST, PUT, DELETE);
-    private HTTPRequest postRequest = new HTTPRequest(POST, "/form");
-    private HTTPRequest getRequest = new HTTPRequest(GET, "/form");
+    private RequestFake postRequest = new RequestFake(POST, "/form");
+    private RequestFake getRequest = new RequestFake(GET, "/form");
 
     @Before
     public void setUp() throws IOException {
@@ -39,7 +40,7 @@ public class FormRouteTest {
     public void canPostToFormAndGetA200Response() {
         postRequest.setData("data=fatcat");
 
-        HTTPResponse httpResponse = formRoute.performAction(postRequest);
+        Response httpResponse = formRoute.performAction(postRequest);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -50,7 +51,7 @@ public class FormRouteTest {
 
         formRoute.performAction(postRequest);
 
-        HTTPResponse httpResponse = formRoute.performAction(getRequest);
+        Response httpResponse = formRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("data=fatcat", body);
@@ -62,12 +63,12 @@ public class FormRouteTest {
 
         formRoute.performAction(postRequest);
 
-        HTTPRequest httpRequest2 = new HTTPRequest(PUT, "/");
+        RequestFake httpRequest2 = new RequestFake(PUT, "/");
         httpRequest2.setData("data=goodbye");
 
         formRoute.performAction(httpRequest2);
 
-        HTTPResponse httpResponse = formRoute.performAction(getRequest);
+        Response httpResponse = formRoute.performAction(getRequest);
         String body = new String(httpResponse.getBody(), Charset.forName("UTF-8"));
 
         assertEquals("data=goodbye", body);
@@ -78,8 +79,8 @@ public class FormRouteTest {
         postRequest.setData("data=hello");
         formRoute.performAction(postRequest);
 
-        HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
+        RequestFake httpRequest2 = new RequestFake(DELETE, "/form");
+        Response httpResponse = formRoute.performAction(httpRequest2);
 
         assertEquals(200, httpResponse.getStatusCode());
     }
@@ -89,17 +90,17 @@ public class FormRouteTest {
         postRequest.setData("data=hello");
         formRoute.performAction(postRequest);
 
-        HTTPRequest httpRequest2 = new HTTPRequest(DELETE, "/form");
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest2);
+        RequestFake httpRequest2 = new RequestFake(DELETE, "/form");
+        Response httpResponse = formRoute.performAction(httpRequest2);
 
         assertNull(httpResponse.getBody());
     }
 
     @Test
     public void canGiveAMethodNotAllowedResponse() {
-        HTTPRequest httpRequest = new HTTPRequest(BOGUS, "/form");
+        Request httpRequest = new RequestFake(BOGUS, "/form");
 
-        HTTPResponse httpResponse = formRoute.performAction(httpRequest);
+        Response httpResponse = formRoute.performAction(httpRequest);
 
         assertEquals(405, httpResponse.getStatusCode());
     }
@@ -108,7 +109,7 @@ public class FormRouteTest {
     public void throwsAnExceptionIfFormFileCannotBeAccessed() {
         FormRoute formRoute = new FormRoute("/bad/path", GET);
 
-        HTTPRequest httpRequest = new HTTPRequest(GET, "/form");
+        Request httpRequest = new RequestFake(GET, "/form");
 
         formRoute.performAction(httpRequest);
     }
