@@ -39,6 +39,8 @@ public class HTTPSocket implements ClientSocket {
         try {
             OutputStream outputStream = socket.getOutputStream();
             outputStream.write(httpResponseWriter.parse(response));
+            outputStream.flush();
+            socket.close();
         } catch (IOException e) {
             throw new SocketConnectionException("Cannot get output stream: ", e.getCause());
         }
@@ -48,7 +50,7 @@ public class HTTPSocket implements ClientSocket {
     public HTTPRequest getRequest() {
         try {
             InputStream inputStream = socket.getInputStream();
-            byte[] buffer = new byte[600];
+            byte[] buffer = new byte[800];
             inputStream.read(buffer);
             String req = new String(buffer, Charset.forName("UTF-8"));
             return httpRequestParser.parse(req);

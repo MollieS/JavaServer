@@ -67,7 +67,7 @@ public class ServerRunnerTest {
     public void returnsAllTheRegisteredRoutes() throws IOException {
         List<Route> registeredRoutes = serverRunner.createRoutes("localhost:5000", resourceHandler, "/form");
 
-        assertEquals(11, registeredRoutes.size());
+        assertEquals(12, registeredRoutes.size());
     }
 
     @Test

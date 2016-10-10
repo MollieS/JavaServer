@@ -8,6 +8,7 @@ public enum StatusCode {
     REDIRECT("Found", 302),
     PARTIAL("Partial Content", 206),
     UNAUTHORIZED("Unauthorized", 401),
+    NOCONTENT("No Content", 204),
     NOTALLOWED("Method Not Allowed", 405);
 
     public final String reason;

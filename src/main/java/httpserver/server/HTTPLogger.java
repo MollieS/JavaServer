@@ -11,7 +11,6 @@ public class HTTPLogger {
 
     public HTTPLogger(String logPath) {
         this.logFile = new File(logPath);
-        System.out.println(logPath);
     }
 
     public void log(String request) {
@@ -20,8 +19,7 @@ public class HTTPLogger {
             createNewFile();
             printWriter = createPrintWriter();
         } catch (IOException e) {
-//            throw new RuntimeException("Cannot write to logs", e);
-            System.out.println(e);
+            throw new RuntimeException("Cannot write to logs", e);
         }
         CharSequence chars = request + "\n";
         printWriter.append(chars);
