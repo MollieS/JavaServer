@@ -61,6 +61,7 @@ public class ServerRunner {
         registeredRoutes.add(new EatCookieRoute(GET));
         registeredRoutes.add(new LogsRoute(path + "/logs", GET));
         registeredRoutes.add(new PatchContentRoute(resourceHandler, GET, PATCH));
+        registeredRoutes.add(new TicTacToeMenuRoute("/ttt-menu", GET));
         return registeredRoutes;
     }
 
