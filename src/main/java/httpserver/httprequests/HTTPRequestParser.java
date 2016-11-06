@@ -10,7 +10,6 @@ import static httpserver.httprequests.RequestHeader.*;
 public class HTTPRequestParser {
 
     public HTTPRequest parse(String request) {
-        System.out.println(request);
         String[] requestElements = request.split(" ");
         Method requestMethod = getMethod(requestElements[0]);
         URI uri = URI.create(requestElements[1]);

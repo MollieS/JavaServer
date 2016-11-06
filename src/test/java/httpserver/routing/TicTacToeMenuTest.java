@@ -6,9 +6,11 @@ import httpserver.httprequests.RequestFake;
 import org.junit.Test;
 
 import static httpserver.httpresponse.ResponseHeader.CONTENT_TYPE;
+import static httpserver.httpresponse.ResponseHeader.COOKIE;
 import static httpserver.httpresponses.HTTPResponseTest.getString;
 import static httpserver.routing.Method.GET;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TicTacToeMenuTest {
 
@@ -31,5 +33,15 @@ public class TicTacToeMenuTest {
         String contentType = getString(response.getValue(CONTENT_TYPE));
 
         assertEquals("text/html", contentType);
+    }
+
+    @Test
+    public void setsACookieIfOneIsNotPresent() {
+        Request request = new RequestFake(GET, "/ttt-menu");
+        TicTacToeMenuRoute ticTacToeMenuRoute = new TicTacToeMenuRoute("/ttt-menu", GET);
+
+        Response response = ticTacToeMenuRoute.performAction(request);
+
+        assertTrue(response.hasHeader(COOKIE));
     }
 }

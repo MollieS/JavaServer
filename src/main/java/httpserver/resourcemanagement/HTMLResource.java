@@ -8,7 +8,9 @@ import java.nio.file.Files;
 
 public class HTMLResource implements Resource {
 
-    private final File view;
+    private File view = null;
+    private byte[] contents = null;
+    private boolean isDynamic = false;
 
     public HTMLResource(String filename) {
         String baseLocation = new File("").getAbsolutePath();
@@ -17,8 +19,21 @@ public class HTMLResource implements Resource {
         this.view = new File(viewPath);
     }
 
+    public HTMLResource(byte[] body) {
+        this.isDynamic = true;
+        this.contents = body;
+    }
+
     @Override
     public byte[] getContents() {
+        if (isDynamic) {
+            return contents;
+        } else {
+            return readFile();
+        }
+    }
+
+    private byte[] readFile() {
         try {
             return Files.readAllBytes(view.toPath());
         } catch (IOException e) {
