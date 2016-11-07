@@ -21,7 +21,6 @@ public class TicTacToeGameRouteTest {
     private Session session = new GameSession("1");
     private TicTacToeGameRoute ticTacToeGameRoute = new TicTacToeGameRoute("/ttt-game", new SessionFactoryFake(session), GET);
     private RequestFake request = new RequestFake(GET, "/ttt-game");
-    private String params = "board-state=---------&game-state=hvh&cell=0";
 
     @Test
     public void sendsA200Response() {

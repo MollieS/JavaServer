@@ -76,8 +76,12 @@ public class GameView {
 
     private static String createButton(int i, GamePresenter gamePresenter) {
         String button = "<div class=\"cell\">" +
-                        "<button class=\"button\" placeholder=\"-\" name=\"cell\" value=\"" + i + "\">" + gamePresenter.getMark(i) + "</button>\n" +
-                        "</div>";
+                "<button class=\"button\" placeholder=\"-\" name=\"cell\" value=\"" + i + "\"";
+        if (gamePresenter.gameIsOver()) {
+            button += " disabled";
+        }
+        button += ">" + gamePresenter.getMark(i) + "</button>\n" +
+                "</div>";
 
         if ((i + 1) % 3 == 0) {
             button += "</br>";
@@ -126,7 +130,7 @@ public class GameView {
                 "padding: 10px;" +
                 "}";
         String cssEnd = "</style>";
-        return cssHeader + buttonCss + boardCss +  replayButtonCss + replayCss + cellCss + resultCss + cssEnd;
+        return cssHeader + buttonCss + boardCss + replayButtonCss + replayCss + cellCss + resultCss + cssEnd;
     }
 }
 
