@@ -11,6 +11,7 @@ Simple HTTP Server build with Java
 * use the command `java -jar build/libs/Server-1.0.jar` with two arguments : `-p <port number>` and `-d <directory path>`
 
 ## To run with Tic Tac Toe
+
 * Tic Tac Toe uses some external dependencies not included in the regular jar
 * to run the server with TTT, use the command `gradle fatJar`
 * run the server with `java -jar build/libs/Server-1.0-all.jar`
