@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import static httpserver.httpresponses.HTTPResponseTest.getString;
 import static httpserver.routing.Method.GET;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -147,8 +148,13 @@ public class TicTacToeGameRouteTest {
     }
 
     @Test
-    public void updatesViewWithComputerMove() {
+    public void doesNotPlayAComputerMoveIfHumanIsFirst() {
+        Response response = sendRequest("game-type=hvc");
 
+        String body = getString(response.getBody());
+
+        assertEquals("---------", session.getData().get("boardState"));
+        assertFalse(body.contains("X"));
     }
 
 

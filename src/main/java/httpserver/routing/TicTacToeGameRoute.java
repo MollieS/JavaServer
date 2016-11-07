@@ -6,6 +6,7 @@ import httpserver.httpresponse.HTTPResponse;
 import httpserver.resourcemanagement.HTMLResource;
 import httpserver.sessions.Session;
 import httpserver.sessions.SessionFactory;
+import httpserver.views.GamePresenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,8 +16,8 @@ import static httpserver.httprequests.RequestHeader.COOKIE;
 import static httpserver.httprequests.RequestHeader.PARAMS;
 import static httpserver.httpresponse.StatusCode.OK;
 import static httpserver.views.GameView.createView;
-import static ttt.webplay.web_game.isOver;
-import static ttt.webplay.web_game.playMove;
+import static ttt.core.isOver;
+import static ttt.core.playMove;
 
 public class TicTacToeGameRoute extends Route {
 
@@ -41,7 +42,7 @@ public class TicTacToeGameRoute extends Route {
             boardState = getBoardState(sessionData, request);
             updateSessionData(boardState, currentSession);
         }
-        String view = createView(boardState, gameType);
+        String view = createView(new GamePresenter(gameType, boardState));
         HTMLResource htmlResource = new HTMLResource(view.getBytes());
         return HTTPResponse.create(OK).withBody(htmlResource);
     }
@@ -63,7 +64,14 @@ public class TicTacToeGameRoute extends Route {
 
     private String makeMove(Request request, String currentBoardState, String gameType) {
         Integer move = getMove(request);
+        if (notAValidTurn(currentBoardState, gameType, move)) {
+            return currentBoardState;
+        }
         return playMove(currentBoardState, move, gameType);
+    }
+
+    private boolean notAValidTurn(String currentBoardState, String gameType, Integer move) {
+        return currentBoardState.equals(emptyBoard) && gameType.equals("hvc") && move == -1;
     }
 
     private Integer getMove(Request request) {
