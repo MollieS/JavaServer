@@ -71,7 +71,26 @@ public class TicTacToeGameRoute extends Route {
     }
 
     private boolean notAValidTurn(String currentBoardState, String gameType, Integer move) {
-        return currentBoardState.equals(emptyBoard) && gameType.equals("hvc") && move == -1;
+        if (hasNoHumanMove(currentBoardState, gameType, move)) {
+            return true;
+        } else if (isAHumanTurn(move)) {
+            return false;
+        } else if (cellIsOccupied(currentBoardState, move)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean cellIsOccupied(String currentBoardState, Integer move) {
+        return currentBoardState.charAt(move) != '-';
+    }
+
+    private boolean isAHumanTurn(Integer move) {
+        return move == -1;
+    }
+
+    private boolean hasNoHumanMove(String currentBoardState, String gameType, Integer move) {
+        return currentBoardState.equals(emptyBoard) && gameType.equals("hvc") && isAHumanTurn(move);
     }
 
     private Integer getMove(Request request) {

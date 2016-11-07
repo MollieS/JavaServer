@@ -157,6 +157,15 @@ public class TicTacToeGameRouteTest {
         assertFalse(body.contains("X"));
     }
 
+    @Test
+    public void doesNotPlayAComputerMoveIfHumanMakesInvalidMove() {
+        sendRequest("game-type=hvc");
+        sendRequest("cell=0");
+        sendRequest("cell=0");
+
+        assertEquals("X---O----", session.getData().get("boardState"));
+    }
+
 
     private Response sendRequest(String param) {
         RequestFake request = new RequestFake(GET, "/ttt-game");
