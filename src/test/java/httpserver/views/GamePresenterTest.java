@@ -18,14 +18,14 @@ public class GamePresenterTest {
     public void returnsTheCorrectFormatForAnEmptyCell() {
         GamePresenter gamePresenter = new GamePresenter("hvh", "---------");
 
-        assertEquals(" ", gamePresenter.getMark(0));
+        assertEquals("-", gamePresenter.getMark(0));
     }
 
     @Test
     public void returnsTheCorrectFormatForAMarkedCell() {
         GamePresenter gamePresenter = new GamePresenter("hvh", "X--------");
 
-        assertEquals("X", gamePresenter.getMark(0));
+        assertEquals("x", gamePresenter.getMark(0));
     }
 
     @Test

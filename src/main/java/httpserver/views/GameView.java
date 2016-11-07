@@ -12,6 +12,7 @@ public class GameView {
     private static String header(GamePresenter gamePresenter) {
         String view = htmlHeader();
         view += addRefresh(gamePresenter);
+        view += css();
         view += htmlHeaderEnd();
         return view;
     }
@@ -47,7 +48,7 @@ public class GameView {
     private static String addReplay() {
         return "<div class=\"replay\">" +
                 "<form method=\"get\" action=\"/ttt-menu\">" +
-                "<button name=\"replay\" value=\"true\">Replay?</button>" +
+                "<button class=\"replay-button\" name=\"replay\" value=\"true\">Replay?</button>" +
                 "</form>" +
                 "</div>";
     }
@@ -74,7 +75,10 @@ public class GameView {
     }
 
     private static String createButton(int i, GamePresenter gamePresenter) {
-        String button = "<button class=\"button\" name=\"cell\" value=\"" + i + "\">" + gamePresenter.getMark(i) + "</button>\n";
+        String button = "<div class=\"cell\">" +
+                        "<button class=\"button\" placeholder=\"-\" name=\"cell\" value=\"" + i + "\">" + gamePresenter.getMark(i) + "</button>\n" +
+                        "</div>";
+
         if ((i + 1) % 3 == 0) {
             button += "</br>";
         }
@@ -88,18 +92,41 @@ public class GameView {
         return view;
     }
 
-
     private static String css() {
-//        return "<style media=\"screen\" type=\"text/css\"> " +
-//                ".button { " +
-//                "background-color: yellow;" +
-//                "width: 33%; }" +
-//                ".board {" +
-//                "width: 70%;" +
-//                "margin: 0 auto; }" +
-//                "</style>";
-        return "";
+        String cssHeader = "<style media=\"screen\" type=\"text/css\">";
+        String buttonCss = ".button {" +
+                "padding: 32px 36px;" +
+                "border: none;" +
+                "font-size: 24px;" +
+                "}";
+        String boardCss = ".board {" +
+                "margin: auto; " +
+                "width: 50%; " +
+                "padding: 30px 30px;" +
+                "}";
+        String cellCss = ".cell {" +
+                "border: black 10px; " +
+                "display: inline-block; " +
+                "padding: 10px; " +
+                "}";
+        String replayCss = ".replay {" +
+                "margin: auto;" +
+                "width: 50%;" +
+                "font-size: 18px;" +
+                "padding: 10px;" +
+                "}";
+        String replayButtonCss = ".replay-button {" +
+                "padding: 10px 10px;" +
+                "font-size: 18px;" +
+                "}";
+        String resultCss = ".result {" +
+                "font-size: 24px;" +
+                "margin: auto;" +
+                "width: 50%;" +
+                "padding: 10px;" +
+                "}";
+        String cssEnd = "</style>";
+        return cssHeader + buttonCss + boardCss +  replayButtonCss + replayCss + cellCss + resultCss + cssEnd;
     }
-
 }
 

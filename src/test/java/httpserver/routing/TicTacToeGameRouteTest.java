@@ -71,7 +71,7 @@ public class TicTacToeGameRouteTest {
 
         String body = getString(response.getBody());
 
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"0\">X</button>"));
+        assertTrue(body.contains("value=\"0\">x</button>"));
     }
 
     @Test
@@ -82,8 +82,8 @@ public class TicTacToeGameRouteTest {
 
         String body = getString(response.getBody());
 
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"0\">X</button>"));
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"1\">O</button>"));
+        assertTrue(body.contains("value=\"0\">x</button>"));
+        assertTrue(body.contains("value=\"1\">o</button>"));
     }
 
     @Test
@@ -114,8 +114,8 @@ public class TicTacToeGameRouteTest {
         String body = getString(response.getBody());
 
         assertEquals("X---O----", session.getData().get("boardState"));
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"0\">X</button>"));
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"4\">O</button>"));
+        assertTrue(body.contains("value=\"0\">x</button>"));
+        assertTrue(body.contains("value=\"4\">o</button>"));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class TicTacToeGameRouteTest {
         String body = getString(response.getBody());
 
         assertEquals("X--------", session.getData().get("boardState"));
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"0\">X</button>"));
+        assertTrue(body.contains("value=\"0\">x</button>"));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class TicTacToeGameRouteTest {
         String body = getString(response.getBody());
 
         assertEquals("X--------", session.getData().get("boardState"));
-        assertTrue(body.contains("<button class=\"button\" name=\"cell\" value=\"0\">X</button>"));
+        assertTrue(body.contains("value=\"0\">x</button>"));
     }
 
     @Test

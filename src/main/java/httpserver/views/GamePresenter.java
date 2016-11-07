@@ -27,9 +27,9 @@ public class GamePresenter {
     public String getMark(int i) {
         String[] boardArray = board.split("");
         if (boardArray[i].equals("-")) {
-           return " ";
+           return "-";
         }
-        return boardArray[i];
+        return boardArray[i].toLowerCase();
     }
 
     public String getResult() {
