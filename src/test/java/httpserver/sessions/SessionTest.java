@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SessionTest {
 
-    private Session session = new GameSession("1");
+    private Session session = new HTTPSession("1");
 
     @Test
     public void hasAnId() {

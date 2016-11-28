@@ -2,12 +2,12 @@ package httpserver.sessions;
 
 import java.util.HashMap;
 
-public class GameSession implements Session {
+public class HTTPSession implements Session {
 
     private final String id;
     private final HashMap<String, String> data;
 
-    public GameSession(String id) {
+    public HTTPSession(String id) {
         this.id = id;
         this.data = new HashMap<>();
     }

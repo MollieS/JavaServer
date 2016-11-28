@@ -2,7 +2,7 @@ package httpserver.routing;
 
 import httpserver.Response;
 import httpserver.httprequests.RequestFake;
-import httpserver.sessions.GameSession;
+import httpserver.sessions.HTTPSession;
 import httpserver.sessions.Session;
 import httpserver.sessions.SessionFactoryFake;
 import httpserver.sessions.SessionMock;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TicTacToeGameRouteTest {
 
-    private Session session = new GameSession("1");
+    private Session session = new HTTPSession("1");
     private TicTacToeGameRoute ticTacToeGameRoute = new TicTacToeGameRoute("/ttt-game", new SessionFactoryFake(session), GET);
     private RequestFake request = new RequestFake(GET, "/ttt-game");
 
