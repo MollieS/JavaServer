@@ -30,7 +30,7 @@ public class TicTacToeMenuRoute extends Route {
         }
         int sessionToken = new Random().nextInt();
         headers.put(COOKIE, "theme=game".getBytes());
-        headers.put(COOKIE, ("sessionToken=" + sessionToken + "; Exoires=Wed, 09 June 2021 10:18:14 GMT").getBytes());
+        headers.put(COOKIE, ("sessionToken=" + sessionToken + "; Expires=Wed, 09 June 2021 10:18:14 GMT").getBytes());
         return HTTPResponse.create(OK).withHeaders(headers).withBody(htmlResource);
     }
 }
