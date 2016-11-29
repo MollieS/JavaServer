@@ -27,6 +27,11 @@ public class HTTPRequestTest {
     }
 
     @Test
+    public void hasAStatusHeader() {
+        assertEquals("GET / HTTP/1.1", httpRequest.getStatusHeader());
+    }
+
+    @Test
     public void knowsIfItHasParameters() {
         headers.put(PARAMS, "data=hello");
         httpRequest = httpRequest.withHeaders(headers);

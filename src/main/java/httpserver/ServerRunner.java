@@ -1,14 +1,11 @@
 package httpserver;
 
-import httpserver.routing.*;
+import httpserver.routing.Route;
 import httpserver.server.HTTPLogger;
-import httpserver.sessions.HTTPSessionFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static httpserver.routing.Method.*;
 
 public class ServerRunner {
 
@@ -44,20 +41,6 @@ public class ServerRunner {
 
     public List<Route> createRoutes(String location, ResourceHandler resourceHandler, String path) throws IOException {
         List<Route> registeredRoutes = new ArrayList<>();
-        registeredRoutes.add(new CoffeeRoute(GET));
-        registeredRoutes.add(new TeaRoute(GET));
-        registeredRoutes.add(new MethodOptionsRoute(GET, POST, PUT, OPTIONS, HEAD));
-        registeredRoutes.add(new FormRoute(path + "/form", GET, POST, PUT, DELETE));
-        registeredRoutes.add(new ParameterRoute(GET));
-        registeredRoutes.add(new RedirectRoute(location, GET));
-        registeredRoutes.add(new MethodOptionsTwoRoute(GET, OPTIONS));
-        registeredRoutes.add(new PartialContentRoute(resourceHandler, GET));
-        registeredRoutes.add(new CookieRoute(GET));
-        registeredRoutes.add(new EatCookieRoute(GET));
-        registeredRoutes.add(new LogsRoute(path + "/logs", GET));
-        registeredRoutes.add(new PatchContentRoute(resourceHandler, GET, PATCH));
-        registeredRoutes.add(new TicTacToeMenuRoute("/ttt-menu", GET));
-        registeredRoutes.add(new TicTacToeGameRoute("/ttt-game", new HTTPSessionFactory(), GET));
         return registeredRoutes;
     }
 

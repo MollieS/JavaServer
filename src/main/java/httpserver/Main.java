@@ -2,7 +2,6 @@ package httpserver;
 
 import httpserver.resourcemanagement.HTTPResourceHandler;
 import httpserver.resourcemanagement.ResourceParser;
-import httpserver.routing.FileRoute;
 import httpserver.routing.Route;
 import httpserver.routing.Router;
 import httpserver.server.HTTPLogger;
@@ -33,7 +32,7 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Router router = new Router(new FileRoute(resourceHandler), registeredRoutes);
+        Router router = new Router(registeredRoutes);
         HTTPServer httpServer = new HTTPServer(socketServer, router, logger);
         ExecutorService executorService = Executors.newFixedThreadPool(40);
         try {

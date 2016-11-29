@@ -3,21 +3,18 @@ package httpserver.routing;
 import httpserver.HTTPRouter;
 import httpserver.Request;
 import httpserver.Response;
+import httpserver.httpresponse.HTTPResponse;
+import httpserver.httpresponse.StatusCode;
 
 import java.net.URI;
 import java.util.List;
 
-import static httpserver.routing.Method.GET;
-import static httpserver.routing.Method.HEAD;
-
 public class Router implements HTTPRouter {
 
     private final List<Route> registeredRoutes;
-    private final FileRoute fileRoute;
 
-    public Router(FileRoute fileRoute, List<Route> registeredRoutes) {
+    public Router(List<Route> registeredRoutes) {
         this.registeredRoutes = registeredRoutes;
-        this.fileRoute = fileRoute;
     }
 
     public Response route(Request httpRequest) {
@@ -26,14 +23,10 @@ public class Router implements HTTPRouter {
                 return route.performAction(httpRequest);
             }
         }
-        return fileRoute.performAction(httpRequest);
+        return HTTPResponse.create(StatusCode.NOTFOUND);
     }
 
     private boolean isRegistered(URI uri, Route route) {
         return route.getUri().equals(uri);
-    }
-
-    public boolean allowsMethod(Method method) {
-        return method == GET || method == HEAD;
     }
 }
