@@ -13,9 +13,8 @@ public class HTMLResource implements Resource {
     private boolean isDynamic = false;
 
     public HTMLResource(String filename) {
-        String baseLocation = new File("").getAbsolutePath();
-        String viewFolder = new File("/src/main/java/httpserver/views").getAbsolutePath();
-        String viewPath = (baseLocation + viewFolder + filename);
+        String viewFolder = new File("views").getAbsolutePath();
+        String viewPath = (viewFolder + filename);
         this.view = new File(viewPath);
     }
 
