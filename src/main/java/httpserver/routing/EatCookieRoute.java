@@ -19,7 +19,7 @@ public class EatCookieRoute extends Route {
     @Override
     public Response performAction(Request httpRequest) {
         if (httpRequest.hasHeader(COOKIE)) {
-            String type = httpRequest.getValue(COOKIE).split("=")[1];
+            String type = httpRequest.getValue(COOKIE);
             Resource resource = new HTTPResource(("mmmm " + type).getBytes());
             return HTTPResponse.create(OK).withBody(resource);
         }

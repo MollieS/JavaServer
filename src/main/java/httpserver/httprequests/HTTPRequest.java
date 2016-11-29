@@ -7,6 +7,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static httpserver.httprequests.RequestHeader.AUTHORIZATION;
+
 public class HTTPRequest implements Request {
 
     private static final String PROTOCOL_VERSION = "HTTP/1.1";
@@ -37,6 +39,10 @@ public class HTTPRequest implements Request {
     public String getValue(RequestHeader header) {
         for (Map.Entry<RequestHeader, String> entry : headers.entrySet()) {
             if (entry.getKey() == header) {
+                String value = entry.getValue();
+                if (value.contains("=") && header != AUTHORIZATION) {
+                    return value.split("=")[1];
+                }
                 return entry.getValue();
             }
         }

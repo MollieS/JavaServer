@@ -52,7 +52,7 @@ public class HTTPRequestParserTest {
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertTrue(httpRequest.hasHeader(DATA));
-        assertEquals("data=fatcat", httpRequest.getValue(DATA));
+        assertEquals("fatcat", httpRequest.getValue(DATA));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class HTTPRequestParserTest {
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertTrue(httpRequest.hasHeader(PARAMS));
-        assertEquals("variable_1=parameter", httpRequest.getValue(PARAMS));
+        assertEquals("parameter", httpRequest.getValue(PARAMS));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class HTTPRequestParserTest {
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
         assertTrue(httpRequest.hasHeader(RANGE));
-        assertEquals("bytes=1-4", httpRequest.getValue(RANGE));
+        assertEquals("1-4", httpRequest.getValue(RANGE));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class HTTPRequestParserTest {
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
-        assertEquals("type=chocolate", httpRequest.getValue(PARAMS));
+        assertEquals("chocolate", httpRequest.getValue(PARAMS));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class HTTPRequestParserTest {
 
         HTTPRequest httpRequest = httpRequestParser.parse(request);
 
-        assertEquals("type=chocolate", httpRequest.getValue(COOKIE));
+        assertEquals("chocolate", httpRequest.getValue(COOKIE));
     }
 
     @Test

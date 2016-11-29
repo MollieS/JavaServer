@@ -32,7 +32,7 @@ public class HTTPRequestTest {
         httpRequest = httpRequest.withHeaders(headers);
 
         assertTrue(httpRequest.hasHeader(PARAMS));
-        assertEquals("data=hello", httpRequest.getValue(PARAMS));
+        assertEquals("hello", httpRequest.getValue(PARAMS));
     }
 
     @Test

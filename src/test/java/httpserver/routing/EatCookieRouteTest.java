@@ -26,11 +26,11 @@ public class EatCookieRouteTest {
     @Test
     public void sendsTheCorrectBodyIfRequestHasCookie() {
         RequestFake httpRequest = new RequestFake(GET, "/eat_cookue");
-        httpRequest.setCookie("type=chocolate");
+        httpRequest.setCookie("chocolate");
 
         Response httpResponse = eatCookieRoute.performAction(httpRequest);
         String body = new String(httpResponse.getBody(), Charset.defaultCharset());
 
-        assertEquals(body, "mmmm chocolate");
+        assertEquals("mmmm chocolate", body);
     }
 }
